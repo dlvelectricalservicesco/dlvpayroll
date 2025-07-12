@@ -45,7 +45,7 @@
             border-radius: 0.75rem; /* rounded-lg */
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
             width: 90%;
-            max-width: 500px;
+            max-width: 500px; /* Increased max-width for more fields */
             transform: translateY(-20px);
             transition: transform 0.3s ease;
             position: relative;
@@ -317,15 +317,36 @@
                     <label for="new-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
                     <select id="new-employee-department" name="new-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Select Department</option>
-                        <option value="Electrical Installation">Electrical Installation</option>
-                        <option value="Maintenance & Repair">Maintenance & Repair</option>
-                        <option value="Project Management">Project Management</option>
-                        <option value="Administration">Administration</option>
+                        <!-- Options will be dynamically populated -->
                     </select>
                 </div>
                 <div>
                     <label for="new-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
                     <input type="text" id="new-employee-position" name="new-employee-position" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-employee-contact" class="block text-sm font-medium text-gray-700">Contact No.</label>
+                    <input type="text" id="new-employee-contact" name="new-employee-contact" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="new-employee-address" class="block text-sm font-medium text-gray-700">Address</label>
+                    <textarea id="new-employee-address" name="new-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <div>
+                    <label for="new-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate</label>
+                    <input type="number" id="new-employee-salary-rate" name="new-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-employee-sss" class="block text-sm font-medium text-gray-700">SSS</label>
+                    <input type="text" id="new-employee-sss" name="new-employee-sss" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-employee-philhealth" class="block text-sm font-medium text-gray-700">Philhealth</label>
+                    <input type="text" id="new-employee-philhealth" name="new-employee-philhealth" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-employee-pagibig" class="block text-sm font-medium text-gray-700">Pagibig</label>
+                    <input type="text" id="new-employee-pagibig" name="new-employee-pagibig" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="md:col-span-2">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Employee</button>
@@ -353,15 +374,36 @@
                     <label for="edit-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
                     <select id="edit-employee-department" name="edit-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Select Department</option>
-                        <option value="Electrical Installation">Electrical Installation</option>
-                        <option value="Maintenance & Repair">Maintenance & Repair</option>
-                        <option value="Project Management">Project Management</option>
-                        <option value="Administration">Administration</option>
+                        <!-- Options will be dynamically populated -->
                     </select>
                 </div>
                 <div>
                     <label for="edit-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
                     <input type="text" id="edit-employee-position" name="edit-employee-position" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-employee-contact" class="block text-sm font-medium text-gray-700">Contact No.</label>
+                    <input type="text" id="edit-employee-contact" name="edit-employee-contact" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="edit-employee-address" class="block text-sm font-medium text-gray-700">Address</label>
+                    <textarea id="edit-employee-address" name="edit-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <div>
+                    <label for="edit-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate</label>
+                    <input type="number" id="edit-employee-salary-rate" name="edit-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-employee-sss" class="block text-sm font-medium text-gray-700">SSS</label>
+                    <input type="text" id="edit-employee-sss" name="edit-employee-sss" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-employee-philhealth" class="block text-sm font-medium text-gray-700">Philhealth</label>
+                    <input type="text" id="edit-employee-philhealth" name="edit-employee-philhealth" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-employee-pagibig" class="block text-sm font-medium text-gray-700">Pagibig</label>
+                    <input type="text" id="edit-employee-pagibig" name="edit-employee-pagibig" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="md:col-span-2">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Save Changes</button>
@@ -476,6 +518,13 @@
             const newEmployeeNameInput = document.getElementById('new-employee-name');
             const newEmployeeDepartmentInput = document.getElementById('new-employee-department');
             const newEmployeePositionInput = document.getElementById('new-employee-position');
+            const newEmployeeContactInput = document.getElementById('new-employee-contact'); // New field
+            const newEmployeeAddressInput = document.getElementById('new-employee-address'); // New field
+            const newEmployeeSalaryRateInput = document.getElementById('new-employee-salary-rate'); // New field
+            const newEmployeeSssInput = document.getElementById('new-employee-sss'); // New field
+            const newEmployeePhilhealthInput = document.getElementById('new-employee-philhealth'); // New field
+            const newEmployeePagibigInput = document.getElementById('new-employee-pagibig'); // New field
+
 
             const editEmployeeModal = document.getElementById('edit-employee-modal');
             const closeEditEmployeeModalBtn = document.getElementById('close-edit-employee-modal');
@@ -485,6 +534,12 @@
             const editEmployeeNameInput = document.getElementById('edit-employee-name');
             const editEmployeeDepartmentInput = document.getElementById('edit-employee-department');
             const editEmployeePositionInput = document.getElementById('edit-employee-position');
+            const editEmployeeContactInput = document.getElementById('edit-employee-contact'); // New field
+            const editEmployeeAddressInput = document.getElementById('edit-employee-address'); // New field
+            const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate'); // New field
+            const editEmployeeSssInput = document.getElementById('edit-employee-sss'); // New field
+            const editEmployeePhilhealthInput = document.getElementById('edit-employee-philhealth'); // New field
+            const editEmployeePagibigInput = document.getElementById('edit-employee-pagibig'); // New field
 
 
             const confirmModal = document.getElementById('confirm-modal');
@@ -600,7 +655,23 @@
                         </td>
                     `;
                 });
+                populateDepartmentDropdowns(); // Call this after departments are loaded/rendered
             };
+
+            // Function to populate department dropdowns
+            const populateDepartmentDropdowns = () => {
+                const departmentDropdowns = [newEmployeeDepartmentInput, editEmployeeDepartmentInput];
+                departmentDropdowns.forEach(dropdown => {
+                    dropdown.innerHTML = '<option value="">Select Department</option>'; // Clear existing options
+                    departments.forEach(dept => {
+                        const option = document.createElement('option');
+                        option.value = dept.name; // Use department name as value
+                        option.textContent = dept.name;
+                        dropdown.appendChild(option);
+                    });
+                });
+            };
+
 
             // Listen to departments collection in Firestore
             const listenToDepartments = () => {
@@ -743,6 +814,12 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.contactNo || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.address || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.salaryRate || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.sss || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.philhealth || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.pagibig || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button class="text-indigo-600 hover:text-indigo-900 mr-4 edit-employee-btn" data-id="${employee.id}">Edit</button>
                             <button class="text-red-600 hover:text-red-900 delete-employee-btn" data-id="${employee.id}">Delete</button>
@@ -769,6 +846,7 @@
 
             // Open Add Employee Modal
             openAddEmployeeModalBtn.addEventListener('click', () => {
+                populateDepartmentDropdowns(); // Ensure dropdown is fresh
                 openModal(addEmployeeModal);
             });
 
@@ -785,6 +863,13 @@
                 const employeeName = newEmployeeNameInput.value.trim();
                 const employeeDepartment = newEmployeeDepartmentInput.value.trim();
                 const employeePosition = newEmployeePositionInput.value.trim();
+                const employeeContact = newEmployeeContactInput.value.trim();
+                const employeeAddress = newEmployeeAddressInput.value.trim();
+                const employeeSalaryRate = parseFloat(newEmployeeSalaryRateInput.value);
+                const employeeSss = newEmployeeSssInput.value.trim();
+                const employeePhilhealth = newEmployeePhilhealthInput.value.trim();
+                const employeePagibig = newEmployeePagibigInput.value.trim();
+
 
                 if (employeeName && employeeDepartment && employeePosition) {
                     const newEmployeeId = await generateUniqueEmployeeId(); // Generate unique ID
@@ -793,7 +878,13 @@
                         await setDoc(doc(employeesCollectionRef, newEmployeeId), {
                             name: employeeName,
                             department: employeeDepartment,
-                            position: employeePosition
+                            position: employeePosition,
+                            contactNo: employeeContact,
+                            address: employeeAddress,
+                            salaryRate: isNaN(employeeSalaryRate) ? 0 : employeeSalaryRate, // Store as number
+                            sss: employeeSss,
+                            philhealth: employeePhilhealth,
+                            pagibig: employeePagibig
                         });
                         closeModal(addEmployeeModal);
                         addEmployeeForm.reset();
@@ -803,7 +894,7 @@
                         showToast("Failed to add employee. Please try again.", "error");
                     }
                 } else {
-                    showToast("All employee fields are required.", "error");
+                    showToast("Required fields (Name, Department, Position) are missing.", "error");
                 }
             });
 
@@ -815,6 +906,13 @@
                 const newName = editEmployeeNameInput.value.trim();
                 const newDepartment = editEmployeeDepartmentInput.value.trim();
                 const newPosition = editEmployeePositionInput.value.trim();
+                const newContact = editEmployeeContactInput.value.trim();
+                const newAddress = editEmployeeAddressInput.value.trim();
+                const newSalaryRate = parseFloat(editEmployeeSalaryRateInput.value);
+                const newSss = editEmployeeSssInput.value.trim();
+                const newPhilhealth = editEmployeePhilhealthInput.value.trim();
+                const newPagibig = editEmployeePagibigInput.value.trim();
+
 
                 if (docId && newName && newDepartment && newPosition) {
                     try {
@@ -822,7 +920,13 @@
                         await updateDoc(employeeDocRef, {
                             name: newName,
                             department: newDepartment,
-                            position: newPosition
+                            position: newPosition,
+                            contactNo: newContact,
+                            address: newAddress,
+                            salaryRate: isNaN(newSalaryRate) ? 0 : newSalaryRate,
+                            sss: newSss,
+                            philhealth: newPhilhealth,
+                            pagibig: newPagibig
                         });
                         closeModal(editEmployeeModal);
                         showToast("Employee updated successfully!", "success");
@@ -831,7 +935,7 @@
                         showToast("Failed to update employee. Please try again.", "error");
                     }
                 } else {
-                    showToast("All employee fields are required.", "error");
+                    showToast("Required fields (Name, Department, Position) are missing.", "error");
                 }
             });
 
@@ -865,6 +969,16 @@
                         editEmployeeNameInput.value = currentEmployee.name;
                         editEmployeeDepartmentInput.value = currentEmployee.department;
                         editEmployeePositionInput.value = currentEmployee.position;
+                        editEmployeeContactInput.value = currentEmployee.contactNo || '';
+                        editEmployeeAddressInput.value = currentEmployee.address || '';
+                        editEmployeeSalaryRateInput.value = currentEmployee.salaryRate || '';
+                        editEmployeeSssInput.value = currentEmployee.sss || '';
+                        editEmployeePhilhealthInput.value = currentEmployee.philhealth || '';
+                        editEmployeePagibigInput.value = currentEmployee.pagibig || '';
+
+                        populateDepartmentDropdowns(); // Ensure dropdown is fresh before setting value
+                        editEmployeeDepartmentInput.value = currentEmployee.department; // Set the selected department
+
                         openModal(editEmployeeModal);
                     }
                 }
