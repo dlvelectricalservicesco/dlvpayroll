@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DLV Electrical Services Co. Payroll System</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom styles for the Inter font */
@@ -107,6 +108,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex">
 
+    <!-- Side Navigation Bar -->
     <aside class="w-64 bg-gradient-to-br from-blue-700 to-blue-900 text-white shadow-lg rounded-r-lg p-6 flex flex-col justify-between">
         <div>
             <div class="text-3xl font-extrabold mb-8 text-center tracking-wide">
@@ -146,7 +148,9 @@
         </div>
     </aside>
 
+    <!-- Main Content Area -->
     <main class="flex-1 p-8 overflow-y-auto">
+        <!-- Header -->
         <header class="bg-white shadow-md rounded-lg p-6 mb-8 flex items-center justify-between">
             <h1 class="text-4xl font-bold text-gray-800">Welcome, Admin!</h1>
             <div class="text-lg text-gray-600">
@@ -154,9 +158,11 @@
             </div>
         </header>
 
+        <!-- Content Sections -->
         <section id="dashboard-content" class="content-section active bg-white shadow-md rounded-lg p-8 mb-8">
             <h2 class="text-3xl font-semibold text-gray-700 mb-6">Dashboard Overview</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1: Total Employees -->
                 <div class="bg-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
                     <div>
                         <p class="text-xl font-medium">Total Employees</p>
@@ -164,6 +170,7 @@
                     </div>
                     <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2m20 0h-2.356A6 6 0 0110 6.136v0a6 6 0 009.356 1.857M17 20v-2A3 3 0 005.356 18.143M10 12V6a6 6 0 0112 0v6m-6 0h-2.356A6 6 0 006 18.143M10 12h2.356A6 6 0 0118 6.136v0a6 6 0 01-9.356 1.857"></path></svg>
                 </div>
+                <!-- Card 2: Monthly Payroll -->
                 <div class="bg-green-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
                     <div>
                         <p class="text-xl font-medium">Monthly Payroll</p>
@@ -171,6 +178,7 @@
                     </div>
                     <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.592 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.592-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
+                <!-- Card 3: Pending Approvals -->
                 <div class="bg-yellow-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
                     <div>
                         <p class="text-xl font-medium">Pending Approvals</p>
@@ -289,6 +297,7 @@
             </section>
     </main>
 
+    <!-- Add Department/Site Modal -->
     <div id="add-dept-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close-button" id="close-add-dept-modal">&times;</button>
@@ -307,12 +316,14 @@
         </div>
     </div>
 
+    <!-- Edit Department/Site Modal -->
     <div id="edit-dept-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close-button" id="close-edit-dept-modal">&times;</button>
             <h3 class="text-2xl font-semibold text-gray-700 mb-4">Edit Department/Site</h3>
             <form id="edit-department-form" class="space-y-4">
-                <input type="hidden" id="edit-dept-id"> <div>
+                <input type="hidden" id="edit-dept-id"> <!-- Changed from index to id -->
+                <div>
                     <label for="edit-dept-name" class="block text-sm font-medium text-gray-700">Department/Site Name</label>
                     <input type="text" id="edit-dept-name" name="edit-dept-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
@@ -325,11 +336,13 @@
         </div>
     </div>
 
+    <!-- Add Employee Modal -->
     <div id="add-employee-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close-button" id="close-add-employee-modal">&times;</button>
             <h3 class="text-2xl font-semibold text-gray-700 mb-4">Add New Employee</h3>
             <form id="add-employee-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Employee ID will be auto-generated -->
                 <div>
                     <label for="new-employee-name" class="block text-sm font-medium text-gray-700">Full Name</label>
                     <input type="text" id="new-employee-name" name="new-employee-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
@@ -338,7 +351,8 @@
                     <label for="new-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
                     <select id="new-employee-department" name="new-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Select Department</option>
-                        </select>
+                        <!-- Options will be dynamically populated -->
+                    </select>
                 </div>
                 <div>
                     <label for="new-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
@@ -375,12 +389,14 @@
         </div>
     </div>
 
+    <!-- Edit Employee Modal -->
     <div id="edit-employee-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close-button" id="close-edit-employee-modal">&times;</button>
             <h3 class="text-2xl font-semibold text-gray-700 mb-4">Edit Employee Details</h3>
             <form id="edit-employee-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <input type="hidden" id="edit-employee-doc-id"> <div>
+                <input type="hidden" id="edit-employee-doc-id"> <!-- Hidden field for Firestore doc ID -->
+                <div>
                     <label for="edit-employee-id" class="block text-sm font-medium text-gray-700">Employee ID</label>
                     <input type="text" id="edit-employee-id" name="edit-employee-id" readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-gray-100 cursor-not-allowed">
                 </div>
@@ -392,7 +408,8 @@
                     <label for="edit-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
                     <select id="edit-employee-department" name="edit-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">Select Department</option>
-                        </select>
+                        <!-- Options will be dynamically populated -->
+                    </select>
                 </div>
                 <div>
                     <label for="edit-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
@@ -429,10 +446,76 @@
         </div>
     </div>
 
+    <!-- Payroll Entry Modal -->
+    <div id="payroll-entry-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="close-payroll-entry-modal">&times;</button>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Payroll Entry for: <span id="payroll-employee-display-name"></span> (<span id="payroll-employee-display-id"></span>)</h3>
 
+            <form id="add-payroll-entry-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <input type="hidden" id="current-payroll-employee-id">
+                <input type="hidden" id="edit-payroll-entry-doc-id"> <!-- For editing existing entries -->
+
+                <div>
+                    <label for="payroll-days-of-work" class="block text-sm font-medium text-gray-700">Days of Work</label>
+                    <input type="number" id="payroll-days-of-work" name="days-of-work" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="payroll-overtime-hrs" class="block text-sm font-medium text-gray-700">Overtime Hrs</label>
+                    <input type="number" id="payroll-overtime-hrs" name="overtime-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="payroll-sunday-holiday-hrs" class="block text-sm font-medium text-gray-700">Sunday/Holiday Hrs</label>
+                    <input type="number" id="payroll-sunday-holiday-hrs" name="sunday-holiday-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="payroll-night-diff-hrs" class="block text-sm font-medium text-gray-700">Night Differential Hrs</label>
+                    <input type="number" id="payroll-night-diff-hrs" name="night-diff-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="payroll-night-diff-overtime-hrs" class="block text-sm font-medium text-gray-700">Night Differential Overtime Hrs</label>
+                    <input type="number" id="payroll-night-diff-overtime-hrs" name="night-diff-overtime-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="payroll-tardiness" class="block text-sm font-medium text-gray-700">Tardiness (Hrs)</label>
+                    <input type="number" id="payroll-tardiness" name="tardiness" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" id="save-payroll-entry-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Payroll Entry</button>
+                </div>
+            </form>
+
+            <div class="mt-8">
+                <h4 class="text-xl font-semibold text-gray-700 mb-4">Recorded Payroll Entries</h4>
+                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days Work</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OT Hrs</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sun/Hol Hrs</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ND Hrs</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ND OT Hrs</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tardiness</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payroll-entries-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Payroll entries will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Confirmation Modal -->
     <div id="confirm-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close-button" id="close-confirm-modal">&times;</button> <h3 class="text-2xl font-semibold text-gray-700 mb-4" id="confirm-modal-title">Confirm Action</h3>
+            <button class="modal-close-button" id="close-confirm-modal">&times;</button>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4" id="confirm-modal-title">Confirm Action</h3>
             <p class="text-gray-600 mb-6" id="confirm-modal-message">Are you sure you want to proceed?</p>
             <div class="flex justify-end space-x-4">
                 <button id="confirm-cancel-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg shadow-md transition duration-200">Cancel</button>
@@ -441,6 +524,7 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
     <div id="toast-notification" class="flex items-center">
         <span id="toast-icon" class="toast-icon"></span>
         <span id="toast-message"></span>
@@ -468,6 +552,7 @@
             let app, db, auth, departmentsCollectionRef, employeesCollectionRef;
             let userId = null;
             let isAuthReady = false;
+            let currentEmployeePayrollId = null; // To keep track of the employee whose payroll is being managed
 
             try {
                 app = initializeApp(firebaseConfig);
@@ -575,10 +660,30 @@
             const employeesTableBody = document.getElementById('employees-table-body');
             let employees = []; // Data will come from Firestore
 
-            // New elements for Process Payroll section
+            // Elements for Process Payroll section
             const payrollDepartmentFilter = document.getElementById('payroll-department-filter');
             const payrollEmployeeSearchInput = document.getElementById('payroll-employee-search');
             const payrollEmployeesTableBody = document.getElementById('payroll-employees-table-body');
+
+            // Elements for Payroll Entry Modal
+            const payrollEntryModal = document.getElementById('payroll-entry-modal');
+            const closePayrollEntryModalBtn = document.getElementById('close-payroll-entry-modal');
+            const payrollEmployeeDisplayName = document.getElementById('payroll-employee-display-name');
+            const payrollEmployeeDisplayId = document.getElementById('payroll-employee-display-id');
+            const addPayrollEntryForm = document.getElementById('add-payroll-entry-form');
+            const currentPayrollEmployeeIdInput = document.getElementById('current-payroll-employee-id');
+            const editPayrollEntryDocIdInput = document.getElementById('edit-payroll-entry-doc-id');
+            const savePayrollEntryBtn = document.getElementById('save-payroll-entry-btn');
+
+            const payrollDaysOfWorkInput = document.getElementById('payroll-days-of-work');
+            const payrollOvertimeHrsInput = document.getElementById('payroll-overtime-hrs');
+            const payrollSundayHolidayHrsInput = document.getElementById('payroll-sunday-holiday-hrs');
+            const payrollNightDiffHrsInput = document.getElementById('payroll-night-diff-hrs');
+            const payrollNightDiffOvertimeHrsInput = document.getElementById('payroll-night-diff-overtime-hrs');
+            const payrollTardinessInput = document.getElementById('payroll-tardiness');
+            const payrollEntriesTableBody = document.getElementById('payroll-entries-table-body');
+
+            let currentPayrollEntries = []; // Stores payroll entries for the currently selected employee
 
 
             // Function to show a specific content section
@@ -1039,7 +1144,9 @@
                 employeesToDisplay.forEach(employee => {
                     const row = payrollEmployeesTableBody.insertRow();
                     row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${employee.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <button class="text-blue-600 hover:text-blue-800 font-bold open-payroll-entry-btn" data-employee-id="${employee.id}">${employee.id}</button>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
@@ -1073,6 +1180,167 @@
             payrollDepartmentFilter.addEventListener('change', filterPayrollEmployees);
             payrollEmployeeSearchInput.addEventListener('input', filterPayrollEmployees);
 
+            // Event delegation for opening payroll entry modal
+            payrollEmployeesTableBody.addEventListener('click', (event) => {
+                if (event.target.classList.contains('open-payroll-entry-btn')) {
+                    const employeeId = event.target.dataset.employeeId;
+                    const selectedEmployee = employees.find(emp => emp.id === employeeId);
+                    if (selectedEmployee) {
+                        currentEmployeePayrollId = employeeId; // Set the global variable
+                        payrollEmployeeDisplayName.textContent = selectedEmployee.name;
+                        payrollEmployeeDisplayId.textContent = selectedEmployee.id;
+                        currentPayrollEmployeeIdInput.value = employeeId; // Set hidden input
+                        addPayrollEntryForm.reset(); // Clear form for new entry
+                        editPayrollEntryDocIdInput.value = ''; // Clear doc ID for new entry
+                        savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
+
+                        listenToPayrollEntries(employeeId); // Start listening to this employee's payroll entries
+                        openModal(payrollEntryModal);
+                    }
+                }
+            });
+
+            // Close Payroll Entry Modal
+            closePayrollEntryModalBtn.addEventListener('click', () => {
+                closeModal(payrollEntryModal);
+                addPayrollEntryForm.reset();
+                editPayrollEntryDocIdInput.value = '';
+                savePayrollEntryBtn.textContent = 'Add Payroll Entry';
+                currentEmployeePayrollId = null; // Clear the current employee context
+            });
+
+            // Function to listen to payroll entries for a specific employee
+            const listenToPayrollEntries = (employeeId) => {
+                if (!isAuthReady || !db) {
+                    console.warn("Firestore not ready for payroll entries.");
+                    return;
+                }
+                const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
+                onSnapshot(query(payrollEntriesCollectionRef), (snapshot) => {
+                    currentPayrollEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderPayrollEntriesTableInModal(currentPayrollEntries);
+                }, (error) => {
+                    console.error(`Error listening to payroll entries for ${employeeId}:`, error);
+                    showToast("Failed to load payroll entries.", "error");
+                });
+            };
+
+            // Function to render payroll entries in the modal's table
+            const renderPayrollEntriesTableInModal = (entries) => {
+                payrollEntriesTableBody.innerHTML = '';
+                if (!entries || entries.length === 0) {
+                    payrollEntriesTableBody.innerHTML = `<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">No payroll entries recorded for this employee.</td></tr>`;
+                    return;
+                }
+                entries.forEach(entry => {
+                    const row = payrollEntriesTableBody.insertRow();
+                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString() : 'N/A';
+                    row.innerHTML = `
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.daysOfWork || '0'}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.overtimeHrs || '0'}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.sundayHolidayHrs || '0'}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.nightDiffHrs || '0'}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.nightDiffOvertimeHrs || '0'}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.tardiness || '0'}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-indigo-600 hover:text-indigo-900 mr-2 edit-payroll-entry-btn" data-id="${entry.id}">Edit</button>
+                            <button class="text-red-600 hover:text-red-900 delete-payroll-entry-btn" data-id="${entry.id}">Delete</button>
+                        </td>
+                    `;
+                });
+            };
+
+            // Handle form submission for adding/editing payroll entry
+            addPayrollEntryForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const employeeId = currentPayrollEmployeeIdInput.value;
+                const entryDocId = editPayrollEntryDocIdInput.value; // Will be empty for new entries
+
+                const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
+                const overtimeHrs = parseFloat(payrollOvertimeHrsInput.value) || 0;
+                const sundayHolidayHrs = parseFloat(payrollSundayHolidayHrsInput.value) || 0;
+                const nightDiffHrs = parseFloat(payrollNightDiffHrsInput.value) || 0;
+                const nightDiffOvertimeHrs = parseFloat(payrollNightDiffOvertimeHrsInput.value) || 0;
+                const tardiness = parseFloat(payrollTardinessInput.value) || 0;
+
+                if (!employeeId) {
+                    showToast("No employee selected for payroll entry.", "error");
+                    return;
+                }
+
+                try {
+                    const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
+                    const payrollData = {
+                        daysOfWork,
+                        overtimeHrs,
+                        sundayHolidayHrs,
+                        nightDiffHrs,
+                        nightDiffOvertimeHrs,
+                        tardiness,
+                        timestamp: new Date() // Record the time of entry
+                    };
+
+                    if (entryDocId) {
+                        // Editing existing entry
+                        const entryRef = doc(payrollEntriesCollectionRef, entryDocId);
+                        await updateDoc(entryRef, payrollData);
+                        showToast("Payroll entry updated successfully!", "success");
+                    } else {
+                        // Adding new entry
+                        await addDoc(payrollEntriesCollectionRef, payrollData);
+                        showToast("Payroll entry added successfully!", "success");
+                    }
+                    addPayrollEntryForm.reset();
+                    editPayrollEntryDocIdInput.value = ''; // Clear for next entry
+                    savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
+                } catch (error) {
+                    console.error("Error saving payroll entry:", error);
+                    showToast("Failed to save payroll entry. Please try again.", "error");
+                }
+            });
+
+            // Event delegation for edit and delete payroll entry buttons in the modal
+            payrollEntriesTableBody.addEventListener('click', async (event) => {
+                const target = event.target;
+                const entryId = target.dataset.id;
+                const employeeId = currentPayrollEmployeeIdInput.value;
+
+                if (!employeeId) {
+                    showToast("Error: No employee context for payroll action.", "error");
+                    return;
+                }
+
+                const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
+
+                if (target.classList.contains('edit-payroll-entry-btn')) {
+                    const entryToEdit = currentPayrollEntries.find(entry => entry.id === entryId);
+                    if (entryToEdit) {
+                        payrollDaysOfWorkInput.value = entryToEdit.daysOfWork;
+                        payrollOvertimeHrsInput.value = entryToEdit.overtimeHrs;
+                        payrollSundayHolidayHrsInput.value = entryToEdit.sundayHolidayHrs;
+                        payrollNightDiffHrsInput.value = entryToEdit.nightDiffHrs;
+                        payrollNightDiffOvertimeHrsInput.value = entryToEdit.nightDiffOvertimeHrs;
+                        payrollTardinessInput.value = entryToEdit.tardiness;
+                        editPayrollEntryDocIdInput.value = entryId; // Store the ID of the entry being edited
+                        savePayrollEntryBtn.textContent = 'Update Payroll Entry'; // Change button text
+                    }
+                } else if (target.classList.contains('delete-payroll-entry-btn')) {
+                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this payroll entry?", async (confirmed) => {
+                        if (confirmed) {
+                            try {
+                                const entryRef = doc(payrollEntriesCollectionRef, entryId);
+                                await deleteDoc(entryRef);
+                                showToast("Payroll entry deleted successfully!", "success");
+                            } catch (error) {
+                                console.error("Error deleting payroll entry:", error);
+                                showToast("Failed to delete payroll entry. Please try again.", "error");
+                            }
+                        }
+                    });
+                }
+            });
         });
     </script>
 </body>
