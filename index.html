@@ -1192,9 +1192,8 @@
             // Function to calculate and display gross pay
             const calculateGrossPay = () => {
                 const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
-                // Assuming a monthly salary and 22 working days in a month for calculation
-                const dailyRate = currentEmployeeSalaryRate / 22;
-                const grossPay = dailyRate * daysOfWork;
+                // Changed calculation: Assuming salaryRate is now the daily rate
+                const grossPay = currentEmployeeSalaryRate * daysOfWork;
                 payrollGrossPayDisplay.textContent = `$${grossPay.toFixed(2)}`;
             };
 
