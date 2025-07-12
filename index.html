@@ -369,7 +369,7 @@
                     <textarea id="new-employee-address" name="new-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
                 <div>
-                    <label for="new-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Monthly)</label>
+                    <label for="new-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Daily)</label>
                     <input type="number" id="new-employee-salary-rate" name="new-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
@@ -426,7 +426,7 @@
                     <textarea id="edit-employee-address" name="edit-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
                 <div>
-                    <label for="edit-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Monthly)</label>
+                    <label for="edit-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Daily)</label>
                     <input type="number" id="edit-employee-salary-rate" name="edit-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
@@ -457,7 +457,7 @@
             <form id="add-payroll-entry-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <input type="hidden" id="current-payroll-employee-id">
                 <input type="hidden" id="edit-payroll-entry-doc-id"> <!-- For editing existing entries -->
-                <input type="hidden" id="current-employee-monthly-salary"> <!-- To store the employee's monthly salary -->
+                <input type="hidden" id="current-employee-daily-salary"> <!-- To store the employee's daily salary -->
                 <input type="hidden" id="current-employee-sss-deduction"> <!-- To store SSS deduction -->
                 <input type="hidden" id="current-employee-philhealth-deduction"> <!-- To store Philhealth deduction -->
                 <input type="hidden" id="current-employee-pagibig-deduction"> <!-- To store Pagibig deduction -->
@@ -578,7 +578,7 @@
             let userId = null;
             let isAuthReady = false;
             let currentEmployeePayrollId = null; // To keep track of the employee whose payroll is being managed
-            let currentEmployeeMonthlySalary = 0; // To store the employee's monthly salary
+            let currentEmployeeDailySalary = 0; // To store the employee's daily salary
             let currentEmployeeSssDeduction = 0; // To store SSS deduction
             let currentEmployeePhilhealthDeduction = 0; // To store Philhealth deduction
             let currentEmployeePagibigDeduction = 0; // To store Pagibig deduction
@@ -702,7 +702,7 @@
             const payrollEmployeeDisplayId = document.getElementById('payroll-employee-display-id');
             const addPayrollEntryForm = document.getElementById('add-payroll-entry-form');
             const currentPayrollEmployeeIdInput = document.getElementById('current-payroll-employee-id');
-            const currentEmployeeMonthlySalaryInput = document.getElementById('current-employee-monthly-salary'); // Changed to monthly salary
+            const currentEmployeeDailySalaryInput = document.getElementById('current-employee-daily-salary'); // Changed to daily salary
             const currentEmployeeSssDeductionInput = document.getElementById('current-employee-sss-deduction'); // Added
             const currentEmployeePhilhealthDeductionInput = document.getElementById('current-employee-philhealth-deduction'); // Added
             const currentEmployeePagibigDeductionInput = document.getElementById('current-employee-pagibig-deduction'); // Added
@@ -1243,7 +1243,7 @@
 
             // Function to calculate and display gross pay
             const calculateGrossPay = () => {
-                const monthlySalary = parseFloat(currentEmployeeMonthlySalaryInput.value) || 0;
+                const dailySalary = parseFloat(currentEmployeeDailySalaryInput.value) || 0;
                 const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
                 const overtimeHrs = parseFloat(payrollOvertimeHrsInput.value) || 0;
                 const sundayHolidayHrs = parseFloat(payrollSundayHolidayHrsInput.value) || 0;
@@ -1255,21 +1255,16 @@
                 const philhealthDeduction = parseFloat(currentEmployeePhilhealthDeductionInput.value) || 0;
                 const pagibigDeduction = parseFloat(currentEmployeePagibigDeductionInput.value) || 0;
 
-                // Assuming 22 working days and 8 hours per day for calculation
-                const dailyRate = monthlySalary / 22;
-                const hourlyRate = dailyRate / 8;
+                // Assuming 8 hours per day for hourly rate calculation
+                const hourlyRate = dailySalary / 8;
 
-                // Calculate components
-                const basePay = dailyRate * daysOfWork;
-                // Overtime pay: Regular rate + 25% premium (125% of hourly rate)
-                const overtimePay = overtimeHrs * hourlyRate * 1.25;
-                // Sunday/Holiday pay: Regular rate + 50% premium (150% of hourly rate)
-                const sundayHolidayPay = sundayHolidayHrs * hourlyRate * 1.50;
-                // Night Differential pay: 10% of hourly rate for hours worked between 10 PM and 6 AM
-                const nightDiffPay = nightDiffHrs * hourlyRate * 0.10;
-                // Night Differential Overtime pay: Overtime rate (125%) + 10% of overtime rate (137.5% of hourly rate)
-                const nightDiffOvertimePay = nightDiffOvertimeHrs * hourlyRate * 1.375;
-                const tardinessDeduction = tardiness * hourlyRate;
+                // Calculate components based on user's new formulas
+                const basePay = dailySalary * daysOfWork;
+                const overtimePay = hourlyRate * overtimeHrs * 1.25;
+                const sundayHolidayPay = hourlyRate * sundayHolidayHrs * 1.30;
+                const nightDiffPay = hourlyRate * nightDiffHrs * 1.10; // 110% of hourly rate
+                const nightDiffOvertimePay = hourlyRate * nightDiffOvertimeHrs * 1.25;
+                const tardinessDeduction = hourlyRate * tardiness;
 
                 // Gross Pay before statutory deductions
                 const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction;
@@ -1277,7 +1272,7 @@
                 // Final Gross Pay after statutory deductions
                 const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
 
-                // Update display elements
+                // Update display elements with PHP currency
                 calcBasePay.textContent = `₱${basePay.toFixed(2)}`;
                 calcOvertimePay.textContent = `₱${overtimePay.toFixed(2)}`;
                 calcSundayHolidayPay.textContent = `₱${sundayHolidayPay.toFixed(2)}`;
@@ -1298,12 +1293,12 @@
                     const selectedEmployee = employees.find(emp => emp.id === employeeId);
                     if (selectedEmployee) {
                         currentEmployeePayrollId = employeeId; // Set the global variable
-                        currentEmployeeMonthlySalary = selectedEmployee.salaryRate || 0; // Store monthly salary
+                        currentEmployeeDailySalary = selectedEmployee.salaryRate || 0; // Store daily salary
                         currentEmployeeSssDeduction = selectedEmployee.sssDeduction || 0; // Store SSS deduction
                         currentEmployeePhilhealthDeduction = selectedEmployee.philhealthDeduction || 0; // Store Philhealth deduction
                         currentEmployeePagibigDeduction = selectedEmployee.pagibigDeduction || 0; // Store Pagibig deduction
 
-                        currentEmployeeMonthlySalaryInput.value = currentEmployeeMonthlySalary; // Store in hidden input
+                        currentEmployeeDailySalaryInput.value = currentEmployeeDailySalary; // Store in hidden input
                         currentEmployeeSssDeductionInput.value = currentEmployeeSssDeduction;
                         currentEmployeePhilhealthDeductionInput.value = currentEmployeePhilhealthDeduction;
                         currentEmployeePagibigDeductionInput.value = currentEmployeePagibigDeduction;
@@ -1339,7 +1334,7 @@
                 editPayrollEntryDocIdInput.value = '';
                 savePayrollEntryBtn.textContent = 'Add Payroll Entry';
                 currentEmployeePayrollId = null; // Clear the current employee context
-                currentEmployeeMonthlySalary = 0; // Reset monthly salary
+                currentEmployeeDailySalary = 0; // Reset daily salary
                 currentEmployeeSssDeduction = 0;
                 currentEmployeePhilhealthDeduction = 0;
                 currentEmployeePagibigDeduction = 0;
