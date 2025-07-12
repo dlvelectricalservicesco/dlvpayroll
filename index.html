@@ -247,9 +247,9 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact No.</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary Rate</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS Deduction</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth Deduction</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig Deduction</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -367,20 +367,20 @@
                     <textarea id="new-employee-address" name="new-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
                 <div>
-                    <label for="new-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate</label>
+                    <label for="new-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Monthly)</label>
                     <input type="number" id="new-employee-salary-rate" name="new-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="new-employee-sss" class="block text-sm font-medium text-gray-700">SSS</label>
-                    <input type="text" id="new-employee-sss" name="new-employee-sss" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="new-employee-sss-deduction" class="block text-sm font-medium text-gray-700">SSS Deduction</label>
+                    <input type="number" id="new-employee-sss-deduction" name="new-employee-sss-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="new-employee-philhealth" class="block text-sm font-medium text-gray-700">Philhealth</label>
-                    <input type="text" id="new-employee-philhealth" name="new-employee-philhealth" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="new-employee-philhealth-deduction" class="block text-sm font-medium text-gray-700">Philhealth Deduction</label>
+                    <input type="number" id="new-employee-philhealth-deduction" name="new-employee-philhealth-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="new-employee-pagibig" class="block text-sm font-medium text-gray-700">Pagibig</label>
-                    <input type="text" id="new-employee-pagibig" name="new-employee-pagibig" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="new-employee-pagibig-deduction" class="block text-sm font-medium text-gray-700">Pagibig Deduction</label>
+                    <input type="number" id="new-employee-pagibig-deduction" name="new-employee-pagibig-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="md:col-span-2">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Employee</button>
@@ -424,20 +424,20 @@
                     <textarea id="edit-employee-address" name="edit-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
                 <div>
-                    <label for="edit-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate</label>
+                    <label for="edit-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Monthly)</label>
                     <input type="number" id="edit-employee-salary-rate" name="edit-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="edit-employee-sss" class="block text-sm font-medium text-gray-700">SSS</label>
-                    <input type="text" id="edit-employee-sss" name="edit-employee-sss" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="edit-employee-sss-deduction" class="block text-sm font-medium text-gray-700">SSS Deduction</label>
+                    <input type="number" id="edit-employee-sss-deduction" name="edit-employee-sss-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="edit-employee-philhealth" class="block text-sm font-medium text-gray-700">Philhealth</label>
-                    <input type="text" id="edit-employee-philhealth" name="edit-employee-philhealth" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="edit-employee-philhealth-deduction" class="block text-sm font-medium text-gray-700">Philhealth Deduction</label>
+                    <input type="number" id="edit-employee-philhealth-deduction" name="edit-employee-philhealth-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="edit-employee-pagibig" class="block text-sm font-medium text-gray-700">Pagibig</label>
-                    <input type="text" id="edit-employee-pagibig" name="edit-employee-pagibig" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="edit-employee-pagibig-deduction" class="block text-sm font-medium text-gray-700">Pagibig Deduction</label>
+                    <input type="number" id="edit-employee-pagibig-deduction" name="edit-employee-pagibig-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="md:col-span-2">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Save Changes</button>
@@ -455,7 +455,11 @@
             <form id="add-payroll-entry-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <input type="hidden" id="current-payroll-employee-id">
                 <input type="hidden" id="edit-payroll-entry-doc-id"> <!-- For editing existing entries -->
-                <input type="hidden" id="current-employee-salary-rate"> <!-- To store the employee's salary rate -->
+                <input type="hidden" id="current-employee-monthly-salary"> <!-- To store the employee's monthly salary -->
+                <input type="hidden" id="current-employee-sss-deduction"> <!-- To store SSS deduction -->
+                <input type="hidden" id="current-employee-philhealth-deduction"> <!-- To store Philhealth deduction -->
+                <input type="hidden" id="current-employee-pagibig-deduction"> <!-- To store Pagibig deduction -->
+
 
                 <div>
                     <label for="payroll-days-of-work" class="block text-sm font-medium text-gray-700">Days of Work</label>
@@ -481,10 +485,24 @@
                     <label for="payroll-tardiness" class="block text-sm font-medium text-gray-700">Tardiness (Hrs)</label>
                     <input type="number" id="payroll-tardiness" name="tardiness" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
-                <div class="md:col-span-2">
-                    <label for="payroll-gross-pay" class="block text-sm font-medium text-gray-700">Gross Pay (Pre-calculated)</label>
-                    <p id="payroll-gross-pay" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-gray-100 text-gray-800 font-semibold">$0.00</p>
+
+                <div class="md:col-span-2 mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Gross Pay Calculation Details</h4>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <p>Base Pay:</p><p id="calc-base-pay" class="font-medium text-right">$0.00</p>
+                        <p>Overtime Pay:</p><p id="calc-overtime-pay" class="font-medium text-right">$0.00</p>
+                        <p>Sunday/Holiday Pay:</p><p id="calc-sunday-holiday-pay" class="font-medium text-right">$0.00</p>
+                        <p>Night Differential Pay:</p><p id="calc-night-diff-pay" class="font-medium text-right">$0.00</p>
+                        <p>Night Differential Overtime Pay:</p><p id="calc-night-diff-overtime-pay" class="font-medium text-right">$0.00</p>
+                        <p class="text-red-700">Tardiness Deduction:</p><p id="calc-tardiness-deduction" class="font-medium text-right text-red-700">-$0.00</p>
+                        <p class="font-bold text-gray-900">Gross Pay (Before Statutory):</p><p id="calc-gross-before-statutory" class="font-bold text-right text-gray-900">$0.00</p>
+                        <p class="text-purple-700">SSS Deduction:</p><p id="calc-sss-deduction" class="font-medium text-right text-purple-700">-$0.00</p>
+                        <p class="text-purple-700">Philhealth Deduction:</p><p id="calc-philhealth-deduction" class="font-medium text-right text-purple-700">-$0.00</p>
+                        <p class="text-purple-700">Pagibig Deduction:</p><p id="calc-pagibig-deduction" class="font-medium text-right text-purple-700">-$0.00</p>
+                        <p class="font-bold text-xl text-blue-800">Final Gross Pay:</p><p id="payroll-gross-pay" class="font-bold text-xl text-right text-blue-800">$0.00</p>
+                    </div>
                 </div>
+
                 <div class="md:col-span-2">
                     <button type="submit" id="save-payroll-entry-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Payroll Entry</button>
                 </div>
@@ -558,7 +576,10 @@
             let userId = null;
             let isAuthReady = false;
             let currentEmployeePayrollId = null; // To keep track of the employee whose payroll is being managed
-            let currentEmployeeSalaryRate = 0; // To store the employee's salary for gross pay calculation
+            let currentEmployeeMonthlySalary = 0; // To store the employee's monthly salary
+            let currentEmployeeSssDeduction = 0; // To store SSS deduction
+            let currentEmployeePhilhealthDeduction = 0; // To store Philhealth deduction
+            let currentEmployeePagibigDeduction = 0; // To store Pagibig deduction
 
 
             try {
@@ -628,9 +649,9 @@
             const newEmployeeContactInput = document.getElementById('new-employee-contact'); // New field
             const newEmployeeAddressInput = document.getElementById('new-employee-address'); // New field
             const newEmployeeSalaryRateInput = document.getElementById('new-employee-salary-rate'); // New field
-            const newEmployeeSssInput = document.getElementById('new-employee-sss'); // New field
-            const newEmployeePhilhealthInput = document.getElementById('new-employee-philhealth'); // New field
-            const newEmployeePagibigInput = document.getElementById('new-employee-pagibig'); // New field
+            const newEmployeeSssDeductionInput = document.getElementById('new-employee-sss-deduction'); // Changed to deduction
+            const newEmployeePhilhealthDeductionInput = document.getElementById('new-employee-philhealth-deduction'); // Changed to deduction
+            const newEmployeePagibigDeductionInput = document.getElementById('new-employee-pagibig-deduction'); // Changed to deduction
 
 
             const editEmployeeModal = document.getElementById('edit-employee-modal');
@@ -644,9 +665,9 @@
             const editEmployeeContactInput = document.getElementById('edit-employee-contact'); // New field
             const editEmployeeAddressInput = document.getElementById('edit-employee-address'); // New field
             const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate'); // New field
-            const editEmployeeSssInput = document.getElementById('edit-employee-sss'); // New field
-            const editEmployeePhilhealthInput = document.getElementById('edit-employee-philhealth'); // New field
-            const editEmployeePagibigInput = document.getElementById('edit-employee-pagibig'); // New field
+            const editEmployeeSssDeductionInput = document.getElementById('edit-employee-sss-deduction'); // Changed to deduction
+            const editEmployeePhilhealthDeductionInput = document.getElementById('edit-employee-philhealth-deduction'); // Changed to deduction
+            const editEmployeePagibigDeductionInput = document.getElementById('edit-employee-pagibig-deduction'); // Changed to deduction
 
 
             const confirmModal = document.getElementById('confirm-modal');
@@ -679,7 +700,10 @@
             const payrollEmployeeDisplayId = document.getElementById('payroll-employee-display-id');
             const addPayrollEntryForm = document.getElementById('add-payroll-entry-form');
             const currentPayrollEmployeeIdInput = document.getElementById('current-payroll-employee-id');
-            const currentEmployeeSalaryRateInput = document.getElementById('current-employee-salary-rate'); // Added
+            const currentEmployeeMonthlySalaryInput = document.getElementById('current-employee-monthly-salary'); // Changed to monthly salary
+            const currentEmployeeSssDeductionInput = document.getElementById('current-employee-sss-deduction'); // Added
+            const currentEmployeePhilhealthDeductionInput = document.getElementById('current-employee-philhealth-deduction'); // Added
+            const currentEmployeePagibigDeductionInput = document.getElementById('current-employee-pagibig-deduction'); // Added
             const editPayrollEntryDocIdInput = document.getElementById('edit-payroll-entry-doc-id');
             const savePayrollEntryBtn = document.getElementById('save-payroll-entry-btn');
 
@@ -689,7 +713,20 @@
             const payrollNightDiffHrsInput = document.getElementById('payroll-night-diff-hrs');
             const payrollNightDiffOvertimeHrsInput = document.getElementById('payroll-night-diff-overtime-hrs');
             const payrollTardinessInput = document.getElementById('payroll-tardiness');
-            const payrollGrossPayDisplay = document.getElementById('payroll-gross-pay'); // Added
+
+            // Elements for detailed gross pay display
+            const calcBasePay = document.getElementById('calc-base-pay');
+            const calcOvertimePay = document.getElementById('calc-overtime-pay');
+            const calcSundayHolidayPay = document.getElementById('calc-sunday-holiday-pay');
+            const calcNightDiffPay = document.getElementById('calc-night-diff-pay');
+            const calcNightDiffOvertimePay = document.getElementById('calc-night-diff-overtime-pay');
+            const calcTardinessDeduction = document.getElementById('calc-tardiness-deduction');
+            const calcGrossBeforeStatutory = document.getElementById('calc-gross-before-statutory');
+            const calcSssDeduction = document.getElementById('calc-sss-deduction');
+            const calcPhilhealthDeduction = document.getElementById('calc-philhealth-deduction');
+            const calcPagibigDeduction = document.getElementById('calc-pagibig-deduction');
+            const payrollGrossPayDisplay = document.getElementById('payroll-gross-pay'); // Final Gross Pay
+
             const payrollEntriesTableBody = document.getElementById('payroll-entries-table-body');
 
             let currentPayrollEntries = []; // Stores payroll entries for the currently selected employee
@@ -933,7 +970,7 @@
                     if (currentDept) {
                         editDeptIdInput.value = currentDept.id; // Store Firestore ID
                         editDeptNameInput.value = currentDept.name;
-                        editDeptDescriptionInput.value = currentDept.description;
+                        editDeptDescriptionInput.value = current.description;
                         openModal(editDeptModal);
                     }
                 }
@@ -972,9 +1009,9 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.contactNo || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.address || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.salaryRate || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.sss || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.philhealth || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.pagibig || ''}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.sssDeduction || '0'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.philhealthDeduction || '0'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.pagibigDeduction || '0'}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button class="text-indigo-600 hover:text-indigo-900 mr-4 edit-employee-btn" data-id="${employee.id}">Edit</button>
                             <button class="text-red-600 hover:text-red-900 delete-employee-btn" data-id="${employee.id}">Delete</button>
@@ -1010,6 +1047,9 @@
             closeAddEmployeeModalBtn.addEventListener('click', () => {
                 closeModal(addEmployeeModal);
                 addEmployeeForm.reset(); // Clear form on close
+                newEmployeeSssDeductionInput.value = '0'; // Reset to 0
+                newEmployeePhilhealthDeductionInput.value = '0'; // Reset to 0
+                newEmployeePagibigDeductionInput.value = '0'; // Reset to 0
             });
 
             // Handle form submission for adding a new employee
@@ -1022,9 +1062,9 @@
                 const employeeContact = newEmployeeContactInput.value.trim();
                 const employeeAddress = newEmployeeAddressInput.value.trim();
                 const employeeSalaryRate = parseFloat(newEmployeeSalaryRateInput.value);
-                const employeeSss = newEmployeeSssInput.value.trim();
-                const employeePhilhealth = newEmployeePhilhealthInput.value.trim();
-                const employeePagibig = newEmployeePagibigInput.value.trim();
+                const employeeSssDeduction = parseFloat(newEmployeeSssDeductionInput.value) || 0;
+                const employeePhilhealthDeduction = parseFloat(newEmployeePhilhealthDeductionInput.value) || 0;
+                const employeePagibigDeduction = parseFloat(newEmployeePagibigDeductionInput.value) || 0;
 
 
                 if (employeeName && employeeDepartment && employeePosition) {
@@ -1038,12 +1078,15 @@
                             contactNo: employeeContact,
                             address: employeeAddress,
                             salaryRate: isNaN(employeeSalaryRate) ? 0 : employeeSalaryRate, // Store as number
-                            sss: employeeSss,
-                            philhealth: employeePhilhealth,
-                            pagibig: employeePagibig
+                            sssDeduction: employeeSssDeduction,
+                            philhealthDeduction: employeePhilhealthDeduction,
+                            pagibigDeduction: employeePagibigDeduction
                         });
                         closeModal(addEmployeeModal);
                         addEmployeeForm.reset();
+                        newEmployeeSssDeductionInput.value = '0'; // Reset to 0
+                        newEmployeePhilhealthDeductionInput.value = '0'; // Reset to 0
+                        newEmployeePagibigDeductionInput.value = '0'; // Reset to 0
                         showToast("Employee added successfully!", "success");
                     } catch (error) {
                         console.error("Error adding employee:", error);
@@ -1065,9 +1108,9 @@
                 const newContact = editEmployeeContactInput.value.trim();
                 const newAddress = editEmployeeAddressInput.value.trim();
                 const newSalaryRate = parseFloat(editEmployeeSalaryRateInput.value);
-                const newSss = editEmployeeSssInput.value.trim();
-                const newPhilhealth = editEmployeePhilhealthInput.value.trim();
-                const newPagibig = editEmployeePagibigInput.value.trim();
+                const newSssDeduction = parseFloat(editEmployeeSssDeductionInput.value) || 0;
+                const newPhilhealthDeduction = parseFloat(editEmployeePhilhealthDeductionInput.value) || 0;
+                const newPagibigDeduction = parseFloat(editEmployeePagibigDeductionInput.value) || 0;
 
 
                 if (docId && newName && newDepartment && newPosition) {
@@ -1080,9 +1123,9 @@
                             contactNo: newContact,
                             address: newAddress,
                             salaryRate: isNaN(newSalaryRate) ? 0 : newSalaryRate,
-                            sss: newSss,
-                            philhealth: newPhilhealth,
-                            pagibig: newPagibig
+                            sssDeduction: newSssDeduction,
+                            philhealthDeduction: newPhilhealthDeduction,
+                            pagibigDeduction: newPagibigDeduction
                         });
                         closeModal(editEmployeeModal);
                         showToast("Employee updated successfully!", "success");
@@ -1128,9 +1171,9 @@
                         editEmployeeContactInput.value = currentEmployee.contactNo || '';
                         editEmployeeAddressInput.value = currentEmployee.address || '';
                         editEmployeeSalaryRateInput.value = currentEmployee.salaryRate || '';
-                        editEmployeeSssInput.value = currentEmployee.sss || '';
-                        editEmployeePhilhealthInput.value = currentEmployee.philhealth || '';
-                        editEmployeePagibigInput.value = currentEmployee.pagibig || '';
+                        editEmployeeSssDeductionInput.value = currentEmployee.sssDeduction || '0';
+                        editEmployeePhilhealthDeductionInput.value = currentEmployee.philhealthDeduction || '0';
+                        editEmployeePagibigDeductionInput.value = currentEmployee.pagibigDeduction || '0';
 
                         populateDepartmentDropdowns(); // Ensure dropdown is fresh before setting value
                         editEmployeeDepartmentInput.value = currentEmployee.department; // Set the selected department
@@ -1191,10 +1234,48 @@
 
             // Function to calculate and display gross pay
             const calculateGrossPay = () => {
+                const monthlySalary = parseFloat(currentEmployeeMonthlySalaryInput.value) || 0;
                 const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
-                // Changed calculation: Assuming salaryRate is now the daily rate
-                const grossPay = currentEmployeeSalaryRate * daysOfWork;
-                payrollGrossPayDisplay.textContent = `$${grossPay.toFixed(2)}`;
+                const overtimeHrs = parseFloat(payrollOvertimeHrsInput.value) || 0;
+                const sundayHolidayHrs = parseFloat(payrollSundayHolidayHrsInput.value) || 0;
+                const nightDiffHrs = parseFloat(payrollNightDiffHrsInput.value) || 0;
+                const nightDiffOvertimeHrs = parseFloat(payrollNightDiffOvertimeHrsInput.value) || 0;
+                const tardiness = parseFloat(payrollTardinessInput.value) || 0;
+
+                const sssDeduction = parseFloat(currentEmployeeSssDeductionInput.value) || 0;
+                const philhealthDeduction = parseFloat(currentEmployeePhilhealthDeductionInput.value) || 0;
+                const pagibigDeduction = parseFloat(currentEmployeePagibigDeductionInput.value) || 0;
+
+                // Assuming 22 working days and 8 hours per day for calculation
+                const dailyRate = monthlySalary / 22;
+                const hourlyRate = dailyRate / 8;
+
+                // Calculate components
+                const basePay = dailyRate * daysOfWork;
+                const overtimePay = overtimeHrs * hourlyRate * 1.25; // 125% for overtime
+                const sundayHolidayPay = sundayHolidayHrs * hourlyRate * 1.5; // 150% for Sunday/Holiday
+                const nightDiffPay = nightDiffHrs * hourlyRate * 0.10; // 10% of hourly rate for ND
+                const nightDiffOvertimePay = nightDiffOvertimeHrs * hourlyRate * 1.375; // 137.5% for ND OT (125% OT + 10% ND on OT portion)
+                const tardinessDeduction = tardiness * hourlyRate;
+
+                // Gross Pay before statutory deductions
+                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction;
+
+                // Final Gross Pay after statutory deductions
+                const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
+
+                // Update display elements
+                calcBasePay.textContent = `$${basePay.toFixed(2)}`;
+                calcOvertimePay.textContent = `$${overtimePay.toFixed(2)}`;
+                calcSundayHolidayPay.textContent = `$${sundayHolidayPay.toFixed(2)}`;
+                calcNightDiffPay.textContent = `$${nightDiffPay.toFixed(2)}`;
+                calcNightDiffOvertimePay.textContent = `$${nightDiffOvertimePay.toFixed(2)}`;
+                calcTardinessDeduction.textContent = `-$${tardinessDeduction.toFixed(2)}`;
+                calcGrossBeforeStatutory.textContent = `$${grossPayBeforeStatutory.toFixed(2)}`;
+                calcSssDeduction.textContent = `-$${sssDeduction.toFixed(2)}`;
+                calcPhilhealthDeduction.textContent = `-$${philhealthDeduction.toFixed(2)}`;
+                calcPagibigDeduction.textContent = `-$${pagibigDeduction.toFixed(2)}`;
+                payrollGrossPayDisplay.textContent = `$${finalGrossPay.toFixed(2)}`;
             };
 
             // Event delegation for opening payroll entry modal
@@ -1204,8 +1285,16 @@
                     const selectedEmployee = employees.find(emp => emp.id === employeeId);
                     if (selectedEmployee) {
                         currentEmployeePayrollId = employeeId; // Set the global variable
-                        currentEmployeeSalaryRate = selectedEmployee.salaryRate || 0; // Store salary rate
-                        currentEmployeeSalaryRateInput.value = currentEmployeeSalaryRate; // Store in hidden input as well
+                        currentEmployeeMonthlySalary = selectedEmployee.salaryRate || 0; // Store monthly salary
+                        currentEmployeeSssDeduction = selectedEmployee.sssDeduction || 0; // Store SSS deduction
+                        currentEmployeePhilhealthDeduction = selectedEmployee.philhealthDeduction || 0; // Store Philhealth deduction
+                        currentEmployeePagibigDeduction = selectedEmployee.pagibigDeduction || 0; // Store Pagibig deduction
+
+                        currentEmployeeMonthlySalaryInput.value = currentEmployeeMonthlySalary; // Store in hidden input
+                        currentEmployeeSssDeductionInput.value = currentEmployeeSssDeduction;
+                        currentEmployeePhilhealthDeductionInput.value = currentEmployeePhilhealthDeduction;
+                        currentEmployeePagibigDeductionInput.value = currentEmployeePagibigDeduction;
+
 
                         payrollEmployeeDisplayName.textContent = selectedEmployee.name;
                         payrollEmployeeDisplayId.textContent = selectedEmployee.id;
@@ -1221,8 +1310,13 @@
                 }
             });
 
-            // Event listener for Days of Work input to trigger gross pay calculation
+            // Event listeners for payroll input fields to trigger gross pay calculation
             payrollDaysOfWorkInput.addEventListener('input', calculateGrossPay);
+            payrollOvertimeHrsInput.addEventListener('input', calculateGrossPay);
+            payrollSundayHolidayHrsInput.addEventListener('input', calculateGrossPay);
+            payrollNightDiffHrsInput.addEventListener('input', calculateGrossPay);
+            payrollNightDiffOvertimeHrsInput.addEventListener('input', calculateGrossPay);
+            payrollTardinessInput.addEventListener('input', calculateGrossPay);
 
 
             // Close Payroll Entry Modal
@@ -1232,8 +1326,22 @@
                 editPayrollEntryDocIdInput.value = '';
                 savePayrollEntryBtn.textContent = 'Add Payroll Entry';
                 currentEmployeePayrollId = null; // Clear the current employee context
-                currentEmployeeSalaryRate = 0; // Reset salary rate
-                payrollGrossPayDisplay.textContent = '$0.00'; // Reset gross pay display
+                currentEmployeeMonthlySalary = 0; // Reset monthly salary
+                currentEmployeeSssDeduction = 0;
+                currentEmployeePhilhealthDeduction = 0;
+                currentEmployeePagibigDeduction = 0;
+                // Reset all display values
+                calcBasePay.textContent = '$0.00';
+                calcOvertimePay.textContent = '$0.00';
+                calcSundayHolidayPay.textContent = '$0.00';
+                calcNightDiffPay.textContent = '$0.00';
+                calcNightDiffOvertimePay.textContent = '$0.00';
+                calcTardinessDeduction.textContent = '-$0.00';
+                calcGrossBeforeStatutory.textContent = '$0.00';
+                calcSssDeduction.textContent = '-$0.00';
+                calcPhilhealthDeduction.textContent = '-$0.00';
+                calcPagibigDeduction.textContent = '-$0.00';
+                payrollGrossPayDisplay.textContent = '$0.00';
             });
 
             // Function to listen to payroll entries for a specific employee
