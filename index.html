@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DLV Electrical Services Co. Payroll System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Hide content sections by default */
+        .content-section {
+            display: none;
+        }
+        /* Show the active content section */
+        .content-section.active {
+            display: block;
+        }
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6B7280; /* gray-500 */
+            transition: color 0.2s ease;
+        }
+        .modal-close-button:hover {
+            color: #1F2937; /* gray-900 */
+        }
+
+        /* Toast Notification Styles */
+        #toast-notification {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background-color: #333;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            z-index: 1001; /* Above modals */
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        #toast-notification.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        #toast-notification.success {
+            background-color: #22C55E; /* green-500 */
+        }
+        #toast-notification.error {
+            background-color: #EF4444; /* red-500 */
+        }
+        #toast-notification.info {
+            background-color: #3B82F6; /* blue-500 */
+        }
+        #toast-notification .toast-icon {
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+    <!-- Side Navigation Bar -->
+    <aside class="w-64 bg-gradient-to-br from-blue-700 to-blue-900 text-white shadow-lg rounded-r-lg p-6 flex flex-col justify-between">
+        <div>
+            <div class="text-3xl font-extrabold mb-8 text-center tracking-wide">
+                DLV Payroll
+            </div>
+            <nav>
+                <ul>
+                    <li class="mb-4">
+                        <button id="nav-dashboard" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-9v10a1 1 0 001 1h3M3 12l2 2m0 0l7 7 7-7M3 12v6a1 1 0 001 1h3m10-1v-6m-4-6v6a1 1 0 001 1h3"></path></svg>
+                            <span>Dashboard</span>
+                        </button>
+                    </li>
+                    <li class="mb-4">
+                        <button id="nav-department" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            <span>Department/Site</span>
+                        </button>
+                    </li>
+                    <li class="mb-4">
+                        <button id="nav-employee" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2m20 0h-2.356A6 6 0 0110 6.136v0a6 6 0 009.356 1.857M17 20v-2A3 3 0 005.356 18.143M10 12V6a6 6 0 0112 0v6m-6 0h-2.356A6 6 0 006 18.143M10 12h2.356A6 6 0 0118 6.136v0a6 6 0 01-9.356 1.857"></path></svg>
+                            <span>Manage Employee</span>
+                        </button>
+                    </li>
+                     <li>
+                        <button id="nav-process-payroll" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0h-2m5 0h2M9 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h4l-1 1v2h5v-2l-1-1h4a2 2 0 002-2V5a2 2 0 00-2-2h-2m-7 12l-2 2m0 0l-2-2m2 2v2"></path></svg>
+                            <span>Process Payroll</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="text-sm text-gray-300 text-center">
+            &copy; 2025 DLV Electrical Services Co.
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-8 overflow-y-auto">
+        <!-- Header -->
+        <header class="bg-white shadow-md rounded-lg p-6 mb-8 flex items-center justify-between">
+            <h1 class="text-4xl font-bold text-gray-800">Welcome, Admin!</h1>
+            <div class="text-lg text-gray-600">
+                DLV Electrical Services Co.
+            </div>
+        </header>
+
+        <!-- Content Sections -->
+        <section id="dashboard-content" class="content-section active bg-white shadow-md rounded-lg p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Dashboard Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1: Total Employees -->
+                <div class="bg-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
+                    <div>
+                        <p class="text-xl font-medium">Total Employees</p>
+                        <p class="text-4xl font-bold mt-2">120</p>
+                    </div>
+                    <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2m20 0h-2.356A6 6 0 0110 6.136v0a6 6 0 009.356 1.857M17 20v-2A3 3 0 005.356 18.143M10 12V6a6 6 0 0112 0v6m-6 0h-2.356A6 6 0 006 18.143M10 12h2.356A6 6 0 0118 6.136v0a6 6 0 01-9.356 1.857"></path></svg>
+                </div>
+                <!-- Card 2: Monthly Payroll -->
+                <div class="bg-green-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
+                    <div>
+                        <p class="text-xl font-medium">Monthly Payroll</p>
+                        <p class="text-4xl font-bold mt-2">$75,000</p>
+                    </div>
+                    <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.592 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.592-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <!-- Card 3: Pending Approvals -->
+                <div class="bg-yellow-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
+                    <div>
+                        <p class="text-xl font-medium">Pending Approvals</p>
+                        <p class="text-4xl font-bold mt-2">5</p>
+                    </div>
+                    <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-inner">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Quick Actions</h3>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg shadow-md transition duration-200">Generate Payroll</button>
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg shadow-md transition duration-200">Add New Employee</button>
+                    <button class="bg-teal-600 hover:bg-teal-700 text-white py-3 px-6 rounded-lg shadow-md transition duration-200">View Reports</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="department-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Department/Site Management</h2>
+            <p class="text-gray-600 mb-4">Manage departments and project sites for DLV Electrical Services Co.</p>
+
+            <div class="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Actions</h3>
+                <button id="open-add-dept-modal" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Department/Site</button>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Current Departments/Sites</h3>
+                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="departments-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Department rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="employee-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Manage Employees</h2>
+            <p class="text-gray-600 mb-4">This section is for adding, editing, and viewing employee details and their payroll information.</p>
+
+            <div class="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Actions</h3>
+                <button id="open-add-employee-modal" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add New Employee</button>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Employee List</h3>
+                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employees-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Employee rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="process-payroll-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Process Payroll</h2>
+            <p class="text-gray-600 mb-4">This section will allow you to process payroll for employees.</p>
+            <!-- Removed the placeholder "Payroll Options" div -->
+        </section>
+    </main>
+
+    <!-- Add Department/Site Modal -->
+    <div id="add-dept-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="close-add-dept-modal">&times;</button>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Add New Department/Site</h3>
+            <form id="add-department-form" class="space-y-4">
+                <div>
+                    <label for="new-dept-name" class="block text-sm font-medium text-gray-700">Department/Site Name</label>
+                    <input type="text" id="new-dept-name" name="new-dept-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-dept-description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="new-dept-description" name="new-dept-description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Department/Site</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Department/Site Modal -->
+    <div id="edit-dept-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="close-edit-dept-modal">&times;</button>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Edit Department/Site</h3>
+            <form id="edit-department-form" class="space-y-4">
+                <input type="hidden" id="edit-dept-id"> <!-- Changed from index to id -->
+                <div>
+                    <label for="edit-dept-name" class="block text-sm font-medium text-gray-700">Department/Site Name</label>
+                    <input type="text" id="edit-dept-name" name="edit-dept-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-dept-description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="edit-dept-description" name="edit-dept-description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div id="add-employee-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="close-add-employee-modal">&times;</button>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Add New Employee</h3>
+            <form id="add-employee-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Employee ID will be auto-generated -->
+                <div>
+                    <label for="new-employee-name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="new-employee-name" name="new-employee-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="new-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
+                    <select id="new-employee-department" name="new-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select Department</option>
+                        <option value="Electrical Installation">Electrical Installation</option>
+                        <option value="Maintenance & Repair">Maintenance & Repair</option>
+                        <option value="Project Management">Project Management</option>
+                        <option value="Administration">Administration</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="new-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
+                    <input type="text" id="new-employee-position" name="new-employee-position" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Employee Modal -->
+    <div id="edit-employee-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="close-edit-employee-modal">&times;</button>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Edit Employee Details</h3>
+            <form id="edit-employee-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="hidden" id="edit-employee-doc-id"> <!-- Hidden field for Firestore doc ID -->
+                <div>
+                    <label for="edit-employee-id" class="block text-sm font-medium text-gray-700">Employee ID</label>
+                    <input type="text" id="edit-employee-id" name="edit-employee-id" readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-gray-100 cursor-not-allowed">
+                </div>
+                <div>
+                    <label for="edit-employee-name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="edit-employee-name" name="edit-employee-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
+                    <select id="edit-employee-department" name="edit-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select Department</option>
+                        <option value="Electrical Installation">Electrical Installation</option>
+                        <option value="Maintenance & Repair">Maintenance & Repair</option>
+                        <option value="Project Management">Project Management</option>
+                        <option value="Administration">Administration</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="edit-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
+                    <input type="text" id="edit-employee-position" name="edit-employee-position" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4" id="confirm-modal-title">Confirm Action</h3>
+            <p class="text-gray-600 mb-6" id="confirm-modal-message">Are you sure you want to proceed?</p>
+            <div class="flex justify-end space-x-4">
+                <button id="confirm-cancel-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg shadow-md transition duration-200">Cancel</button>
+                <button id="confirm-ok-btn" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="flex items-center">
+        <span id="toast-icon" class="toast-icon"></span>
+        <span id="toast-message"></span>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Firebase setup
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+
+            let app, db, auth, departmentsCollectionRef, employeesCollectionRef;
+            let userId = null;
+            let isAuthReady = false;
+
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Authenticate
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // Set up auth state listener
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Firebase authenticated. User ID:", userId);
+                        // Initialize collection references after authentication
+                        departmentsCollectionRef = collection(db, `artifacts/${appId}/public/data/departments`);
+                        employeesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees`);
+                        isAuthReady = true;
+                        // Start listening to data once authenticated
+                        listenToDepartments();
+                        listenToEmployees();
+                    } else {
+                        console.log("Firebase not authenticated.");
+                        userId = null;
+                        isAuthReady = true; // Still ready, but unauthenticated
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                showToast("Failed to initialize Firebase.", "error");
+            }
+
+
+            // Get all navigation buttons
+            const navButtons = document.querySelectorAll('.nav-button');
+            // Get all content sections
+            const contentSections = document.querySelectorAll('.content-section');
+
+            // Modal elements
+            const addDeptModal = document.getElementById('add-dept-modal');
+            const openAddDeptModalBtn = document.getElementById('open-add-dept-modal');
+            const closeAddDeptModalBtn = document.getElementById('close-add-dept-modal');
+            const addDepartmentForm = document.getElementById('add-department-form');
+            const newDeptNameInput = document.getElementById('new-dept-name');
+            const newDeptDescriptionInput = document.getElementById('new-dept-description');
+
+            const editDeptModal = document.getElementById('edit-dept-modal');
+            const closeEditDeptModalBtn = document.getElementById('close-edit-dept-modal');
+            const editDepartmentForm = document.getElementById('edit-department-form');
+            const editDeptIdInput = document.getElementById('edit-dept-id'); // Changed to id
+            const editDeptNameInput = document.getElementById('edit-dept-name');
+            const editDeptDescriptionInput = document.getElementById('edit-dept-description');
+
+            const addEmployeeModal = document.getElementById('add-employee-modal');
+            const openAddEmployeeModalBtn = document.getElementById('open-add-employee-modal');
+            const closeAddEmployeeModalBtn = document.getElementById('close-add-employee-modal');
+            const addEmployeeForm = document.getElementById('add-employee-form');
+            const newEmployeeNameInput = document.getElementById('new-employee-name');
+            const newEmployeeDepartmentInput = document.getElementById('new-employee-department');
+            const newEmployeePositionInput = document.getElementById('new-employee-position');
+
+            const editEmployeeModal = document.getElementById('edit-employee-modal');
+            const closeEditEmployeeModalBtn = document.getElementById('close-edit-employee-modal');
+            const editEmployeeForm = document.getElementById('edit-employee-form');
+            const editEmployeeDocIdInput = document.getElementById('edit-employee-doc-id'); // Hidden field for Firestore doc ID
+            const editEmployeeIdInput = document.getElementById('edit-employee-id'); // Displayed Employee ID
+            const editEmployeeNameInput = document.getElementById('edit-employee-name');
+            const editEmployeeDepartmentInput = document.getElementById('edit-employee-department');
+            const editEmployeePositionInput = document.getElementById('edit-employee-position');
+
+
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmModalTitle = document.getElementById('confirm-modal-title');
+            const confirmModalMessage = document.getElementById('confirm-modal-message');
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+            const confirmOkBtn = document.getElementById('confirm-ok-btn');
+
+            // Toast elements
+            const toastNotification = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            const departmentsTableBody = document.getElementById('departments-table-body');
+            let departments = []; // Data will come from Firestore
+
+            const employeesTableBody = document.getElementById('employees-table-body');
+            let employees = []; // Data will come from Firestore
+
+
+            // Function to show a specific content section
+            const showContent = (id) => {
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                const targetSection = document.getElementById(id);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+            };
+
+            // Function to open a modal
+            const openModal = (modalElement) => {
+                modalElement.classList.add('show');
+            };
+
+            // Function to close a modal
+            const closeModal = (modalElement) => {
+                modalElement.classList.remove('show');
+            };
+
+            // Generic confirmation modal handler
+            let confirmCallback = null; // Stores the callback function for the OK button
+
+            const showConfirmModal = (title, message, onConfirm) => {
+                confirmModalTitle.textContent = title;
+                confirmModalMessage.textContent = message;
+                confirmCallback = onConfirm;
+                openModal(confirmModal);
+            };
+
+            confirmOkBtn.addEventListener('click', () => {
+                if (confirmCallback) {
+                    confirmCallback(true);
+                }
+                closeModal(confirmModal);
+            });
+
+            confirmCancelBtn.addEventListener('click', () => {
+                if (confirmCallback) {
+                    confirmCallback(false);
+                }
+                closeModal(confirmModal);
+            });
+
+            // Function to show a toast notification
+            const showToast = (message, type = 'info', duration = 3000) => {
+                toastMessage.textContent = message;
+                toastNotification.className = ''; // Clear existing classes
+                toastNotification.classList.add('flex', 'items-center', type); // Add base and type classes
+
+                // Set icon based on type (simple text icons for now)
+                if (type === 'success') {
+                    toastIcon.textContent = '✓'; // Checkmark
+                } else if (type === 'error') {
+                    toastIcon.textContent = '✗'; // Cross
+                } else {
+                    toastIcon.textContent = 'i'; // Info
+                }
+
+                toastNotification.classList.add('show');
+
+                setTimeout(() => {
+                    toastNotification.classList.remove('show');
+                }, duration);
+            };
+
+
+            // Add click event listeners to navigation buttons
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const contentId = button.id.replace('nav-', '') + '-content';
+                    showContent(contentId);
+                });
+            });
+
+            // Initially show the dashboard content when the page loads
+            showContent('dashboard-content');
+
+            // --- Department/Site Management Logic ---
+
+            // Function to render departments in the table
+            const renderDepartments = () => {
+                departmentsTableBody.innerHTML = ''; // Clear existing rows
+                departments.forEach((dept) => {
+                    const row = departmentsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${dept.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${dept.description}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-indigo-600 hover:text-indigo-900 mr-4 edit-dept-btn" data-id="${dept.id}">Edit</button>
+                            <button class="text-red-600 hover:text-red-900 delete-dept-btn" data-id="${dept.id}">Delete</button>
+                        </td>
+                    `;
+                });
+            };
+
+            // Listen to departments collection in Firestore
+            const listenToDepartments = () => {
+                if (!isAuthReady || !departmentsCollectionRef) {
+                    console.warn("Firestore not ready for departments.");
+                    return;
+                }
+                onSnapshot(query(departmentsCollectionRef), (snapshot) => {
+                    departments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderDepartments();
+                }, (error) => {
+                    console.error("Error listening to departments:", error);
+                    showToast("Failed to load departments.", "error");
+                });
+            };
+
+
+            // Open Add Department Modal
+            openAddDeptModalBtn.addEventListener('click', () => {
+                openModal(addDeptModal);
+            });
+
+            // Close Add Department Modal
+            closeAddDeptModalBtn.addEventListener('click', () => {
+                closeModal(addDeptModal);
+                addDepartmentForm.reset(); // Clear form on close
+            });
+
+            // Handle form submission for adding a new department
+            addDepartmentForm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                const deptName = newDeptNameInput.value.trim();
+                const deptDescription = newDeptDescriptionInput.value.trim();
+
+                if (deptName) {
+                    try {
+                        await addDoc(departmentsCollectionRef, {
+                            name: deptName,
+                            description: deptDescription
+                        });
+                        closeModal(addDeptModal); // Close the modal
+                        addDepartmentForm.reset(); // Clear the form fields
+                        showToast("Department added successfully!", "success");
+                    } catch (error) {
+                        console.error("Error adding department:", error);
+                        showToast("Failed to add department. Please try again.", "error");
+                    }
+                } else {
+                    showToast("Department Name is required.", "error");
+                }
+            });
+
+            // Handle form submission for editing a department
+            editDepartmentForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const deptId = editDeptIdInput.value; // Get the Firestore document ID
+                const newName = editDeptNameInput.value.trim();
+                const newDescription = editDeptDescriptionInput.value.trim();
+
+                if (newName && deptId) {
+                    try {
+                        const deptDocRef = doc(db, `artifacts/${appId}/public/data/departments`, deptId);
+                        await updateDoc(deptDocRef, {
+                            name: newName,
+                            description: newDescription
+                        });
+                        closeModal(editDeptModal);
+                        showToast("Department updated successfully!", "success");
+                    } catch (error) {
+                        console.error("Error updating department:", error);
+                        showToast("Failed to update department. Please try again.", "error");
+                    }
+                } else {
+                    showToast("Department Name is required.", "error");
+                }
+            });
+
+            // Close Edit Department Modal
+            closeEditDeptModalBtn.addEventListener('click', () => {
+                closeModal(editDeptModal);
+            });
+
+            // Event delegation for edit and delete buttons
+            departmentsTableBody.addEventListener('click', async (event) => {
+                if (event.target.classList.contains('delete-dept-btn')) {
+                    const deptId = event.target.dataset.id;
+                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this department?", async (confirmed) => {
+                        if (confirmed) {
+                            try {
+                                const deptDocRef = doc(db, `artifacts/${appId}/public/data/departments`, deptId);
+                                await deleteDoc(deptDocRef);
+                                showToast("Department deleted successfully!", "success");
+                            } catch (error) {
+                                console.error("Error deleting department:", error);
+                                showToast("Failed to delete department. Please try again.", "error");
+                            }
+                        }
+                    });
+                } else if (event.target.classList.contains('edit-dept-btn')) {
+                    const deptId = event.target.dataset.id;
+                    const currentDept = departments.find(d => d.id === deptId);
+                    if (currentDept) {
+                        editDeptIdInput.value = currentDept.id; // Store Firestore ID
+                        editDeptNameInput.value = currentDept.name;
+                        editDeptDescriptionInput.value = currentDept.description;
+                        openModal(editDeptModal);
+                    }
+                }
+            });
+
+            // --- Manage Employee Logic ---
+
+            // Function to generate a unique employee ID (DLV-XXXXX)
+            const generateUniqueEmployeeId = async () => {
+                let newId;
+                let isUnique = false;
+                while (!isUnique) {
+                    const randomNumber = Math.floor(10000 + Math.random() * 90000); // 5 random digits
+                    newId = `DLV-${randomNumber}`;
+                    // Check if ID already exists in current employees array
+                    isUnique = !employees.some(employee => employee.id === newId);
+                    // For a robust check, you might query Firestore here, but for simplicity,
+                    // we'll rely on the `setDoc` operation to create/overwrite.
+                    // If a collision happens, Firestore will overwrite, which is not ideal for "unique ID".
+                    // A proper solution would involve a transaction or a server-side check.
+                    // For client-side, we'll assume the random generation is sufficient for most cases.
+                }
+                return newId;
+            };
+
+            // Function to render employees in the table
+            const renderEmployees = () => {
+                employeesTableBody.innerHTML = ''; // Clear existing rows
+                employees.forEach((employee) => {
+                    const row = employeesTableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${employee.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-indigo-600 hover:text-indigo-900 mr-4 edit-employee-btn" data-id="${employee.id}">Edit</button>
+                            <button class="text-red-600 hover:text-red-900 delete-employee-btn" data-id="${employee.id}">Delete</button>
+                        </td>
+                    `;
+                });
+            };
+
+            // Listen to employees collection in Firestore
+            const listenToEmployees = () => {
+                if (!isAuthReady || !employeesCollectionRef) {
+                    console.warn("Firestore not ready for employees.");
+                    return;
+                }
+                onSnapshot(query(employeesCollectionRef), (snapshot) => {
+                    employees = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderEmployees();
+                }, (error) => {
+                    console.error("Error listening to employees:", error);
+                    showToast("Failed to load employees.", "error");
+                });
+            };
+
+
+            // Open Add Employee Modal
+            openAddEmployeeModalBtn.addEventListener('click', () => {
+                openModal(addEmployeeModal);
+            });
+
+            // Close Add Employee Modal
+            closeAddEmployeeModalBtn.addEventListener('click', () => {
+                closeModal(addEmployeeModal);
+                addEmployeeForm.reset(); // Clear form on close
+            });
+
+            // Handle form submission for adding a new employee
+            addEmployeeForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const employeeName = newEmployeeNameInput.value.trim();
+                const employeeDepartment = newEmployeeDepartmentInput.value.trim();
+                const employeePosition = newEmployeePositionInput.value.trim();
+
+                if (employeeName && employeeDepartment && employeePosition) {
+                    const newEmployeeId = await generateUniqueEmployeeId(); // Generate unique ID
+                    try {
+                        // Use setDoc with the generated ID as the document ID
+                        await setDoc(doc(employeesCollectionRef, newEmployeeId), {
+                            name: employeeName,
+                            department: employeeDepartment,
+                            position: employeePosition
+                        });
+                        closeModal(addEmployeeModal);
+                        addEmployeeForm.reset();
+                        showToast("Employee added successfully!", "success");
+                    } catch (error) {
+                        console.error("Error adding employee:", error);
+                        showToast("Failed to add employee. Please try again.", "error");
+                    }
+                } else {
+                    showToast("All employee fields are required.", "error");
+                }
+            });
+
+            // Handle form submission for editing an employee
+            editEmployeeForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const docId = editEmployeeDocIdInput.value; // Get the Firestore document ID
+                const newName = editEmployeeNameInput.value.trim();
+                const newDepartment = editEmployeeDepartmentInput.value.trim();
+                const newPosition = editEmployeePositionInput.value.trim();
+
+                if (docId && newName && newDepartment && newPosition) {
+                    try {
+                        const employeeDocRef = doc(db, `artifacts/${appId}/public/data/employees`, docId);
+                        await updateDoc(employeeDocRef, {
+                            name: newName,
+                            department: newDepartment,
+                            position: newPosition
+                        });
+                        closeModal(editEmployeeModal);
+                        showToast("Employee updated successfully!", "success");
+                    } catch (error) {
+                        console.error("Error updating employee:", error);
+                        showToast("Failed to update employee. Please try again.", "error");
+                    }
+                } else {
+                    showToast("All employee fields are required.", "error");
+                }
+            });
+
+            // Close Edit Employee Modal
+            closeEditEmployeeModalBtn.addEventListener('click', () => {
+                closeModal(editEmployeeModal);
+            });
+
+            // Event delegation for employee edit and delete buttons
+            employeesTableBody.addEventListener('click', async (event) => {
+                if (event.target.classList.contains('delete-employee-btn')) {
+                    const employeeId = event.target.dataset.id; // This is the Firestore doc ID
+                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this employee?", async (confirmed) => {
+                        if (confirmed) {
+                            try {
+                                const employeeDocRef = doc(db, `artifacts/${appId}/public/data/employees`, employeeId);
+                                await deleteDoc(employeeDocRef);
+                                showToast("Employee deleted successfully!", "success");
+                            } catch (error) {
+                                console.error("Error deleting employee:", error);
+                                showToast("Failed to delete employee. Please try again.", "error");
+                            }
+                        }
+                    });
+                } else if (event.target.classList.contains('edit-employee-btn')) {
+                    const employeeId = event.target.dataset.id; // This is the Firestore doc ID
+                    const currentEmployee = employees.find(e => e.id === employeeId);
+                    if (currentEmployee) {
+                        editEmployeeDocIdInput.value = currentEmployee.id; // Store Firestore doc ID
+                        editEmployeeIdInput.value = currentEmployee.id; // Display the DLV-XXXXX ID (read-only)
+                        editEmployeeNameInput.value = currentEmployee.name;
+                        editEmployeeDepartmentInput.value = currentEmployee.department;
+                        editEmployeePositionInput.value = currentEmployee.position;
+                        openModal(editEmployeeModal);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
