@@ -41,11 +41,13 @@
         }
         .modal-content {
             background-color: white;
-            padding: 2rem;
+            padding: 1.5rem; /* Made padding slightly more compact */
             border-radius: 0.75rem; /* rounded-lg */
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
-            width: 90%;
-            max-width: 700px; /* Increased max-width for more fields */
+            width: 95%; /* Increased width slightly for better fit */
+            max-width: 650px; /* Reduced max-width for more compactness */
+            max-height: 90vh; /* Added max-height for scrollbar */
+            overflow-y: auto; /* Added scrollbar for vertical overflow */
             transform: translateY(-20px);
             transition: transform 0.3s ease;
             position: relative;
@@ -174,7 +176,7 @@
                 <div class="bg-green-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
                     <div>
                         <p class="text-xl font-medium">Monthly Payroll</p>
-                        <p class="text-4xl font-bold mt-2">$75,000</p>
+                        <p class="text-4xl font-bold mt-2">₱75,000</p>
                     </div>
                     <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.592 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.592-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
@@ -489,17 +491,17 @@
                 <div class="md:col-span-2 mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Gross Pay Calculation Details</h4>
                     <div class="grid grid-cols-2 gap-2 text-sm">
-                        <p>Base Pay:</p><p id="calc-base-pay" class="font-medium text-right">$0.00</p>
-                        <p>Overtime Pay:</p><p id="calc-overtime-pay" class="font-medium text-right">$0.00</p>
-                        <p>Sunday/Holiday Pay:</p><p id="calc-sunday-holiday-pay" class="font-medium text-right">$0.00</p>
-                        <p>Night Differential Pay:</p><p id="calc-night-diff-pay" class="font-medium text-right">$0.00</p>
-                        <p>Night Differential Overtime Pay:</p><p id="calc-night-diff-overtime-pay" class="font-medium text-right">$0.00</p>
-                        <p class="text-red-700">Tardiness Deduction:</p><p id="calc-tardiness-deduction" class="font-medium text-right text-red-700">-$0.00</p>
-                        <p class="font-bold text-gray-900">Gross Pay (Before Statutory):</p><p id="calc-gross-before-statutory" class="font-bold text-right text-gray-900">$0.00</p>
-                        <p class="text-purple-700">SSS Deduction:</p><p id="calc-sss-deduction" class="font-medium text-right text-purple-700">-$0.00</p>
-                        <p class="text-purple-700">Philhealth Deduction:</p><p id="calc-philhealth-deduction" class="font-medium text-right text-purple-700">-$0.00</p>
-                        <p class="text-purple-700">Pagibig Deduction:</p><p id="calc-pagibig-deduction" class="font-medium text-right text-purple-700">-$0.00</p>
-                        <p class="font-bold text-xl text-blue-800">Final Gross Pay:</p><p id="payroll-gross-pay" class="font-bold text-xl text-right text-blue-800">$0.00</p>
+                        <p>Base Pay:</p><p id="calc-base-pay" class="font-medium text-right">₱0.00</p>
+                        <p>Overtime Pay:</p><p id="calc-overtime-pay" class="font-medium text-right">₱0.00</p>
+                        <p>Sunday/Holiday Pay:</p><p id="calc-sunday-holiday-pay" class="font-medium text-right">₱0.00</p>
+                        <p>Night Differential Pay:</p><p id="calc-night-diff-pay" class="font-medium text-right">₱0.00</p>
+                        <p>Night Differential Overtime Pay:</p><p id="calc-night-diff-overtime-pay" class="font-medium text-right">₱0.00</p>
+                        <p class="text-red-700">Tardiness Deduction:</p><p id="calc-tardiness-deduction" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="font-bold text-gray-900">Gross Pay (Before Statutory):</p><p id="calc-gross-before-statutory" class="font-bold text-right text-gray-900">₱0.00</p>
+                        <p class="text-purple-700">SSS Deduction:</p><p id="calc-sss-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
+                        <p class="text-purple-700">Philhealth Deduction:</p><p id="calc-philhealth-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
+                        <p class="text-purple-700">Pagibig Deduction:</p><p id="calc-pagibig-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
+                        <p class="font-bold text-xl text-blue-800">Final Gross Pay:</p><p id="payroll-gross-pay" class="font-bold text-xl text-right text-blue-800">₱0.00</p>
                     </div>
                 </div>
 
@@ -734,6 +736,13 @@
 
             // Function to show a specific content section
             const showContent = (id) => {
+                navButtons.forEach(button => {
+                    if (button.id === `nav-${id.replace('-content', '')}`) {
+                        button.classList.add('bg-blue-600'); // Highlight active nav button
+                    } else {
+                        button.classList.remove('bg-blue-600');
+                    }
+                });
                 contentSections.forEach(section => {
                     section.classList.remove('active');
                 });
@@ -970,7 +979,7 @@
                     if (currentDept) {
                         editDeptIdInput.value = currentDept.id; // Store Firestore ID
                         editDeptNameInput.value = currentDept.name;
-                        editDeptDescriptionInput.value = current.description;
+                        editDeptDescriptionInput.value = currentDept.description;
                         openModal(editDeptModal);
                     }
                 }
@@ -1008,10 +1017,10 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.contactNo || ''}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.address || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.salaryRate || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.sssDeduction || '0'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.philhealthDeduction || '0'}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.pagibigDeduction || '0'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.salaryRate || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.sssDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.philhealthDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.pagibigDeduction || 0).toFixed(2)}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button class="text-indigo-600 hover:text-indigo-900 mr-4 edit-employee-btn" data-id="${employee.id}">Edit</button>
                             <button class="text-red-600 hover:text-red-900 delete-employee-btn" data-id="${employee.id}">Delete</button>
@@ -1252,10 +1261,14 @@
 
                 // Calculate components
                 const basePay = dailyRate * daysOfWork;
-                const overtimePay = overtimeHrs * hourlyRate * 1.25; // 125% for overtime
-                const sundayHolidayPay = sundayHolidayHrs * hourlyRate * 1.5; // 150% for Sunday/Holiday
-                const nightDiffPay = nightDiffHrs * hourlyRate * 0.10; // 10% of hourly rate for ND
-                const nightDiffOvertimePay = nightDiffOvertimeHrs * hourlyRate * 1.375; // 137.5% for ND OT (125% OT + 10% ND on OT portion)
+                // Overtime pay: Regular rate + 25% premium (125% of hourly rate)
+                const overtimePay = overtimeHrs * hourlyRate * 1.25;
+                // Sunday/Holiday pay: Regular rate + 50% premium (150% of hourly rate)
+                const sundayHolidayPay = sundayHolidayHrs * hourlyRate * 1.50;
+                // Night Differential pay: 10% of hourly rate for hours worked between 10 PM and 6 AM
+                const nightDiffPay = nightDiffHrs * hourlyRate * 0.10;
+                // Night Differential Overtime pay: Overtime rate (125%) + 10% of overtime rate (137.5% of hourly rate)
+                const nightDiffOvertimePay = nightDiffOvertimeHrs * hourlyRate * 1.375;
                 const tardinessDeduction = tardiness * hourlyRate;
 
                 // Gross Pay before statutory deductions
@@ -1265,17 +1278,17 @@
                 const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
 
                 // Update display elements
-                calcBasePay.textContent = `$${basePay.toFixed(2)}`;
-                calcOvertimePay.textContent = `$${overtimePay.toFixed(2)}`;
-                calcSundayHolidayPay.textContent = `$${sundayHolidayPay.toFixed(2)}`;
-                calcNightDiffPay.textContent = `$${nightDiffPay.toFixed(2)}`;
-                calcNightDiffOvertimePay.textContent = `$${nightDiffOvertimePay.toFixed(2)}`;
-                calcTardinessDeduction.textContent = `-$${tardinessDeduction.toFixed(2)}`;
-                calcGrossBeforeStatutory.textContent = `$${grossPayBeforeStatutory.toFixed(2)}`;
-                calcSssDeduction.textContent = `-$${sssDeduction.toFixed(2)}`;
-                calcPhilhealthDeduction.textContent = `-$${philhealthDeduction.toFixed(2)}`;
-                calcPagibigDeduction.textContent = `-$${pagibigDeduction.toFixed(2)}`;
-                payrollGrossPayDisplay.textContent = `$${finalGrossPay.toFixed(2)}`;
+                calcBasePay.textContent = `₱${basePay.toFixed(2)}`;
+                calcOvertimePay.textContent = `₱${overtimePay.toFixed(2)}`;
+                calcSundayHolidayPay.textContent = `₱${sundayHolidayPay.toFixed(2)}`;
+                calcNightDiffPay.textContent = `₱${nightDiffPay.toFixed(2)}`;
+                calcNightDiffOvertimePay.textContent = `₱${nightDiffOvertimePay.toFixed(2)}`;
+                calcTardinessDeduction.textContent = `-₱${tardinessDeduction.toFixed(2)}`;
+                calcGrossBeforeStatutory.textContent = `₱${grossPayBeforeStatutory.toFixed(2)}`;
+                calcSssDeduction.textContent = `-₱${sssDeduction.toFixed(2)}`;
+                calcPhilhealthDeduction.textContent = `-₱${philhealthDeduction.toFixed(2)}`;
+                calcPagibigDeduction.textContent = `-₱${pagibigDeduction.toFixed(2)}`;
+                payrollGrossPayDisplay.textContent = `₱${finalGrossPay.toFixed(2)}`;
             };
 
             // Event delegation for opening payroll entry modal
@@ -1331,17 +1344,17 @@
                 currentEmployeePhilhealthDeduction = 0;
                 currentEmployeePagibigDeduction = 0;
                 // Reset all display values
-                calcBasePay.textContent = '$0.00';
-                calcOvertimePay.textContent = '$0.00';
-                calcSundayHolidayPay.textContent = '$0.00';
-                calcNightDiffPay.textContent = '$0.00';
-                calcNightDiffOvertimePay.textContent = '$0.00';
-                calcTardinessDeduction.textContent = '-$0.00';
-                calcGrossBeforeStatutory.textContent = '$0.00';
-                calcSssDeduction.textContent = '-$0.00';
-                calcPhilhealthDeduction.textContent = '-$0.00';
-                calcPagibigDeduction.textContent = '-$0.00';
-                payrollGrossPayDisplay.textContent = '$0.00';
+                calcBasePay.textContent = '₱0.00';
+                calcOvertimePay.textContent = '₱0.00';
+                calcSundayHolidayPay.textContent = '₱0.00';
+                calcNightDiffPay.textContent = '₱0.00';
+                calcNightDiffOvertimePay.textContent = '₱0.00';
+                calcTardinessDeduction.textContent = '-₱0.00';
+                calcGrossBeforeStatutory.textContent = '₱0.00';
+                calcSssDeduction.textContent = '-₱0.00';
+                calcPhilhealthDeduction.textContent = '-₱0.00';
+                calcPagibigDeduction.textContent = '-₱0.00';
+                payrollGrossPayDisplay.textContent = '₱0.00';
             });
 
             // Function to listen to payroll entries for a specific employee
