@@ -455,6 +455,7 @@
             <form id="add-payroll-entry-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <input type="hidden" id="current-payroll-employee-id">
                 <input type="hidden" id="edit-payroll-entry-doc-id"> <!-- For editing existing entries -->
+                <input type="hidden" id="current-employee-salary-rate"> <!-- To store the employee's salary rate -->
 
                 <div>
                     <label for="payroll-days-of-work" class="block text-sm font-medium text-gray-700">Days of Work</label>
@@ -479,6 +480,10 @@
                 <div>
                     <label for="payroll-tardiness" class="block text-sm font-medium text-gray-700">Tardiness (Hrs)</label>
                     <input type="number" id="payroll-tardiness" name="tardiness" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="payroll-gross-pay" class="block text-sm font-medium text-gray-700">Gross Pay (Pre-calculated)</label>
+                    <p id="payroll-gross-pay" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-gray-100 text-gray-800 font-semibold">$0.00</p>
                 </div>
                 <div class="md:col-span-2">
                     <button type="submit" id="save-payroll-entry-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Payroll Entry</button>
@@ -553,6 +558,8 @@
             let userId = null;
             let isAuthReady = false;
             let currentEmployeePayrollId = null; // To keep track of the employee whose payroll is being managed
+            let currentEmployeeSalaryRate = 0; // To store the employee's salary for gross pay calculation
+
 
             try {
                 app = initializeApp(firebaseConfig);
@@ -672,6 +679,7 @@
             const payrollEmployeeDisplayId = document.getElementById('payroll-employee-display-id');
             const addPayrollEntryForm = document.getElementById('add-payroll-entry-form');
             const currentPayrollEmployeeIdInput = document.getElementById('current-payroll-employee-id');
+            const currentEmployeeSalaryRateInput = document.getElementById('current-employee-salary-rate'); // Added
             const editPayrollEntryDocIdInput = document.getElementById('edit-payroll-entry-doc-id');
             const savePayrollEntryBtn = document.getElementById('save-payroll-entry-btn');
 
@@ -681,6 +689,7 @@
             const payrollNightDiffHrsInput = document.getElementById('payroll-night-diff-hrs');
             const payrollNightDiffOvertimeHrsInput = document.getElementById('payroll-night-diff-overtime-hrs');
             const payrollTardinessInput = document.getElementById('payroll-tardiness');
+            const payrollGrossPayDisplay = document.getElementById('payroll-gross-pay'); // Added
             const payrollEntriesTableBody = document.getElementById('payroll-entries-table-body');
 
             let currentPayrollEntries = []; // Stores payroll entries for the currently selected employee
@@ -1180,6 +1189,15 @@
             payrollDepartmentFilter.addEventListener('change', filterPayrollEmployees);
             payrollEmployeeSearchInput.addEventListener('input', filterPayrollEmployees);
 
+            // Function to calculate and display gross pay
+            const calculateGrossPay = () => {
+                const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
+                // Assuming a monthly salary and 22 working days in a month for calculation
+                const dailyRate = currentEmployeeSalaryRate / 22;
+                const grossPay = dailyRate * daysOfWork;
+                payrollGrossPayDisplay.textContent = `$${grossPay.toFixed(2)}`;
+            };
+
             // Event delegation for opening payroll entry modal
             payrollEmployeesTableBody.addEventListener('click', (event) => {
                 if (event.target.classList.contains('open-payroll-entry-btn')) {
@@ -1187,18 +1205,26 @@
                     const selectedEmployee = employees.find(emp => emp.id === employeeId);
                     if (selectedEmployee) {
                         currentEmployeePayrollId = employeeId; // Set the global variable
+                        currentEmployeeSalaryRate = selectedEmployee.salaryRate || 0; // Store salary rate
+                        currentEmployeeSalaryRateInput.value = currentEmployeeSalaryRate; // Store in hidden input as well
+
                         payrollEmployeeDisplayName.textContent = selectedEmployee.name;
                         payrollEmployeeDisplayId.textContent = selectedEmployee.id;
                         currentPayrollEmployeeIdInput.value = employeeId; // Set hidden input
                         addPayrollEntryForm.reset(); // Clear form for new entry
                         editPayrollEntryDocIdInput.value = ''; // Clear doc ID for new entry
                         savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
+                        calculateGrossPay(); // Initial calculation when modal opens
 
                         listenToPayrollEntries(employeeId); // Start listening to this employee's payroll entries
                         openModal(payrollEntryModal);
                     }
                 }
             });
+
+            // Event listener for Days of Work input to trigger gross pay calculation
+            payrollDaysOfWorkInput.addEventListener('input', calculateGrossPay);
+
 
             // Close Payroll Entry Modal
             closePayrollEntryModalBtn.addEventListener('click', () => {
@@ -1207,6 +1233,8 @@
                 editPayrollEntryDocIdInput.value = '';
                 savePayrollEntryBtn.textContent = 'Add Payroll Entry';
                 currentEmployeePayrollId = null; // Clear the current employee context
+                currentEmployeeSalaryRate = 0; // Reset salary rate
+                payrollGrossPayDisplay.textContent = '$0.00'; // Reset gross pay display
             });
 
             // Function to listen to payroll entries for a specific employee
@@ -1295,6 +1323,7 @@
                     addPayrollEntryForm.reset();
                     editPayrollEntryDocIdInput.value = ''; // Clear for next entry
                     savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
+                    calculateGrossPay(); // Recalculate after submission
                 } catch (error) {
                     console.error("Error saving payroll entry:", error);
                     showToast("Failed to save payroll entry. Please try again.", "error");
@@ -1325,6 +1354,7 @@
                         payrollTardinessInput.value = entryToEdit.tardiness;
                         editPayrollEntryDocIdInput.value = entryId; // Store the ID of the entry being edited
                         savePayrollEntryBtn.textContent = 'Update Payroll Entry'; // Change button text
+                        calculateGrossPay(); // Recalculate for editing
                     }
                 } else if (target.classList.contains('delete-payroll-entry-btn')) {
                     showConfirmModal("Confirm Deletion", "Are you sure you want to delete this payroll entry?", async (confirmed) => {
