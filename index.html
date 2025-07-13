@@ -602,7 +602,10 @@
                 <input type="hidden" id="current-employee-philhealth-deduction"> <!-- To store Philhealth deduction -->
                 <input type="hidden" id="current-employee-pagibig-deduction"> <!-- To store Pagibig deduction -->
 
-
+                <div>
+                    <label for="payroll-entry-date" class="block text-sm font-medium text-gray-700">Date</label>
+                    <input type="date" id="payroll-entry-date" name="payroll-entry-date" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
                 <div>
                     <label for="payroll-days-of-work" class="block text-sm font-medium text-gray-700">Days of Work</label>
                     <input type="number" id="payroll-days-of-work" name="days-of-work" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
@@ -627,6 +630,10 @@
                     <label for="payroll-tardiness" class="block text-sm font-medium text-gray-700">Tardiness (Hrs)</label>
                     <input type="number" id="payroll-tardiness" name="tardiness" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
+                <div>
+                    <label for="payroll-allowance" class="block text-sm font-medium text-gray-700">Allowance</label>
+                    <input type="number" id="payroll-allowance" name="payroll-allowance" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
 
                 <div class="md:col-span-2 mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Gross Pay Calculation Details</h4>
@@ -637,6 +644,7 @@
                         <p>Night Differential Pay:</p><p id="calc-night-diff-pay" class="font-medium text-right">₱0.00</p>
                         <p>Night Differential Overtime Pay:</p><p id="calc-night-diff-overtime-pay" class="font-medium text-right">₱0.00</p>
                         <p class="text-red-700">Tardiness Deduction:</p><p id="calc-tardiness-deduction" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p>Allowance:</p><p id="calc-allowance" class="font-medium text-right">₱0.00</p>
                         <p class="font-bold text-gray-900">Gross Pay (Before Statutory):</p><p id="calc-gross-before-statutory" class="font-bold text-right text-gray-900">₱0.00</p>
                         <p class="text-purple-700">SSS Deduction:</p><p id="calc-sss-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
                         <p class="text-purple-700">Philhealth Deduction:</p><p id="calc-philhealth-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
@@ -663,6 +671,7 @@
                                 <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ND Hrs</th>
                                 <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ND OT Hrs</th>
                                 <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tardiness</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Allowance</th>
                                 <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -686,6 +695,10 @@
                 <input type="hidden" id="edit-deduction-entry-doc-id"> <!-- For editing existing entries -->
                 <input type="hidden" id="current-deductions-gross-pay"> <!-- To store the employee's gross pay for calculation -->
 
+                <div>
+                    <label for="deductions-entry-date" class="block text-sm font-medium text-gray-700">Date</label>
+                    <input type="date" id="deductions-entry-date" name="deductions-entry-date" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
                 <div>
                     <label for="deductions-govt-loan" class="block text-sm font-medium text-gray-700">Govt Loan</label>
                     <input type="number" id="deductions-govt-loan" name="govt-loan" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
@@ -814,7 +827,7 @@
                 apiKey: "AIzaSyBJTXVvZ2IS7i3DIY2Dl9X4PYsS5aw2ST8",
                 authDomain: "dlvpayroll-b5c3b.firebaseapp.com",
                 projectId: "dlvpayroll-b5c3b",
-                storageBucket: "dlvpayroll-b5c3b.firebasestorage.app",
+                storageBucket: "dlvpayroll-b5c3b.firebaseapp.com",
                 messagingSenderId: "885811032842",
                 appId: "1:885811032842:web:879edb8a1f9a0f8f3ac0f3",
                 measurementId: "G-DKWWX56V55"
@@ -921,12 +934,14 @@
             const editPayrollEntryDocIdInput = document.getElementById('edit-payroll-entry-doc-id');
             const savePayrollEntryBtn = document.getElementById('save-payroll-entry-btn');
 
+            const payrollEntryDateInput = document.getElementById('payroll-entry-date'); // New: Date input
             const payrollDaysOfWorkInput = document.getElementById('payroll-days-of-work');
             const payrollOvertimeHrsInput = document.getElementById('payroll-overtime-hrs');
             const payrollSundayHolidayHrsInput = document.getElementById('payroll-sunday-holiday-hrs');
             const payrollNightDiffHrsInput = document.getElementById('payroll-night-diff-hrs');
             const payrollNightDiffOvertimeHrsInput = document.getElementById('payroll-night-diff-overtime-hrs');
             const payrollTardinessInput = document.getElementById('payroll-tardiness');
+            const payrollAllowanceInput = document.getElementById('payroll-allowance'); // New: Allowance input
 
             // Elements for detailed gross pay display
             const calcBasePay = document.getElementById('calc-base-pay');
@@ -935,6 +950,7 @@
             const calcNightDiffPay = document.getElementById('calc-night-diff-pay');
             const calcNightDiffOvertimePay = document.getElementById('calc-night-diff-overtime-pay');
             const calcTardinessDeduction = document.getElementById('calc-tardiness-deduction');
+            const calcAllowance = document.getElementById('calc-allowance'); // New: Allowance display
             const calcGrossBeforeStatutory = document.getElementById('calc-gross-before-statutory');
             const calcSssDeduction = document.getElementById('calc-sss-deduction');
             const calcPhilhealthDeduction = document.getElementById('calc-philhealth-deduction');
@@ -960,6 +976,7 @@
             const editDeductionEntryDocIdInput = document.getElementById('edit-deduction-entry-doc-id');
             const saveDeductionEntryBtn = document.getElementById('save-deduction-entry-btn');
 
+            const deductionsEntryDateInput = document.getElementById('deductions-entry-date'); // New: Date input
             const deductionsGovtLoanInput = document.getElementById('deductions-govt-loan');
             const deductionsCoopShareInput = document.getElementById('deductions-coop-share');
             const deductionsCoop2025Input = document.getElementById('deductions-coop-2025');
@@ -1545,6 +1562,7 @@
                 const nightDiffHrs = parseFloat(payrollNightDiffHrsInput.value) || 0;
                 const nightDiffOvertimeHrs = parseFloat(payrollNightDiffOvertimeHrsInput.value) || 0;
                 const tardiness = parseFloat(payrollTardinessInput.value) || 0;
+                const allowance = parseFloat(payrollAllowanceInput.value) || 0; // New: Get allowance
 
                 const sssDeduction = parseFloat(currentEmployeeSssDeductionInput.value) || 0;
                 const philhealthDeduction = parseFloat(currentEmployeePhilhealthDeductionInput.value) || 0;
@@ -1561,8 +1579,8 @@
                 const nightDiffOvertimePay = hourlyRate * nightDiffOvertimeHrs * 1.25;
                 const tardinessDeduction = hourlyRate * tardiness;
 
-                // Gross Pay before statutory deductions
-                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction;
+                // Gross Pay before statutory deductions - now includes allowance
+                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction + allowance;
 
                 // Final Gross Pay after statutory deductions
                 const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
@@ -1574,6 +1592,7 @@
                 calcNightDiffPay.textContent = `₱${nightDiffPay.toFixed(2)}`;
                 calcNightDiffOvertimePay.textContent = `₱${nightDiffOvertimePay.toFixed(2)}`;
                 calcTardinessDeduction.textContent = `-₱${tardinessDeduction.toFixed(2)}`;
+                calcAllowance.textContent = `₱${allowance.toFixed(2)}`; // New: Update allowance display
                 calcGrossBeforeStatutory.textContent = `₱${grossPayBeforeStatutory.toFixed(2)}`;
                 calcSssDeduction.textContent = `-₱${sssDeduction.toFixed(2)}`;
                 calcPhilhealthDeduction.textContent = `-₱${philhealthDeduction.toFixed(2)}`;
@@ -1603,6 +1622,8 @@
                         payrollEmployeeDisplayId.textContent = selectedEmployee.id;
                         currentPayrollEmployeeIdInput.value = employeeId; // Set hidden input
                         addPayrollEntryForm.reset(); // Clear form for new entry
+                        // Set default date to today for new entries
+                        payrollEntryDateInput.value = new Date().toISOString().split('T')[0];
                         editPayrollEntryDocIdInput.value = ''; // Clear doc ID for new entry
                         savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
                         calculateGrossPay(); // Initial calculation when modal opens
@@ -1614,18 +1635,22 @@
             });
 
             // Event listeners for payroll input fields to trigger gross pay calculation
+            payrollEntryDateInput.addEventListener('input', calculateGrossPay); // New: Date input listener
             payrollDaysOfWorkInput.addEventListener('input', calculateGrossPay);
             payrollOvertimeHrsInput.addEventListener('input', calculateGrossPay);
             payrollSundayHolidayHrsInput.addEventListener('input', calculateGrossPay);
             payrollNightDiffHrsInput.addEventListener('input', calculateGrossPay);
             payrollNightDiffOvertimeHrsInput.addEventListener('input', calculateGrossPay);
             payrollTardinessInput.addEventListener('input', calculateGrossPay);
+            payrollAllowanceInput.addEventListener('input', calculateGrossPay); // New: Allowance input listener
 
 
             // Close Payroll Entry Modal
             closePayrollEntryModalBtn.addEventListener('click', () => {
                 closeModal(payrollEntryModal);
                 addPayrollEntryForm.reset();
+                payrollEntryDateInput.value = ''; // Reset date
+                payrollAllowanceInput.value = '0'; // Reset allowance
                 editPayrollEntryDocIdInput.value = '';
                 savePayrollEntryBtn.textContent = 'Add Payroll Entry';
                 currentEmployeePayrollId = null; // Clear the current employee context
@@ -1640,6 +1665,7 @@
                 calcNightDiffPay.textContent = '₱0.00';
                 calcNightDiffOvertimePay.textContent = '₱0.00';
                 calcTardinessDeduction.textContent = '-₱0.00';
+                calcAllowance.textContent = '₱0.00'; // Reset allowance display
                 calcGrossBeforeStatutory.textContent = '₱0.00';
                 calcSssDeduction.textContent = '-₱0.00';
                 calcPhilhealthDeduction.textContent = '-₱0.00';
@@ -1667,12 +1693,13 @@
             const renderPayrollEntriesTableInModal = (entries) => {
                 payrollEntriesTableBody.innerHTML = '';
                 if (!entries || entries.length === 0) {
-                    payrollEntriesTableBody.innerHTML = `<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">No payroll entries recorded for this employee.</td></tr>`;
+                    payrollEntriesTableBody.innerHTML = `<tr><td colspan="9" class="px-6 py-4 text-center text-gray-500">No payroll entries recorded for this employee.</td></tr>`;
                     return;
                 }
                 entries.forEach(entry => {
                     const row = payrollEntriesTableBody.insertRow();
-                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString() : 'N/A';
+                    // Display date from timestamp, format to YYYY-MM-DD for consistency
+                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString('en-CA') : 'N/A';
                     row.innerHTML = `
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.daysOfWork || '0'}</td>
@@ -1681,6 +1708,7 @@
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.nightDiffHrs || '0'}</td>
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.nightDiffOvertimeHrs || '0'}</td>
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.tardiness || '0'}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.allowance || 0).toFixed(2)}</td>
                         <td class="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
                             <button class="text-indigo-600 hover:text-indigo-900 mr-2 edit-payroll-entry-btn" data-id="${entry.id}">Edit</button>
                             <button class="text-red-600 hover:text-red-900 delete-payroll-entry-btn" data-id="${entry.id}">Delete</button>
@@ -1696,28 +1724,36 @@
                 const employeeId = currentPayrollEmployeeIdInput.value;
                 const entryDocId = editPayrollEntryDocIdInput.value; // Will be empty for new entries
 
+                const entryDateStr = payrollEntryDateInput.value; // Get date from input
                 const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
                 const overtimeHrs = parseFloat(payrollOvertimeHrsInput.value) || 0;
                 const sundayHolidayHrs = parseFloat(payrollSundayHolidayHrsInput.value) || 0;
                 const nightDiffHrs = parseFloat(payrollNightDiffHrsInput.value) || 0;
                 const nightDiffOvertimeHrs = parseFloat(payrollNightDiffOvertimeHrsInput.value) || 0;
                 const tardiness = parseFloat(payrollTardinessInput.value) || 0;
+                const allowance = parseFloat(payrollAllowanceInput.value) || 0; // Get allowance
 
                 if (!employeeId) {
                     showToast("No employee selected for payroll entry.", "error");
+                    return;
+                }
+                if (!entryDateStr) {
+                    showToast("Please select a date for the payroll entry.", "error");
                     return;
                 }
 
                 try {
                     const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
                     const payrollData = {
+                        date: entryDateStr, // Store date as string YYYY-MM-DD
                         daysOfWork,
                         overtimeHrs,
                         sundayHolidayHrs,
                         nightDiffHrs,
                         nightDiffOvertimeHrs,
                         tardiness,
-                        timestamp: new Date() // Record the time of entry
+                        allowance, // Save allowance
+                        timestamp: Timestamp.fromDate(new Date(entryDateStr)) // Store timestamp for ordering/filtering
                     };
 
                     if (entryDocId) {
@@ -1731,6 +1767,8 @@
                         showToast("Payroll entry added successfully!", "success");
                     }
                     addPayrollEntryForm.reset();
+                    payrollEntryDateInput.value = new Date().toISOString().split('T')[0]; // Reset date to today
+                    payrollAllowanceInput.value = '0'; // Reset allowance
                     editPayrollEntryDocIdInput.value = ''; // Clear for next entry
                     savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
                     calculateGrossPay(); // Recalculate after submission
@@ -1756,12 +1794,14 @@
                 if (target.classList.contains('edit-payroll-entry-btn')) {
                     const entryToEdit = currentPayrollEntries.find(entry => entry.id === entryId);
                     if (entryToEdit) {
+                        payrollEntryDateInput.value = entryToEdit.date || ''; // Set date from stored string
                         payrollDaysOfWorkInput.value = entryToEdit.daysOfWork;
                         payrollOvertimeHrsInput.value = entryToEdit.overtimeHrs;
                         payrollSundayHolidayHrsInput.value = entryToEdit.sundayHolidayHrs;
                         payrollNightDiffHrsInput.value = entryToEdit.nightDiffHrs;
                         payrollNightDiffOvertimeHrsInput.value = entryToEdit.nightDiffOvertimeHrs;
                         payrollTardinessInput.value = entryToEdit.tardiness;
+                        payrollAllowanceInput.value = entryToEdit.allowance || 0; // Set allowance
                         editPayrollEntryDocIdInput.value = entryId; // Store the ID of the entry being edited
                         savePayrollEntryBtn.textContent = 'Update Payroll Entry'; // Change button text
                         calculateGrossPay(); // Recalculate for editing
@@ -1872,6 +1912,7 @@
                     const sssDeduction = employeeData?.sssDeduction || 0;
                     const philhealthDeduction = employeeData?.philhealthDeduction || 0;
                     const pagibigDeduction = employeeData?.pagibigDeduction || 0;
+                    const allowance = latestEntry.allowance || 0; // Get allowance from payroll entry
 
                     const hourlyRate = dailySalary / 8;
 
@@ -1882,7 +1923,7 @@
                     const nightDiffOvertimePay = hourlyRate * (latestEntry.nightDiffOvertimeHrs || 0) * 1.25;
                     const tardinessDeduction = hourlyRate * (latestEntry.tardiness || 0);
 
-                    const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction;
+                    const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction + allowance;
                     const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
 
                     return finalGrossPay;
@@ -1903,6 +1944,8 @@
                         deductionsEmployeeDisplayId.textContent = selectedEmployee.id;
                         currentDeductionsEmployeeIdInput.value = employeeId; // Set hidden input
                         addDeductionEntryForm.reset(); // Clear form for new entry
+                        // Set default date to today for new entries
+                        deductionsEntryDateInput.value = new Date().toISOString().split('T')[0];
                         editDeductionEntryDocIdInput.value = ''; // Clear doc ID for new entry
                         saveDeductionEntryBtn.textContent = 'Add Deduction Entry'; // Reset button text
 
@@ -1919,6 +1962,7 @@
             });
 
             // Event listeners for deduction input fields to trigger net pay calculation
+            deductionsEntryDateInput.addEventListener('input', calculateNetPay); // New: Date input listener
             deductionsGovtLoanInput.addEventListener('input', calculateNetPay);
             deductionsCoopShareInput.addEventListener('input', calculateNetPay);
             deductionsCoop2025Input.addEventListener('input', calculateNetPay);
@@ -1933,6 +1977,7 @@
             closeDeductionsEntryModalBtn.addEventListener('click', () => {
                 closeModal(deductionsEntryModal);
                 addDeductionEntryForm.reset();
+                deductionsEntryDateInput.value = ''; // Reset date
                 editDeductionEntryDocIdInput.value = '';
                 saveDeductionEntryBtn.textContent = 'Add Deduction Entry';
                 currentEmployeeDeductionsId = null; // Clear the current employee context
@@ -1975,7 +2020,8 @@
                 }
                 entries.forEach(entry => {
                     const row = deductionEntriesTableBody.insertRow();
-                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString() : 'N/A';
+                    // Display date from timestamp, format to YYYY-MM-DD for consistency
+                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString('en-CA') : 'N/A';
                     row.innerHTML = `
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.govtLoan || 0).toFixed(2)}</td>
@@ -2002,6 +2048,7 @@
                 const employeeId = currentDeductionsEmployeeIdInput.value;
                 const entryDocId = editDeductionEntryDocIdInput.value; // Will be empty for new entries
 
+                const entryDateStr = deductionsEntryDateInput.value; // Get date from input
                 const govtLoan = parseFloat(deductionsGovtLoanInput.value) || 0;
                 const coopShare = parseFloat(deductionsCoopShareInput.value) || 0;
                 const coop2025 = parseFloat(deductionsCoop2025Input.value) || 0;
@@ -2016,10 +2063,15 @@
                     showToast("No employee selected for deduction entry.", "error");
                     return;
                 }
+                if (!entryDateStr) {
+                    showToast("Please select a date for the deduction entry.", "error");
+                    return;
+                }
 
                 try {
                     const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/deductionEntries`);
                     const deductionData = {
+                        date: entryDateStr, // Store date as string YYYY-MM-DD
                         govtLoan,
                         coopShare,
                         coop2025,
@@ -2029,7 +2081,7 @@
                         dailyBalance,
                         others,
                         netPay, // Save the calculated net pay
-                        timestamp: new Date() // Record the time of entry
+                        timestamp: Timestamp.fromDate(new Date(entryDateStr)) // Store timestamp for ordering/filtering
                     };
 
                     if (entryDocId) {
@@ -2043,6 +2095,7 @@
                         showToast("Deduction entry added successfully!", "success");
                     }
                     addDeductionEntryForm.reset();
+                    deductionsEntryDateInput.value = new Date().toISOString().split('T')[0]; // Reset date to today
                     editDeductionEntryDocIdInput.value = ''; // Clear for next entry
                     saveDeductionEntryBtn.textContent = 'Add Deduction Entry'; // Reset button text
                     calculateNetPay(); // Recalculate after submission
@@ -2068,6 +2121,7 @@
                 if (target.classList.contains('edit-deduction-entry-btn')) {
                     const entryToEdit = currentDeductionEntries.find(entry => entry.id === entryId);
                     if (entryToEdit) {
+                        deductionsEntryDateInput.value = entryToEdit.date || ''; // Set date from stored string
                         deductionsGovtLoanInput.value = entryToEdit.govtLoan || 0;
                         deductionsCoopShareInput.value = entryToEdit.coopShare || 0;
                         deductionsCoop2025Input.value = entryToEdit.coop2025 || 0;
@@ -2107,6 +2161,7 @@
                 const nightDiffHrs = payrollEntry.nightDiffHrs || 0;
                 const nightDiffOvertimeHrs = payrollEntry.nightDiffOvertimeHrs || 0;
                 const tardiness = payrollEntry.tardiness || 0;
+                const allowance = payrollEntry.allowance || 0; // Include allowance
 
                 const sssDeduction = employee.sssDeduction || 0;
                 const philhealthDeduction = employee.philhealthDeduction || 0;
@@ -2121,7 +2176,7 @@
                 const nightDiffOvertimePay = hourlyRate * nightDiffOvertimeHrs * 1.25;
                 const tardinessDeduction = hourlyRate * tardiness;
 
-                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction;
+                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction + allowance;
                 const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
 
                 return {
