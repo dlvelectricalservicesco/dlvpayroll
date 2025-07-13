@@ -136,10 +136,16 @@
                             <span>Manage Employee</span>
                         </button>
                     </li>
-                     <li>
+                     <li class="mb-4">
                         <button id="nav-process-payroll" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0h-2m5 0h2M9 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h4l-1 1v2h5v-2l-1-1h4a2 2 0 002-2V5a2 2 0 00-2-2h-2m-7 12l-2 2m0 0l-2-2m2 2v2"></path></svg>
                             <span>Process Payroll</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-deductions" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <span>Deductions</span>
                         </button>
                     </li>
                 </ul>
@@ -297,6 +303,42 @@
                 </div>
             </div>
             </section>
+
+        <section id="deductions-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Manage Deductions</h2>
+            <p class="text-gray-600 mb-4">This section allows you to manage deductions for employees.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="deductions-department-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Department/Site</label>
+                    <select id="deductions-department-filter" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Departments</option>
+                        </select>
+                </div>
+                <div>
+                    <label for="deductions-employee-search" class="block text-sm font-medium text-gray-700 mb-1">Search Employee</label>
+                    <input type="text" id="deductions-employee-search" placeholder="Search by ID, Name, Position, or Department" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Eligible Employees for Deductions Entry</h3>
+                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department/Site</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deductions-employees-table-body" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Add Department/Site Modal -->
@@ -535,6 +577,99 @@
         </div>
     </div>
 
+    <!-- Deductions Entry Modal -->
+    <div id="deductions-entry-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="close-deductions-entry-modal">&times;</button>
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Deductions Entry for: <span id="deductions-employee-display-name"></span> (<span id="deductions-employee-display-id"></span>)</h3>
+
+            <form id="add-deduction-entry-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <input type="hidden" id="current-deductions-employee-id">
+                <input type="hidden" id="edit-deduction-entry-doc-id"> <!-- For editing existing entries -->
+                <input type="hidden" id="current-deductions-gross-pay"> <!-- To store the employee's gross pay for calculation -->
+
+                <div>
+                    <label for="deductions-govt-loan" class="block text-sm font-medium text-gray-700">Govt Loan</label>
+                    <input type="number" id="deductions-govt-loan" name="govt-loan" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="deductions-coop-share" class="block text-sm font-medium text-gray-700">Coop Share</label>
+                    <input type="number" id="deductions-coop-share" name="coop-share" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="deductions-coop-2025" class="block text-sm font-medium text-gray-700">Coop 2025</label>
+                    <input type="number" id="deductions-coop-2025" name="coop-2025" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="deductions-withholding-tax" class="block text-sm font-medium text-gray-700">Withholding Tax</label>
+                    <input type="number" id="deductions-withholding-tax" name="withholding-tax" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="deductions-unpaid-loan" class="block text-sm font-medium text-gray-700">Unpaid Loan</label>
+                    <input type="number" id="deductions-unpaid-loan" name="unpaid-loan" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="deductions-ca-voucher" class="block text-sm font-medium text-gray-700">C/A Voucher</label>
+                    <input type="number" id="deductions-ca-voucher" name="ca-voucher" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="deductions-daily-balance" class="block text-sm font-medium text-gray-700">Daily Balance</label>
+                    <input type="number" id="deductions-daily-balance" name="daily-balance" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="deductions-others" class="block text-sm font-medium text-gray-700">Others</label>
+                    <input type="number" id="deductions-others" name="others" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div class="md:col-span-2 mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Net Pay Calculation Details</h4>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <p>Gross Pay (from last payroll):</p><p id="calc-deductions-gross-pay" class="font-medium text-right">₱0.00</p>
+                        <p class="text-red-700">Govt Loan:</p><p id="calc-govt-loan" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="text-red-700">Coop Share:</p><p id="calc-coop-share" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="text-red-700">Coop 2025:</p><p id="calc-coop-2025" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="text-red-700">Withholding Tax:</p><p id="calc-withholding-tax" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="text-red-700">Unpaid Loan:</p><p id="calc-unpaid-loan" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="text-red-700">C/A Voucher:</p><p id="calc-ca-voucher" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="text-red-700">Daily Balance:</p><p id="calc-daily-balance" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="text-red-700">Others:</p><p id="calc-others" class="font-medium text-right text-red-700">-₱0.00</p>
+                        <p class="font-bold text-xl text-purple-800">Net Pay:</p><p id="deductions-net-pay" class="font-bold text-xl text-right text-purple-800">₱0.00</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2">
+                    <button type="submit" id="save-deduction-entry-btn" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Deduction Entry</button>
+                </div>
+            </form>
+
+            <div class="mt-8">
+                <h4 class="text-xl font-semibold text-gray-700 mb-4">Recorded Deduction Entries</h4>
+                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Govt Loan</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coop Share</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coop 2025</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">W/H Tax</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unpaid Loan</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">C/A Voucher</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Daily Bal</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Others</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deduction-entries-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Deduction entries will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Confirmation Modal -->
     <div id="confirm-modal" class="modal-overlay">
@@ -559,7 +694,7 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Firebase setup
@@ -583,6 +718,8 @@
             let currentEmployeePhilhealthDeduction = 0; // To store Philhealth deduction
             let currentEmployeePagibigDeduction = 0; // To store Pagibig deduction
 
+            let currentEmployeeDeductionsId = null; // To track employee for deductions
+            let currentDeductionsGrossPay = 0; // To store the gross pay for deductions calculation
 
             try {
                 app = initializeApp(firebaseConfig);
@@ -632,7 +769,7 @@
             const closeAddDeptModalBtn = document.getElementById('close-add-dept-modal');
             const addDepartmentForm = document.getElementById('add-department-form');
             const newDeptNameInput = document.getElementById('new-dept-name');
-            const newDeptDescriptionInput = document.getElementById('new-dept-description');
+            const newDeptDescriptionInput = document = document.getElementById('new-dept-description');
 
             const editDeptModal = document.getElementById('edit-dept-modal');
             const closeEditDeptModalBtn = document.getElementById('close-edit-dept-modal');
@@ -732,6 +869,45 @@
             const payrollEntriesTableBody = document.getElementById('payroll-entries-table-body');
 
             let currentPayrollEntries = []; // Stores payroll entries for the currently selected employee
+
+            // Elements for Deductions section
+            const deductionsDepartmentFilter = document.getElementById('deductions-department-filter');
+            const deductionsEmployeeSearchInput = document.getElementById('deductions-employee-search');
+            const deductionsEmployeesTableBody = document.getElementById('deductions-employees-table-body');
+
+            // Elements for Deductions Entry Modal
+            const deductionsEntryModal = document.getElementById('deductions-entry-modal');
+            const closeDeductionsEntryModalBtn = document.getElementById('close-deductions-entry-modal');
+            const deductionsEmployeeDisplayName = document.getElementById('deductions-employee-display-name');
+            const deductionsEmployeeDisplayId = document.getElementById('deductions-employee-display-id');
+            const addDeductionEntryForm = document.getElementById('add-deduction-entry-form');
+            const currentDeductionsEmployeeIdInput = document.getElementById('current-deductions-employee-id');
+            const editDeductionEntryDocIdInput = document.getElementById('edit-deduction-entry-doc-id');
+            const saveDeductionEntryBtn = document.getElementById('save-deduction-entry-btn');
+
+            const deductionsGovtLoanInput = document.getElementById('deductions-govt-loan');
+            const deductionsCoopShareInput = document.getElementById('deductions-coop-share');
+            const deductionsCoop2025Input = document.getElementById('deductions-coop-2025');
+            const deductionsWithholdingTaxInput = document.getElementById('deductions-withholding-tax');
+            const deductionsUnpaidLoanInput = document.getElementById('deductions-unpaid-loan');
+            const deductionsCaVoucherInput = document.getElementById('deductions-ca-voucher');
+            const deductionsDailyBalanceInput = document.getElementById('deductions-daily-balance');
+            const deductionsOthersInput = document.getElementById('deductions-others');
+
+            // Elements for detailed net pay display
+            const calcDeductionsGrossPay = document.getElementById('calc-deductions-gross-pay');
+            const calcGovtLoan = document.getElementById('calc-govt-loan');
+            const calcCoopShare = document.getElementById('calc-coop-share');
+            const calcCoop2025 = document.getElementById('calc-coop-2025');
+            const calcWithholdingTax = document.getElementById('calc-withholding-tax');
+            const calcUnpaidLoan = document.getElementById('calc-unpaid-loan');
+            const calcCaVoucher = document.getElementById('calc-ca-voucher');
+            const calcDailyBalance = document.getElementById('calc-daily-balance');
+            const calcOthers = document.getElementById('calc-others');
+            const deductionsNetPayDisplay = document.getElementById('deductions-net-pay');
+
+            const deductionEntriesTableBody = document.getElementById('deduction-entries-table-body');
+            let currentDeductionEntries = []; // Stores deduction entries for the currently selected employee
 
 
             // Function to show a specific content section
@@ -846,6 +1022,7 @@
                 });
                 populateDepartmentDropdowns(); // Call this after departments are loaded/rendered
                 populatePayrollDepartmentFilter(); // Also populate payroll filter
+                populateDeductionsDepartmentFilter(); // Populate deductions filter
             };
 
             // Function to populate department dropdowns (for Add/Edit Employee modals)
@@ -870,6 +1047,17 @@
                     option.value = dept.name;
                     option.textContent = dept.name;
                     payrollDepartmentFilter.appendChild(option);
+                });
+            };
+
+            // Function to populate the department dropdown in the deductions section
+            const populateDeductionsDepartmentFilter = () => {
+                deductionsDepartmentFilter.innerHTML = '<option value="">All Departments</option>'; // Add "All" option
+                departments.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept.name;
+                    option.textContent = dept.name;
+                    deductionsDepartmentFilter.appendChild(option);
                 });
             };
 
@@ -1039,6 +1227,7 @@
                     employees = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     renderEmployees(); // Render the main employee list
                     filterPayrollEmployees(); // Also update the payroll employee list
+                    filterDeductionsEmployees(); // Also update the deductions employee list
                 }, (error) => {
                     console.error("Error listening to employees:", error);
                     showToast("Failed to load employees.", "error");
@@ -1481,6 +1670,319 @@
                             } catch (error) {
                                 console.error("Error deleting payroll entry:", error);
                                 showToast("Failed to delete payroll entry. Please try again.", "error");
+                            }
+                        }
+                    });
+                }
+            });
+
+            // --- Deductions Logic ---
+
+            // Function to render employees in the deductions table (filtered view)
+            const renderDeductionsEmployeesTable = (employeesToDisplay) => {
+                deductionsEmployeesTableBody.innerHTML = '';
+                if (!employeesToDisplay || employeesToDisplay.length === 0) {
+                    deductionsEmployeesTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No employees found.</td></tr>`;
+                    return;
+                }
+                employeesToDisplay.forEach(employee => {
+                    const row = deductionsEmployeesTableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <button class="text-blue-600 hover:text-blue-800 font-bold open-deductions-entry-btn" data-employee-id="${employee.id}">${employee.id}</button>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
+                    `;
+                });
+            };
+
+            // Function to filter and display employees in the deductions section
+            const filterDeductionsEmployees = () => {
+                const selectedDepartment = deductionsDepartmentFilter.value;
+                const searchTerm = deductionsEmployeeSearchInput.value.toLowerCase();
+
+                let filteredEmployees = employees; // Start with the full list
+
+                if (selectedDepartment) {
+                    filteredEmployees = filteredEmployees.filter(emp => emp.department === selectedDepartment);
+                }
+
+                if (searchTerm) {
+                    filteredEmployees = filteredEmployees.filter(emp =>
+                        emp.name.toLowerCase().includes(searchTerm) ||
+                        emp.id.toLowerCase().includes(searchTerm) ||
+                        emp.position.toLowerCase().includes(searchTerm) ||
+                        (emp.department && emp.department.toLowerCase().includes(searchTerm))
+                    );
+                }
+                renderDeductionsEmployeesTable(filteredEmployees);
+            };
+
+            // Event listeners for deductions filters
+            deductionsDepartmentFilter.addEventListener('change', filterDeductionsEmployees);
+            deductionsEmployeeSearchInput.addEventListener('input', filterDeductionsEmployees);
+
+            // Function to calculate and display Net Pay
+            const calculateNetPay = () => {
+                const grossPay = parseFloat(currentDeductionsGrossPay) || 0; // Use the fetched gross pay
+                const govtLoan = parseFloat(deductionsGovtLoanInput.value) || 0;
+                const coopShare = parseFloat(deductionsCoopShareInput.value) || 0;
+                const coop2025 = parseFloat(deductionsCoop2025Input.value) || 0;
+                const withholdingTax = parseFloat(deductionsWithholdingTaxInput.value) || 0;
+                const unpaidLoan = parseFloat(deductionsUnpaidLoanInput.value) || 0;
+                const caVoucher = parseFloat(deductionsCaVoucherInput.value) || 0;
+                const dailyBalance = parseFloat(deductionsDailyBalanceInput.value) || 0;
+                const others = parseFloat(deductionsOthersInput.value) || 0;
+
+                const totalDeductions = govtLoan + coopShare + coop2025 + withholdingTax + unpaidLoan + caVoucher + dailyBalance + others;
+                const netPay = grossPay - totalDeductions;
+
+                // Update display elements
+                calcDeductionsGrossPay.textContent = `₱${grossPay.toFixed(2)}`;
+                calcGovtLoan.textContent = `-₱${govtLoan.toFixed(2)}`;
+                calcCoopShare.textContent = `-₱${coopShare.toFixed(2)}`;
+                calcCoop2025.textContent = `-₱${coop2025.toFixed(2)}`;
+                calcWithholdingTax.textContent = `-₱${withholdingTax.toFixed(2)}`;
+                calcUnpaidLoan.textContent = `-₱${unpaidLoan.toFixed(2)}`;
+                calcCaVoucher.textContent = `-₱${caVoucher.toFixed(2)}`;
+                calcDailyBalance.textContent = `-₱${dailyBalance.toFixed(2)}`;
+                calcOthers.textContent = `-₱${others.toFixed(2)}`;
+                deductionsNetPayDisplay.textContent = `₱${netPay.toFixed(2)}`;
+            };
+
+            // Fetch the latest final gross pay for an employee
+            const fetchLatestGrossPay = async (employeeId) => {
+                const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
+                // Query for the latest entry by timestamp
+                const q = query(payrollEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const latestEntry = querySnapshot.docs[0].data();
+                    const dailySalary = employees.find(emp => emp.id === employeeId)?.salaryRate || 0;
+                    const sssDeduction = employees.find(emp => emp.id === employeeId)?.sssDeduction || 0;
+                    const philhealthDeduction = employees.find(emp => emp.id === employeeId)?.philhealthDeduction || 0;
+                    const pagibigDeduction = employees.find(emp => emp.id === employeeId)?.pagibigDeduction || 0;
+
+                    const hourlyRate = dailySalary / 8;
+
+                    const basePay = dailySalary * (latestEntry.daysOfWork || 0);
+                    const overtimePay = hourlyRate * (latestEntry.overtimeHrs || 0) * 1.25;
+                    const sundayHolidayPay = hourlyRate * (latestEntry.sundayHolidayHrs || 0) * 1.30;
+                    const nightDiffPay = hourlyRate * (latestEntry.nightDiffHrs || 0) * 1.10;
+                    const nightDiffOvertimePay = hourlyRate * (latestEntry.nightDiffOvertimeHrs || 0) * 1.25;
+                    const tardinessDeduction = hourlyRate * (latestEntry.tardiness || 0);
+
+                    const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction;
+                    const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
+
+                    return finalGrossPay;
+                }
+                return 0; // Return 0 if no payroll entries found
+            };
+
+
+            // Event delegation for opening deductions entry modal
+            deductionsEmployeesTableBody.addEventListener('click', async (event) => {
+                if (event.target.classList.contains('open-deductions-entry-btn')) {
+                    const employeeId = event.target.dataset.employeeId;
+                    const selectedEmployee = employees.find(emp => emp.id === employeeId);
+                    if (selectedEmployee) {
+                        currentEmployeeDeductionsId = employeeId; // Set the global variable
+
+                        deductionsEmployeeDisplayName.textContent = selectedEmployee.name;
+                        deductionsEmployeeDisplayId.textContent = selectedEmployee.id;
+                        currentDeductionsEmployeeIdInput.value = employeeId; // Set hidden input
+                        addDeductionEntryForm.reset(); // Clear form for new entry
+                        editDeductionEntryDocIdInput.value = ''; // Clear doc ID for new entry
+                        saveDeductionEntryBtn.textContent = 'Add Deduction Entry'; // Reset button text
+
+                        // Fetch and set the latest gross pay
+                        currentDeductionsGrossPay = await fetchLatestGrossPay(employeeId);
+                        calcDeductionsGrossPay.textContent = `₱${currentDeductionsGrossPay.toFixed(2)}`;
+
+                        calculateNetPay(); // Initial calculation when modal opens
+
+                        listenToDeductionEntries(employeeId); // Start listening to this employee's deduction entries
+                        openModal(deductionsEntryModal);
+                    }
+                }
+            });
+
+            // Event listeners for deduction input fields to trigger net pay calculation
+            deductionsGovtLoanInput.addEventListener('input', calculateNetPay);
+            deductionsCoopShareInput.addEventListener('input', calculateNetPay);
+            deductionsCoop2025Input.addEventListener('input', calculateNetPay);
+            deductionsWithholdingTaxInput.addEventListener('input', calculateNetPay);
+            deductionsUnpaidLoanInput.addEventListener('input', calculateNetPay);
+            deductionsCaVoucherInput.addEventListener('input', calculateNetPay);
+            deductionsDailyBalanceInput.addEventListener('input', calculateNetPay);
+            deductionsOthersInput.addEventListener('input', calculateNetPay);
+
+
+            // Close Deductions Entry Modal
+            closeDeductionsEntryModalBtn.addEventListener('click', () => {
+                closeModal(deductionsEntryModal);
+                addDeductionEntryForm.reset();
+                editDeductionEntryDocIdInput.value = '';
+                saveDeductionEntryBtn.textContent = 'Add Deduction Entry';
+                currentEmployeeDeductionsId = null; // Clear the current employee context
+                currentDeductionsGrossPay = 0; // Reset gross pay
+                // Reset all display values
+                calcDeductionsGrossPay.textContent = '₱0.00';
+                calcGovtLoan.textContent = '-₱0.00';
+                calcCoopShare.textContent = '-₱0.00';
+                calcCoop2025.textContent = '-₱0.00';
+                calcWithholdingTax.textContent = '-₱0.00';
+                calcUnpaidLoan.textContent = '-₱0.00';
+                calcCaVoucher.textContent = '-₱0.00';
+                calcDailyBalance.textContent = '-₱0.00';
+                calcOthers.textContent = '-₱0.00';
+                deductionsNetPayDisplay.textContent = '₱0.00';
+            });
+
+            // Function to listen to deduction entries for a specific employee
+            const listenToDeductionEntries = (employeeId) => {
+                if (!isAuthReady || !db) {
+                    console.warn("Firestore not ready for deduction entries.");
+                    return;
+                }
+                const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/deductionEntries`);
+                onSnapshot(query(deductionEntriesCollectionRef), (snapshot) => {
+                    currentDeductionEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderDeductionEntriesTableInModal(currentDeductionEntries);
+                }, (error) => {
+                    console.error(`Error listening to deduction entries for ${employeeId}:`, error);
+                    showToast("Failed to load deduction entries.", "error");
+                });
+            };
+
+            // Function to render deduction entries in the modal's table
+            const renderDeductionEntriesTableInModal = (entries) => {
+                deductionEntriesTableBody.innerHTML = '';
+                if (!entries || entries.length === 0) {
+                    deductionEntriesTableBody.innerHTML = `<tr><td colspan="11" class="px-6 py-4 text-center text-gray-500">No deduction entries recorded for this employee.</td></tr>`;
+                    return;
+                }
+                entries.forEach(entry => {
+                    const row = deductionEntriesTableBody.insertRow();
+                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString() : 'N/A';
+                    row.innerHTML = `
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.govtLoan || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.coopShare || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.coop2025 || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.withholdingTax || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.unpaidLoan || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.caVoucher || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.dailyBalance || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.others || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-sm font-bold text-gray-800">₱${(entry.netPay || 0).toFixed(2)}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-indigo-600 hover:text-indigo-900 mr-2 edit-deduction-entry-btn" data-id="${entry.id}">Edit</button>
+                            <button class="text-red-600 hover:text-red-900 delete-deduction-entry-btn" data-id="${entry.id}">Delete</button>
+                        </td>
+                    `;
+                });
+            };
+
+            // Handle form submission for adding/editing deduction entry
+            addDeductionEntryForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const employeeId = currentDeductionsEmployeeIdInput.value;
+                const entryDocId = editDeductionEntryDocIdInput.value; // Will be empty for new entries
+
+                const govtLoan = parseFloat(deductionsGovtLoanInput.value) || 0;
+                const coopShare = parseFloat(deductionsCoopShareInput.value) || 0;
+                const coop2025 = parseFloat(deductionsCoop2025Input.value) || 0;
+                const withholdingTax = parseFloat(deductionsWithholdingTaxInput.value) || 0;
+                const unpaidLoan = parseFloat(deductionsUnpaidLoanInput.value) || 0;
+                const caVoucher = parseFloat(deductionsCaVoucherInput.value) || 0;
+                const dailyBalance = parseFloat(deductionsDailyBalanceInput.value) || 0;
+                const others = parseFloat(deductionsOthersInput.value) || 0;
+                const netPay = parseFloat(deductionsNetPayDisplay.textContent.replace('₱', '')) || 0; // Get calculated Net Pay
+
+                if (!employeeId) {
+                    showToast("No employee selected for deduction entry.", "error");
+                    return;
+                }
+
+                try {
+                    const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/deductionEntries`);
+                    const deductionData = {
+                        govtLoan,
+                        coopShare,
+                        coop2025,
+                        withholdingTax,
+                        unpaidLoan,
+                        caVoucher,
+                        dailyBalance,
+                        others,
+                        netPay, // Save the calculated net pay
+                        timestamp: new Date() // Record the time of entry
+                    };
+
+                    if (entryDocId) {
+                        // Editing existing entry
+                        const entryRef = doc(deductionEntriesCollectionRef, entryDocId);
+                        await updateDoc(entryRef, deductionData);
+                        showToast("Deduction entry updated successfully!", "success");
+                    } else {
+                        // Adding new entry
+                        await addDoc(deductionEntriesCollectionRef, deductionData);
+                        showToast("Deduction entry added successfully!", "success");
+                    }
+                    addDeductionEntryForm.reset();
+                    editDeductionEntryDocIdInput.value = ''; // Clear for next entry
+                    saveDeductionEntryBtn.textContent = 'Add Deduction Entry'; // Reset button text
+                    calculateNetPay(); // Recalculate after submission
+                } catch (error) {
+                    console.error("Error saving deduction entry:", error);
+                    showToast("Failed to save deduction entry. Please try again.", "error");
+                }
+            });
+
+            // Event delegation for edit and delete deduction entry buttons in the modal
+            deductionEntriesTableBody.addEventListener('click', async (event) => {
+                const target = event.target;
+                const entryId = target.dataset.id;
+                const employeeId = currentDeductionsEmployeeIdInput.value;
+
+                if (!employeeId) {
+                    showToast("Error: No employee context for deduction action.", "error");
+                    return;
+                }
+
+                const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/deductionEntries`);
+
+                if (target.classList.contains('edit-deduction-entry-btn')) {
+                    const entryToEdit = currentDeductionEntries.find(entry => entry.id === entryId);
+                    if (entryToEdit) {
+                        deductionsGovtLoanInput.value = entryToEdit.govtLoan || 0;
+                        deductionsCoopShareInput.value = entryToEdit.coopShare || 0;
+                        deductionsCoop2025Input.value = entryToEdit.coop2025 || 0;
+                        deductionsWithholdingTaxInput.value = entryToEdit.withholdingTax || 0;
+                        deductionsUnpaidLoanInput.value = entryToEdit.unpaidLoan || 0;
+                        deductionsCaVoucherInput.value = entryToEdit.caVoucher || 0;
+                        deductionsDailyBalanceInput.value = entryToEdit.dailyBalance || 0;
+                        deductionsOthersInput.value = entryToEdit.others || 0;
+                        editDeductionEntryDocIdInput.value = entryId; // Store the ID of the entry being edited
+                        saveDeductionEntryBtn.textContent = 'Update Deduction Entry'; // Change button text
+                        calculateNetPay(); // Recalculate for editing
+                    }
+                } else if (target.classList.contains('delete-deduction-entry-btn')) {
+                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this deduction entry?", async (confirmed) => {
+                        if (confirmed) {
+                            try {
+                                const entryRef = doc(deductionEntriesCollectionRef, entryId);
+                                await deleteDoc(entryRef);
+                                showToast("Deduction entry deleted successfully!", "success");
+                            } catch (error) {
+                                console.error("Error deleting deduction entry:", error);
+                                showToast("Failed to delete deduction entry. Please try again.", "error");
                             }
                         }
                     });
