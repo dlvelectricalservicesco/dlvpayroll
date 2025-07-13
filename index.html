@@ -694,7 +694,7 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Firebase setup
@@ -721,42 +721,6 @@
             let currentEmployeeDeductionsId = null; // To track employee for deductions
             let currentDeductionsGrossPay = 0; // To store the gross pay for deductions calculation
 
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Authenticate
-                if (typeof __initial_auth_token !== 'undefined') {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                // Set up auth state listener
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        console.log("Firebase authenticated. User ID:", userId);
-                        // Initialize collection references after authentication
-                        departmentsCollectionRef = collection(db, `artifacts/${appId}/public/data/departments`);
-                        employeesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees`);
-                        isAuthReady = true;
-                        // Start listening to data once authenticated
-                        listenToDepartments();
-                        listenToEmployees();
-                    } else {
-                        console.log("Firebase not authenticated.");
-                        userId = null;
-                        isAuthReady = true; // Still ready, but unauthenticated
-                    }
-                });
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                showToast("Failed to initialize Firebase.", "error");
-            }
-
 
             // Get all navigation buttons
             const navButtons = document.querySelectorAll('.nav-button');
@@ -769,12 +733,13 @@
             const closeAddDeptModalBtn = document.getElementById('close-add-dept-modal');
             const addDepartmentForm = document.getElementById('add-department-form');
             const newDeptNameInput = document.getElementById('new-dept-name');
-            const newDeptDescriptionInput = document = document.getElementById('new-dept-description');
+            // Corrected typo here: removed `document =`
+            const newDeptDescriptionInput = document.getElementById('new-dept-description');
 
             const editDeptModal = document.getElementById('edit-dept-modal');
             const closeEditDeptModalBtn = document.getElementById('close-edit-dept-modal');
             const editDepartmentForm = document.getElementById('edit-department-form');
-            const editDeptIdInput = document.getElementById('edit-dept-id'); // Changed to id
+            const editDeptIdInput = document.getElementById('edit-dept-id');
             const editDeptNameInput = document.getElementById('edit-dept-name');
             const editDeptDescriptionInput = document.getElementById('edit-dept-description');
 
@@ -785,32 +750,32 @@
             const newEmployeeNameInput = document.getElementById('new-employee-name');
             const newEmployeeDepartmentInput = document.getElementById('new-employee-department');
             const newEmployeePositionInput = document.getElementById('new-employee-position');
-            const newEmployeeContactInput = document.getElementById('new-employee-contact'); // New field
-            const newEmployeeAddressInput = document.getElementById('new-employee-address'); // New field
-            const newEmployeeSalaryRateInput = document.getElementById('new-employee-salary-rate'); // New field
-            const newEmployeeSssDeductionInput = document.getElementById('new-employee-sss-deduction'); // Changed to deduction
-            const newEmployeePhilhealthDeductionInput = document.getElementById('new-employee-philhealth-deduction'); // Changed to deduction
-            const newEmployeePagibigDeductionInput = document.getElementById('new-employee-pagibig-deduction'); // Changed to deduction
+            const newEmployeeContactInput = document.getElementById('new-employee-contact');
+            const newEmployeeAddressInput = document.getElementById('new-employee-address');
+            const newEmployeeSalaryRateInput = document.getElementById('new-employee-salary-rate');
+            const newEmployeeSssDeductionInput = document.getElementById('new-employee-sss-deduction');
+            const newEmployeePhilhealthDeductionInput = document.getElementById('new-employee-philhealth-deduction');
+            const newEmployeePagibigDeductionInput = document.getElementById('new-employee-pagibig-deduction');
 
 
             const editEmployeeModal = document.getElementById('edit-employee-modal');
             const closeEditEmployeeModalBtn = document.getElementById('close-edit-employee-modal');
             const editEmployeeForm = document.getElementById('edit-employee-form');
-            const editEmployeeDocIdInput = document.getElementById('edit-employee-doc-id'); // Hidden field for Firestore doc ID
-            const editEmployeeIdInput = document.getElementById('edit-employee-id'); // Displayed Employee ID
+            const editEmployeeDocIdInput = document.getElementById('edit-employee-doc-id');
+            const editEmployeeIdInput = document.getElementById('edit-employee-id');
             const editEmployeeNameInput = document.getElementById('edit-employee-name');
             const editEmployeeDepartmentInput = document.getElementById('edit-employee-department');
             const editEmployeePositionInput = document.getElementById('edit-employee-position');
-            const editEmployeeContactInput = document.getElementById('edit-employee-contact'); // New field
-            const editEmployeeAddressInput = document.getElementById('edit-employee-address'); // New field
-            const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate'); // New field
-            const editEmployeeSssDeductionInput = document.getElementById('edit-employee-sss-deduction'); // Changed to deduction
-            const editEmployeePhilhealthDeductionInput = document.getElementById('edit-employee-philhealth-deduction'); // Changed to deduction
-            const editEmployeePagibigDeductionInput = document.getElementById('edit-employee-pagibig-deduction'); // Changed to deduction
+            const editEmployeeContactInput = document.getElementById('edit-employee-contact');
+            const editEmployeeAddressInput = document.getElementById('edit-employee-address');
+            const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate');
+            const editEmployeeSssDeductionInput = document.getElementById('edit-employee-sss-deduction');
+            const editEmployeePhilhealthDeductionInput = document.getElementById('edit-employee-philhealth-deduction');
+            const editEmployeePagibigDeductionInput = document.getElementById('edit-employee-pagibig-deduction');
 
 
             const confirmModal = document.getElementById('confirm-modal');
-            const closeConfirmModalBtn = document.getElementById('close-confirm-modal'); // New close button for confirm modal
+            const closeConfirmModalBtn = document.getElementById('close-confirm-modal');
             const confirmModalTitle = document.getElementById('confirm-modal-title');
             const confirmModalMessage = document.getElementById('confirm-modal-message');
             const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
@@ -822,10 +787,10 @@
             const toastIcon = document.getElementById('toast-icon');
 
             const departmentsTableBody = document.getElementById('departments-table-body');
-            let departments = []; // Data will come from Firestore
+            let departments = [];
 
             const employeesTableBody = document.getElementById('employees-table-body');
-            let employees = []; // Data will come from Firestore
+            let employees = [];
 
             // Elements for Process Payroll section
             const payrollDepartmentFilter = document.getElementById('payroll-department-filter');
@@ -839,10 +804,10 @@
             const payrollEmployeeDisplayId = document.getElementById('payroll-employee-display-id');
             const addPayrollEntryForm = document.getElementById('add-payroll-entry-form');
             const currentPayrollEmployeeIdInput = document.getElementById('current-payroll-employee-id');
-            const currentEmployeeDailySalaryInput = document.getElementById('current-employee-daily-salary'); // Changed to daily salary
-            const currentEmployeeSssDeductionInput = document.getElementById('current-employee-sss-deduction'); // Added
-            const currentEmployeePhilhealthDeductionInput = document.getElementById('current-employee-philhealth-deduction'); // Added
-            const currentEmployeePagibigDeductionInput = document.getElementById('current-employee-pagibig-deduction'); // Added
+            const currentEmployeeDailySalaryInput = document.getElementById('current-employee-daily-salary');
+            const currentEmployeeSssDeductionInput = document.getElementById('current-employee-sss-deduction');
+            const currentEmployeePhilhealthDeductionInput = document.getElementById('current-employee-philhealth-deduction');
+            const currentEmployeePagibigDeductionInput = document.getElementById('current-employee-pagibig-deduction');
             const editPayrollEntryDocIdInput = document.getElementById('edit-payroll-entry-doc-id');
             const savePayrollEntryBtn = document.getElementById('save-payroll-entry-btn');
 
@@ -864,11 +829,11 @@
             const calcSssDeduction = document.getElementById('calc-sss-deduction');
             const calcPhilhealthDeduction = document.getElementById('calc-philhealth-deduction');
             const calcPagibigDeduction = document.getElementById('calc-pagibig-deduction');
-            const payrollGrossPayDisplay = document.getElementById('payroll-gross-pay'); // Final Gross Pay
+            const payrollGrossPayDisplay = document.getElementById('payroll-gross-pay');
 
             const payrollEntriesTableBody = document.getElementById('payroll-entries-table-body');
 
-            let currentPayrollEntries = []; // Stores payroll entries for the currently selected employee
+            let currentPayrollEntries = [];
 
             // Elements for Deductions section
             const deductionsDepartmentFilter = document.getElementById('deductions-department-filter');
@@ -907,7 +872,7 @@
             const deductionsNetPayDisplay = document.getElementById('deductions-net-pay');
 
             const deductionEntriesTableBody = document.getElementById('deduction-entries-table-body');
-            let currentDeductionEntries = []; // Stores deduction entries for the currently selected employee
+            let currentDeductionEntries = [];
 
 
             // Function to show a specific content section
@@ -1365,7 +1330,7 @@
                         editEmployeeIdInput.value = currentEmployee.id; // Display the DLV-XXXXX ID (read-only)
                         editEmployeeNameInput.value = currentEmployee.name;
                         editEmployeeDepartmentInput.value = currentEmployee.department;
-                        editEmployeePositionInput.value = currentEmployee.position;
+                        editEmployeePositionInput.value = currentC:\Users\User\Desktop\testing\DLV Electrical Services Co. Payroll System.htmlurrent.position;
                         editEmployeeContactInput.value = currentEmployee.contactNo || '';
                         editEmployeeAddressInput.value = currentEmployee.address || '';
                         editEmployeeSalaryRateInput.value = currentEmployee.salaryRate || '';
@@ -1988,6 +1953,43 @@
                     });
                 }
             });
+
+            // Initialize Firebase and start listeners
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Authenticate
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // Set up auth state listener
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("Firebase authenticated. User ID:", userId);
+                        // Initialize collection references after authentication
+                        departmentsCollectionRef = collection(db, `artifacts/${appId}/public/data/departments`);
+                        employeesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees`);
+                        isAuthReady = true;
+                        // Start listening to data once authenticated
+                        listenToDepartments();
+                        listenToEmployees();
+                    } else {
+                        console.log("Firebase not authenticated.");
+                        userId = null;
+                        isAuthReady = true; // Still ready, but unauthenticated
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                showToast("Failed to initialize Firebase.", "error");
+            }
         });
     </script>
 </body>
