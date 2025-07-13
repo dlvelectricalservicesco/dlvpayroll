@@ -106,6 +106,39 @@
         #toast-notification .toast-icon {
             font-size: 1.25rem;
         }
+
+        /* Report Modal Specific Styles */
+        #report-modal .modal-content {
+            max-width: 900px; /* Wider for report */
+            padding: 2rem;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #report-modal, #report-modal * {
+                visibility: visible;
+            }
+            #report-modal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+                overflow: visible;
+                background-color: white;
+            }
+            #report-modal .modal-content {
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                transform: none;
+            }
+            .modal-close-button, #report-print-btn {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex">
@@ -142,10 +175,16 @@
                             <span>Process Payroll</span>
                         </button>
                     </li>
-                    <li>
+                    <li class="mb-4">
                         <button id="nav-deductions" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                             <span>Deductions</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-summary-payroll" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span>Summary of Payroll</span>
                         </button>
                     </li>
                 </ul>
@@ -335,6 +374,65 @@
                         </thead>
                         <tbody id="deductions-employees-table-body" class="bg-white divide-y divide-gray-200">
                             </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="summary-payroll-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Summary of Payroll</h2>
+            <p class="text-gray-600 mb-4">View a summary of payroll and deductions for each employee, and generate reports.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="summary-department-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Department/Site</label>
+                    <select id="summary-department-filter" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Departments</option>
+                        </select>
+                </div>
+                <div>
+                    <label for="summary-employee-search" class="block text-sm font-medium text-gray-700 mb-1">Search Employee</label>
+                    <input type="text" id="summary-employee-search" placeholder="Search by ID or Name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <div class="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generate Report</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="report-start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                        <input type="date" id="report-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="report-end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                        <input type="date" id="report-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="flex items-end">
+                        <button id="generate-summary-report-btn" class="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200 w-full">Generate Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Payroll Summary</h3>
+                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department/Site</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Deductions</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-payroll-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- Summary data will be dynamically added here -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -684,6 +782,19 @@
         </div>
     </div>
 
+    <!-- Report Modal -->
+    <div id="report-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="close-report-modal">&times;</button>
+            <div id="report-content" class="p-4">
+                <!-- Report content will be dynamically generated here -->
+            </div>
+            <div class="flex justify-end mt-6">
+                <button id="report-print-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Print Report</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast-notification" class="flex items-center">
         <span id="toast-icon" class="toast-icon"></span>
@@ -694,7 +805,7 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, getDocs, where, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         document.addEventListener('DOMContentLoaded', async () => {
             // Firebase setup
@@ -733,7 +844,6 @@
             const closeAddDeptModalBtn = document.getElementById('close-add-dept-modal');
             const addDepartmentForm = document.getElementById('add-department-form');
             const newDeptNameInput = document.getElementById('new-dept-name');
-            // Corrected typo here: removed `document =`
             const newDeptDescriptionInput = document.getElementById('new-dept-description');
 
             const editDeptModal = document.getElementById('edit-dept-modal');
@@ -874,6 +984,20 @@
             const deductionEntriesTableBody = document.getElementById('deduction-entries-table-body');
             let currentDeductionEntries = [];
 
+            // Elements for Summary of Payroll section
+            const summaryDepartmentFilter = document.getElementById('summary-department-filter');
+            const summaryEmployeeSearchInput = document.getElementById('summary-employee-search');
+            const summaryPayrollTableBody = document.getElementById('summary-payroll-table-body');
+            const generateSummaryReportBtn = document.getElementById('generate-summary-report-btn');
+            const reportStartDateInput = document.getElementById('report-start-date');
+            const reportEndDateInput = document.getElementById('report-end-date');
+
+            // Report Modal elements
+            const reportModal = document.getElementById('report-modal');
+            const closeReportModalBtn = document.getElementById('close-report-modal');
+            const reportContentDiv = document.getElementById('report-content');
+            const reportPrintBtn = document.getElementById('report-print-btn');
+
 
             // Function to show a specific content section
             const showContent = (id) => {
@@ -963,6 +1087,10 @@
                 button.addEventListener('click', () => {
                     const contentId = button.id.replace('nav-', '') + '-content';
                     showContent(contentId);
+                    // Special handling for summary payroll to refresh data
+                    if (contentId === 'summary-payroll-content') {
+                        filterSummaryPayrollEmployees();
+                    }
                 });
             });
 
@@ -988,6 +1116,7 @@
                 populateDepartmentDropdowns(); // Call this after departments are loaded/rendered
                 populatePayrollDepartmentFilter(); // Also populate payroll filter
                 populateDeductionsDepartmentFilter(); // Populate deductions filter
+                populateSummaryDepartmentFilter(); // Populate summary filter
             };
 
             // Function to populate department dropdowns (for Add/Edit Employee modals)
@@ -1023,6 +1152,17 @@
                     option.value = dept.name;
                     option.textContent = dept.name;
                     deductionsDepartmentFilter.appendChild(option);
+                });
+            };
+
+            // Function to populate the department dropdown in the summary payroll section
+            const populateSummaryDepartmentFilter = () => {
+                summaryDepartmentFilter.innerHTML = '<option value="">All Departments</option>'; // Add "All" option
+                departments.forEach(dept => {
+                    const option = document.createElement('option');
+                    option.value = dept.name;
+                    option.textContent = dept.name;
+                    summaryDepartmentFilter.appendChild(option);
                 });
             };
 
@@ -1193,6 +1333,7 @@
                     renderEmployees(); // Render the main employee list
                     filterPayrollEmployees(); // Also update the payroll employee list
                     filterDeductionsEmployees(); // Also update the deductions employee list
+                    filterSummaryPayrollEmployees(); // Update summary payroll list
                 }, (error) => {
                     console.error("Error listening to employees:", error);
                     showToast("Failed to load employees.", "error");
@@ -1330,7 +1471,7 @@
                         editEmployeeIdInput.value = currentEmployee.id; // Display the DLV-XXXXX ID (read-only)
                         editEmployeeNameInput.value = currentEmployee.name;
                         editEmployeeDepartmentInput.value = currentEmployee.department;
-                        editEmployeePositionInput.value = currentEmployee.position; // Corrected this line
+                        editEmployeePositionInput.value = currentEmployee.position;
                         editEmployeeContactInput.value = currentEmployee.contactNo || '';
                         editEmployeeAddressInput.value = currentEmployee.address || '';
                         editEmployeeSalaryRateInput.value = currentEmployee.salaryRate || '';
@@ -1726,10 +1867,11 @@
 
                 if (!querySnapshot.empty) {
                     const latestEntry = querySnapshot.docs[0].data();
-                    const dailySalary = employees.find(emp => emp.id === employeeId)?.salaryRate || 0;
-                    const sssDeduction = employees.find(emp => emp.id === employeeId)?.sssDeduction || 0;
-                    const philhealthDeduction = employees.find(emp => emp.id === employeeId)?.philhealthDeduction || 0;
-                    const pagibigDeduction = employees.find(emp => emp.id === employeeId)?.pagibigDeduction || 0;
+                    const employeeData = employees.find(emp => emp.id === employeeId);
+                    const dailySalary = employeeData?.salaryRate || 0;
+                    const sssDeduction = employeeData?.sssDeduction || 0;
+                    const philhealthDeduction = employeeData?.philhealthDeduction || 0;
+                    const pagibigDeduction = employeeData?.pagibigDeduction || 0;
 
                     const hourlyRate = dailySalary / 8;
 
@@ -1953,6 +2095,281 @@
                     });
                 }
             });
+
+            // --- Summary of Payroll Logic ---
+
+            // Helper function to calculate gross pay for a given employee and payroll entry
+            const calculateGrossPayForSummary = (employee, payrollEntry) => {
+                const dailySalary = employee.salaryRate || 0;
+                const daysOfWork = payrollEntry.daysOfWork || 0;
+                const overtimeHrs = payrollEntry.overtimeHrs || 0;
+                const sundayHolidayHrs = payrollEntry.sundayHolidayHrs || 0;
+                const nightDiffHrs = payrollEntry.nightDiffHrs || 0;
+                const nightDiffOvertimeHrs = payrollEntry.nightDiffOvertimeHrs || 0;
+                const tardiness = payrollEntry.tardiness || 0;
+
+                const sssDeduction = employee.sssDeduction || 0;
+                const philhealthDeduction = employee.philhealthDeduction || 0;
+                const pagibigDeduction = employee.pagibigDeduction || 0;
+
+                const hourlyRate = dailySalary / 8;
+
+                const basePay = dailySalary * daysOfWork;
+                const overtimePay = hourlyRate * overtimeHrs * 1.25;
+                const sundayHolidayPay = hourlyRate * sundayHolidayHrs * 1.30;
+                const nightDiffPay = hourlyRate * nightDiffHrs * 1.10;
+                const nightDiffOvertimePay = hourlyRate * nightDiffOvertimeHrs * 1.25;
+                const tardinessDeduction = hourlyRate * tardiness;
+
+                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction;
+                const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
+
+                return {
+                    grossPay: finalGrossPay,
+                    sssDeduction: sssDeduction,
+                    philhealthDeduction: philhealthDeduction,
+                    pagibigDeduction: pagibigDeduction
+                };
+            };
+
+            // Helper function to calculate total custom deductions for a given deduction entry
+            const calculateTotalCustomDeductions = (deductionEntry) => {
+                return (deductionEntry.govtLoan || 0) +
+                       (deductionEntry.coopShare || 0) +
+                       (deductionEntry.coop2025 || 0) +
+                       (deductionEntry.withholdingTax || 0) +
+                       (deductionEntry.unpaidLoan || 0) +
+                       (deductionEntry.caVoucher || 0) +
+                       (deductionEntry.dailyBalance || 0) +
+                       (deductionEntry.others || 0);
+            };
+
+            // Function to render employees in the summary payroll table
+            const renderSummaryPayrollEmployeesTable = async (employeesToDisplay) => {
+                summaryPayrollTableBody.innerHTML = '';
+                if (!employeesToDisplay || employeesToDisplay.length === 0) {
+                    summaryPayrollTableBody.innerHTML = `<tr><td colspan="9" class="px-6 py-4 text-center text-gray-500">No employees found.</td></tr>`;
+                    return;
+                }
+
+                for (const employee of employeesToDisplay) {
+                    let grossPay = 0;
+                    let totalDeductions = 0;
+                    let netPay = 0;
+
+                    // Fetch latest payroll entry
+                    const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
+                    const latestPayrollQuery = query(payrollEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
+                    const payrollSnapshot = await getDocs(latestPayrollQuery);
+
+                    if (!payrollSnapshot.empty) {
+                        const latestPayrollEntry = payrollSnapshot.docs[0].data();
+                        const calculatedGross = calculateGrossPayForSummary(employee, latestPayrollEntry);
+                        grossPay = calculatedGross.grossPay;
+                    }
+
+                    // Fetch latest deduction entry
+                    const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
+                    const latestDeductionQuery = query(deductionEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
+                    const deductionSnapshot = await getDocs(latestDeductionQuery);
+
+                    if (!deductionSnapshot.empty) {
+                        const latestDeductionEntry = deductionSnapshot.docs[0].data();
+                        totalDeductions = calculateTotalCustomDeductions(latestDeductionEntry);
+                    }
+
+                    netPay = grossPay - totalDeductions;
+
+                    const row = summaryPayrollTableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${employee.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.sssDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.philhealthDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.pagibigDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-semibold">₱${grossPay.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-700 font-semibold">₱${totalDeductions.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold">₱${netPay.toFixed(2)}</td>
+                    `;
+                }
+            };
+
+            // Function to filter and display employees in the summary section
+            const filterSummaryPayrollEmployees = () => {
+                const selectedDepartment = summaryDepartmentFilter.value;
+                const searchTerm = summaryEmployeeSearchInput.value.toLowerCase();
+
+                let filteredEmployees = employees;
+
+                if (selectedDepartment) {
+                    filteredEmployees = filteredEmployees.filter(emp => emp.department === selectedDepartment);
+                }
+
+                if (searchTerm) {
+                    filteredEmployees = filteredEmployees.filter(emp =>
+                        emp.name.toLowerCase().includes(searchTerm) ||
+                        emp.id.toLowerCase().includes(searchTerm)
+                    );
+                }
+                renderSummaryPayrollEmployeesTable(filteredEmployees);
+            };
+
+            // Event listeners for summary filters
+            summaryDepartmentFilter.addEventListener('change', filterSummaryPayrollEmployees);
+            summaryEmployeeSearchInput.addEventListener('input', filterSummaryPayrollEmployees);
+
+            // --- Report Generation Logic ---
+
+            generateSummaryReportBtn.addEventListener('click', async () => {
+                const startDateStr = reportStartDateInput.value;
+                const endDateStr = reportEndDateInput.value;
+
+                if (!startDateStr || !endDateStr) {
+                    showToast("Please select both start and end dates for the report.", "error");
+                    return;
+                }
+
+                const startDate = new Date(startDateStr);
+                const endDate = new Date(endDateStr);
+                // Set end date to end of day
+                endDate.setHours(23, 59, 59, 999);
+
+                if (startDate > endDate) {
+                    showToast("Start date cannot be after end date.", "error");
+                    return;
+                }
+
+                showToast("Generating report...", "info", 5000);
+
+                const reportData = [];
+                let overallGrossTotal = 0;
+                let overallDeductionsTotal = 0;
+                let overallNetTotal = 0;
+
+                for (const employee of employees) {
+                    const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
+                    const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
+
+                    // Fetch payroll entries within the date range
+                    const payrollQuery = query(
+                        payrollEntriesCollectionRef,
+                        where("timestamp", ">=", Timestamp.fromDate(startDate)),
+                        where("timestamp", "<=", Timestamp.fromDate(endDate))
+                    );
+                    const payrollSnapshot = await getDocs(payrollQuery);
+                    let employeeGrossPay = 0;
+
+                    payrollSnapshot.docs.forEach(payrollDoc => {
+                        const payrollEntry = payrollDoc.data();
+                        const calculatedGross = calculateGrossPayForSummary(employee, payrollEntry);
+                        employeeGrossPay += calculatedGross.grossPay;
+                    });
+
+                    // Fetch deduction entries within the date range
+                    const deductionQuery = query(
+                        deductionEntriesCollectionRef,
+                        where("timestamp", ">=", Timestamp.fromDate(startDate)),
+                        where("timestamp", "<=", Timestamp.fromDate(endDate))
+                    );
+                    const deductionSnapshot = await getDocs(deductionQuery);
+                    let employeeCustomDeductions = 0;
+
+                    deductionSnapshot.docs.forEach(deductionDoc => {
+                        const deductionEntry = deductionDoc.data();
+                        employeeCustomDeductions += calculateTotalCustomDeductions(deductionEntry);
+                    });
+
+                    const employeeNetPay = employeeGrossPay - employeeCustomDeductions;
+
+                    reportData.push({
+                        id: employee.id,
+                        name: employee.name,
+                        department: employee.department,
+                        sssDeduction: employee.sssDeduction || 0,
+                        philhealthDeduction: employee.philhealthDeduction || 0,
+                        pagibigDeduction: employee.pagibigDeduction || 0,
+                        grossPay: employeeGrossPay,
+                        totalDeductions: employeeCustomDeductions,
+                        netPay: employeeNetPay
+                    });
+
+                    overallGrossTotal += employeeGrossPay;
+                    overallDeductionsTotal += employeeCustomDeductions;
+                    overallNetTotal += employeeNetPay;
+                }
+
+                displayReportModal(reportData, startDateStr, endDateStr, overallGrossTotal, overallDeductionsTotal, overallNetTotal);
+                showToast("Report generated successfully!", "success");
+            });
+
+            const displayReportModal = (data, startDate, endDate, overallGross, overallDeductions, overallNet) => {
+                let reportHtml = `
+                    <div class="text-center mb-8">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">DLV Electrical Services Co.</h1>
+                        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Payroll Summary Report</h2>
+                        <p class="text-gray-600">For the period: <span class="font-medium">${startDate}</span> to <span class="font-medium">${endDate}</span></p>
+                    </div>
+                    <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200 mb-8">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Deductions</th>
+                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                `;
+
+                data.forEach(row => {
+                    reportHtml += `
+                        <tr>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${row.id}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">${row.name}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">${row.department}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">₱${row.sssDeduction.toFixed(2)}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">₱${row.philhealthDeduction.toFixed(2)}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">₱${row.pagibigDeduction.toFixed(2)}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-green-700 font-semibold">₱${row.grossPay.toFixed(2)}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-red-700 font-semibold">₱${row.totalDeductions.toFixed(2)}</td>
+                            <td class="px-4 py-2 whitespace-nowrap text-sm text-blue-700 font-bold">₱${row.netPay.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                reportHtml += `
+                            </tbody>
+                            <tfoot class="bg-gray-100">
+                                <tr>
+                                    <td colspan="6" class="px-4 py-2 text-right text-base font-bold text-gray-800">Overall Totals:</td>
+                                    <td class="px-4 py-2 text-left text-base font-bold text-green-800">₱${overallGross.toFixed(2)}</td>
+                                    <td class="px-4 py-2 text-left text-base font-bold text-red-800">₱${overallDeductions.toFixed(2)}</td>
+                                    <td class="px-4 py-2 text-left text-base font-bold text-blue-800">₱${overallNet.toFixed(2)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                `;
+
+                reportContentDiv.innerHTML = reportHtml;
+                openModal(reportModal);
+            };
+
+            closeReportModalBtn.addEventListener('click', () => {
+                closeModal(reportModal);
+            });
+
+            reportPrintBtn.addEventListener('click', () => {
+                window.print();
+            });
+
 
             // Initialize Firebase and start listeners
             try {
