@@ -825,16 +825,8 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Firebase setup
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            // FIX: Added a check for __firebase_config to prevent ReferenceError
             const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-
-            // Ensure essential Firebase config fields are present, using appId as a basis
-            firebaseConfig.projectId = firebaseConfig.projectId || appId;
-            firebaseConfig.apiKey = firebaseConfig.apiKey || ""; // Placeholder if not provided
-            firebaseConfig.authDomain = firebaseConfig.authDomain || `${appId}.firebaseapp.com`;
-            firebaseConfig.databaseURL = firebaseConfig.databaseURL || `https://${appId}.firebaseio.com`;
-            firebaseConfig.storageBucket = firebaseConfig.storageBucket || `${appId}.appspot.com`;
-            firebaseConfig.messagingSenderId = firebaseConfig.messagingSenderId || ""; // Placeholder if not provided
-            firebaseConfig.appId = firebaseConfig.appId || ""; // Placeholder if not provided
 
             let app, db, auth, departmentsCollectionRef, employeesCollectionRef;
             let userId = null;
@@ -2241,33 +2233,28 @@
                         where("timestamp", "<=", Timestamp.fromDate(endDate))
                     );
                     const deductionSnapshot = await getDocs(deductionQuery);
-                    let employeeCustomDeductions = 0;
 
                     deductionSnapshot.docs.forEach(deductionDoc => {
                         const deductionEntry = deductionDoc.data();
-                        employeeCustomDeductions += calculateTotalCustomDeductions(deductionEntry);
+                        totalCustomDeductionsForPeriod += calculateTotalCustomDeductions(deductionEntry);
                     });
 
-                    const employeeNetPay = employeeGrossPay - employeeCustomDeductions;
+                    const netPayForPeriod = totalGrossPayForPeriod - totalCustomDeductionsForPeriod;
 
-                    reportData.push({
-                        id: employee.id,
-                        name: employee.name,
-                        department: employee.department,
-                        sssDeduction: employee.sssDeduction || 0,
-                        philhealthDeduction: employee.philhealthDeduction || 0,
-                        pagibigDeduction: employee.pagibigDeduction || 0,
-                        grossPay: employeeGrossPay,
-                        totalDeductions: employeeCustomDeductions,
-                        netPay: employeeNetPay
-                    });
-
-                    overallGrossTotal += employeeGrossPay;
-                    overallDeductionsTotal += employeeCustomDeductions;
-                    overallNetTotal += employeeNetPay;
+                    const row = summaryPayrollTableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${employee.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.sssDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.philhealthDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.pagibigDeduction || 0).toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-semibold">₱${totalGrossPayForPeriod.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-700 font-semibold">₱${totalCustomDeductionsForPeriod.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold">₱${netPayForPeriod.toFixed(2)}</td>
+                    `;
                 }
-
-                displayReportModal(reportData, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0], overallGrossTotal, overallDeductionsTotal, overallNetTotal, applyTableFilters);
             };
 
             // Function to filter and display employees in the summary section
