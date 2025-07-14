@@ -423,7 +423,6 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department/Site</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig</th>
@@ -825,8 +824,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Firebase setup
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            // FIX: Added a check for __firebase_config to prevent ReferenceError
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+            const firebaseConfig = JSON.parse(__firebase_config); // Use the provided firebase config
 
             let app, db, auth, departmentsCollectionRef, employeesCollectionRef;
             let userId = null;
@@ -2199,60 +2197,52 @@
             };
 
             // Function to render employees in the summary payroll table
-            const renderSummaryPayrollEmployeesTable = async (employeesToDisplay, startDate, endDate) => {
+            const renderSummaryPayrollEmployeesTable = async (employeesToDisplay) => {
                 summaryPayrollTableBody.innerHTML = '';
                 if (!employeesToDisplay || employeesToDisplay.length === 0) {
-                    summaryPayrollTableBody.innerHTML = `<tr><td colspan="10" class="px-6 py-4 text-center text-gray-500">No employees found.</td></tr>`;
+                    summaryPayrollTableBody.innerHTML = `<tr><td colspan="9" class="px-6 py-4 text-center text-gray-500">No employees found.</td></tr>`;
                     return;
                 }
 
                 for (const employee of employeesToDisplay) {
-                    let totalGrossPayForPeriod = 0;
-                    let totalCustomDeductionsForPeriod = 0;
+                    let grossPay = 0;
+                    let totalDeductions = 0;
+                    let netPay = 0;
 
-                    // Fetch payroll entries within the date range
+                    // Fetch latest payroll entry
                     const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
-                    const payrollQuery = query(
-                        payrollEntriesCollectionRef,
-                        where("timestamp", ">=", Timestamp.fromDate(startDate)),
-                        where("timestamp", "<=", Timestamp.fromDate(endDate))
-                    );
-                    const payrollSnapshot = await getDocs(payrollQuery);
+                    const latestPayrollQuery = query(payrollEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
+                    const payrollSnapshot = await getDocs(latestPayrollQuery);
 
-                    payrollSnapshot.docs.forEach(payrollDoc => {
-                        const payrollEntry = payrollDoc.data();
-                        const calculatedGross = calculateGrossPayForSummary(employee, payrollEntry);
-                        totalGrossPayForPeriod += calculatedGross.grossPay;
-                    });
+                    if (!payrollSnapshot.empty) {
+                        const latestPayrollEntry = payrollSnapshot.docs[0].data();
+                        const calculatedGross = calculateGrossPayForSummary(employee, latestPayrollEntry);
+                        grossPay = calculatedGross.grossPay;
+                    }
 
-                    // Fetch deduction entries within the date range
+                    // Fetch latest deduction entry
                     const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
-                    const deductionQuery = query(
-                        deductionEntriesCollectionRef,
-                        where("timestamp", ">=", Timestamp.fromDate(startDate)),
-                        where("timestamp", "<=", Timestamp.fromDate(endDate))
-                    );
-                    const deductionSnapshot = await getDocs(deductionQuery);
+                    const latestDeductionQuery = query(deductionEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
+                    const deductionSnapshot = await getDocs(latestDeductionQuery);
 
-                    deductionSnapshot.docs.forEach(deductionDoc => {
-                        const deductionEntry = deductionDoc.data();
-                        totalCustomDeductionsForPeriod += calculateTotalCustomDeductions(deductionEntry);
-                    });
+                    if (!deductionSnapshot.empty) {
+                        const latestDeductionEntry = deductionSnapshot.docs[0].data();
+                        totalDeductions = calculateTotalCustomDeductions(latestDeductionEntry);
+                    }
 
-                    const netPayForPeriod = totalGrossPayForPeriod - totalCustomDeductionsForPeriod;
+                    netPay = grossPay - totalDeductions;
 
                     const row = summaryPayrollTableBody.insertRow();
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${employee.id}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.sssDeduction || 0).toFixed(2)}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.philhealthDeduction || 0).toFixed(2)}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.pagibigDeduction || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-semibold">₱${totalGrossPayForPeriod.toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-700 font-semibold">₱${totalCustomDeductionsForPeriod.toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold">₱${netPayForPeriod.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-semibold">₱${grossPay.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-700 font-semibold">₱${totalDeductions.toFixed(2)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold">₱${netPay.toFixed(2)}</td>
                     `;
                 }
             };
@@ -2274,25 +2264,12 @@
                         emp.id.toLowerCase().includes(searchTerm)
                     );
                 }
-
-                // Determine the date range for the summary table
-                let startDate = new Date('1900-01-01'); // Default to a very old date
-                let endDate = new Date(); // Default to today
-
-                if (reportStartDateInput.value && reportEndDateInput.value) {
-                    startDate = new Date(reportStartDateInput.value);
-                    endDate = new Date(reportEndDateInput.value);
-                    endDate.setHours(23, 59, 59, 999); // Set to end of day
-                }
-
-                renderSummaryPayrollEmployeesTable(filteredEmployees, startDate, endDate);
+                renderSummaryPayrollEmployeesTable(filteredEmployees);
             };
 
-            // Event listeners for summary filters and date inputs
+            // Event listeners for summary filters
             summaryDepartmentFilter.addEventListener('change', filterSummaryPayrollEmployees);
             summaryEmployeeSearchInput.addEventListener('input', filterSummaryPayrollEmployees);
-            reportStartDateInput.addEventListener('change', filterSummaryPayrollEmployees);
-            reportEndDateInput.addEventListener('change', filterSummaryPayrollEmployees);
 
             // --- Report Generation Logic ---
 
