@@ -825,7 +825,8 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Firebase setup
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const firebaseConfig = JSON.parse(__firebase_config); // Use the provided firebase config
+            // FIX: Added a check for __firebase_config to prevent ReferenceError
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
 
             let app, db, auth, departmentsCollectionRef, employeesCollectionRef;
             let userId = null;
