@@ -407,8 +407,9 @@
                         <label for="report-end-date" class="block text-sm font-medium text-gray-700">End Date</label>
                         <input type="date" id="report-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <div class="flex items-end">
-                        <button id="generate-summary-report-btn" class="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200 w-full">Generate Report</button>
+                    <div class="flex flex-col justify-end gap-2">
+                        <button id="generate-full-report-btn" class="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200 w-full">Generate Full Report</button>
+                        <button id="generate-filtered-report-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200 w-full">Generate Filtered Report</button>
                     </div>
                 </div>
             </div>
@@ -891,7 +892,7 @@
             const editEmployeePositionInput = document.getElementById('edit-employee-position');
             const editEmployeeContactInput = document.getElementById('edit-employee-contact');
             const editEmployeeAddressInput = document.getElementById('edit-employee-address');
-            const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate');
+            const editEmployeeSalaryRateInput = document = document.getElementById('edit-employee-salary-rate');
             const editEmployeeSssDeductionInput = document.getElementById('edit-employee-sss-deduction');
             const editEmployeePhilhealthDeductionInput = document.getElementById('edit-employee-philhealth-deduction');
             const editEmployeePagibigDeductionInput = document.getElementById('edit-employee-pagibig-deduction');
@@ -1005,7 +1006,8 @@
             const summaryDepartmentFilter = document.getElementById('summary-department-filter');
             const summaryEmployeeSearchInput = document.getElementById('summary-employee-search');
             const summaryPayrollTableBody = document.getElementById('summary-payroll-table-body');
-            const generateSummaryReportBtn = document.getElementById('generate-summary-report-btn');
+            const generateFullReportBtn = document.getElementById('generate-full-report-btn'); // Renamed
+            const generateFilteredReportBtn = document.getElementById('generate-filtered-report-btn'); // New
             const reportStartDateInput = document.getElementById('report-start-date');
             const reportEndDateInput = document.getElementById('report-end-date');
 
@@ -1699,7 +1701,7 @@
                 entries.forEach(entry => {
                     const row = payrollEntriesTableBody.insertRow();
                     // Display date from timestamp, format to YYYY-MM-DD for consistency
-                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString('en-CA') : 'N/A';
+                    const entryDate = entry.date || 'N/A'; // Use the stored date string
                     row.innerHTML = `
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.daysOfWork || '0'}</td>
@@ -2021,7 +2023,7 @@
                 entries.forEach(entry => {
                     const row = deductionEntriesTableBody.insertRow();
                     // Display date from timestamp, format to YYYY-MM-DD for consistency
-                    const entryDate = entry.timestamp ? new Date(entry.timestamp.toDate()).toLocaleDateString('en-CA') : 'N/A';
+                    const entryDate = entry.date || 'N/A'; // Use the stored date string
                     row.innerHTML = `
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
                         <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.govtLoan || 0).toFixed(2)}</td>
@@ -2276,7 +2278,8 @@
 
             // --- Report Generation Logic ---
 
-            generateSummaryReportBtn.addEventListener('click', async () => {
+            // Reusable function to generate the report
+            const generateReport = async (applyTableFilters = false) => {
                 const startDateStr = reportStartDateInput.value;
                 const endDateStr = reportEndDateInput.value;
 
@@ -2302,7 +2305,27 @@
                 let overallDeductionsTotal = 0;
                 let overallNetTotal = 0;
 
-                for (const employee of employees) {
+                let employeesToProcess = employees;
+
+                // Apply table filters if requested by the button
+                if (applyTableFilters) {
+                    const selectedDepartment = summaryDepartmentFilter.value;
+                    const searchTerm = summaryEmployeeSearchInput.value.toLowerCase();
+
+                    if (selectedDepartment) {
+                        employeesToProcess = employeesToProcess.filter(emp => emp.department === selectedDepartment);
+                    }
+
+                    if (searchTerm) {
+                        employeesToProcess = employeesToProcess.filter(emp =>
+                            emp.name.toLowerCase().includes(searchTerm) ||
+                            emp.id.toLowerCase().includes(searchTerm)
+                        );
+                    }
+                }
+
+
+                for (const employee of employeesToProcess) {
                     const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
                     const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
 
@@ -2354,16 +2377,27 @@
                     overallNetTotal += employeeNetPay;
                 }
 
-                displayReportModal(reportData, startDateStr, endDateStr, overallGrossTotal, overallDeductionsTotal, overallNetTotal);
+                displayReportModal(reportData, startDateStr, endDateStr, overallGrossTotal, overallDeductionsTotal, overallNetTotal, applyTableFilters);
                 showToast("Report generated successfully!", "success");
-            });
+            };
 
-            const displayReportModal = (data, startDate, endDate, overallGross, overallDeductions, overallNet) => {
+            // Event listener for "Generate Full Report" button
+            generateFullReportBtn.addEventListener('click', () => generateReport(false));
+
+            // Event listener for "Generate Filtered Report" button (new)
+            generateFilteredReportBtn.addEventListener('click', () => generateReport(true));
+
+
+            const displayReportModal = (data, startDate, endDate, overallGross, overallDeductions, overallNet, isFiltered) => {
+                let reportType = isFiltered ? "Filtered Payroll Summary Report" : "Payroll Summary Report";
+                let filterInfo = isFiltered ? `<p class="text-gray-600">Filters Applied: Department: "${summaryDepartmentFilter.value || 'All'}", Employee Search: "${summaryEmployeeSearchInput.value || 'None'}"</p>` : '';
+
                 let reportHtml = `
                     <div class="text-center mb-8">
                         <h1 class="text-3xl font-bold text-gray-800 mb-2">DLV Electrical Services Co.</h1>
-                        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Payroll Summary Report</h2>
+                        <h2 class="text-2xl font-semibold text-gray-700 mb-2">${reportType}</h2>
                         <p class="text-gray-600">For the period: <span class="font-medium">${startDate}</span> to <span class="font-medium">${endDate}</span></p>
+                        ${filterInfo}
                     </div>
                     <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200 mb-8">
                         <table class="min-w-full divide-y divide-gray-200">
