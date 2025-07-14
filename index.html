@@ -824,7 +824,15 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Firebase setup
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const firebaseConfig = JSON.parse(__firebase_config); // Use the provided firebase config
+            const firebaseConfig = {
+                apiKey: "AIzaSyBJTXVvZ2IS7i3DIY2Dl9X4PYsS5aw2ST8",
+                authDomain: "dlvpayroll-b5c3b.firebaseapp.com",
+                projectId: "dlvpayroll-b5c3b",
+                storageBucket: "dlvpayroll-b5c3b.firebaseapp.com",
+                messagingSenderId: "885811032842",
+                appId: "1:885811032842:web:879edb8a1f9a0f8f3ac0f3",
+                measurementId: "G-DKWWX56V55"
+            };
 
             let app, db, auth, departmentsCollectionRef, employeesCollectionRef;
             let userId = null;
@@ -1215,9 +1223,7 @@
 
                 if (deptName) {
                     try {
-                        // Use userId in the collection path for public data
-                        const deptDocRef = collection(db, `artifacts/${appId}/public/data/departments`);
-                        await addDoc(deptDocRef, {
+                        await addDoc(departmentsCollectionRef, {
                             name: deptName,
                             description: deptDescription
                         });
