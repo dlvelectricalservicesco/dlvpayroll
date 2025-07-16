@@ -889,9 +889,7 @@
             const editEmployeeAddressInput = document.getElementById('edit-employee-address');
             const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate');
             const editEmployeeSssDeductionInput = document.getElementById('edit-employee-sss-deduction');
-            // FIX START: Corrected assignment for editEmployeePhilhealthDeductionInput
             const editEmployeePhilhealthDeductionInput = document.getElementById('edit-employee-philhealth-deduction');
-            // FIX END
             const editEmployeePagibigDeductionInput = document.getElementById('edit-employee-pagibig-deduction');
 
 
@@ -2210,42 +2208,35 @@
             };
 
             // Reusable function to generate the report
-            const generateReport = async (applyTableFilters = false) => {
+            // `applyDateRangeFiltersOnly` is true for "Generate Filtered Report" (applies only date filters)
+            // and false for "Generate Full Report" (applies no filters at all).
+            const generateReport = async (applyDateRangeFiltersOnly = false) => {
                 reportTableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Generating report...</td></tr>';
                 reportSummaryFooter.innerHTML = ''; // Clear summary
 
-                let filteredEmployees = employees;
+                let employeesToProcess = employees; // Always start with all employees
+
                 let startDate = null;
                 let endDate = null;
 
-                if (applyTableFilters) {
-                    const selectedDepartment = reportDepartmentFilter.value;
-                    const searchTerm = reportEmployeeSearchInput.value.toLowerCase();
+                if (applyDateRangeFiltersOnly) {
+                    // For "Generate Filtered Report", only apply date range filters from the UI.
+                    // Department and employee search filters on the UI are ignored for the data selection.
                     const start = reportStartDateInput.value;
                     const end = reportEndDateInput.value;
 
                     if (start) startDate = new Date(start);
                     if (end) endDate = new Date(end);
-
-                    if (selectedDepartment) {
-                        filteredEmployees = filteredEmployees.filter(emp => emp.department === selectedDepartment);
-                    }
-                    if (searchTerm) {
-                        filteredEmployees = filteredEmployees.filter(emp =>
-                            emp.name.toLowerCase().includes(searchTerm) ||
-                            emp.id.toLowerCase().includes(searchTerm) ||
-                            emp.position.toLowerCase().includes(searchTerm) ||
-                            (emp.department && emp.department.toLowerCase().includes(searchTerm))
-                        );
-                    }
                 }
+                // If applyDateRangeFiltersOnly is false (Full Report), startDate and endDate remain null,
+                // meaning no date filtering will be applied to the sub-collections.
 
                 let reportData = [];
                 let overallGross = 0;
                 let overallDeductions = 0;
                 let overallNet = 0;
 
-                for (const employee of filteredEmployees) {
+                for (const employee of employeesToProcess) { // Iterate over all employees
                     const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
                     const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
 
@@ -2253,7 +2244,7 @@
                     let employeeTotalDeductions = 0;
                     let employeeNetPay = 0;
 
-                    // Fetch payroll entries for the employee within the date range
+                    // Fetch payroll entries for the employee within the date range (if specified)
                     let payrollQuery = query(payrollEntriesCollectionRef);
                     if (startDate) {
                         payrollQuery = query(payrollQuery, where("timestamp", ">=", Timestamp.fromDate(startDate)));
@@ -2271,7 +2262,7 @@
                         employeeGrossPay += calculateGrossPayForReport(employee, payrollEntry);
                     });
 
-                    // Fetch deduction entries for the employee within the date range
+                    // Fetch deduction entries for the employee within the date range (if specified)
                     let deductionQuery = query(deductionEntriesCollectionRef);
                     if (startDate) {
                         deductionQuery = query(deductionQuery, where("timestamp", ">=", Timestamp.fromDate(startDate)));
@@ -2290,28 +2281,35 @@
 
                     employeeNetPay = employeeGrossPay - employeeTotalDeductions;
 
-                    reportData.push({
-                        employeeId: employee.id,
-                        name: employee.name,
-                        department: employee.department,
-                        grossPay: employeeGrossPay,
-                        totalDeductions: employeeTotalDeductions,
-                        netPay: employeeNetPay
-                    });
+                    // Only add employee to report data if they have any gross pay or deductions within the period
+                    if (employeeGrossPay > 0 || employeeTotalDeductions > 0) {
+                        reportData.push({
+                            employeeId: employee.id,
+                            name: employee.name,
+                            department: employee.department,
+                            grossPay: employeeGrossPay,
+                            totalDeductions: employeeTotalDeductions,
+                            netPay: employeeNetPay
+                        });
+                    }
 
                     overallGross += employeeGrossPay;
                     overallDeductions += employeeTotalDeductions;
                     overallNet += employeeNetPay;
                 }
 
-                displayReportModal(reportData, startDate, endDate, overallGross, overallDeductions, overallNet, applyTableFilters);
+                // Sort report data by employee ID for consistent display
+                reportData.sort((a, b) => a.employeeId.localeCompare(b.employeeId));
+
+
+                displayReportModal(reportData, startDate, endDate, overallGross, overallDeductions, overallNet, applyDateRangeFiltersOnly);
             };
 
             // Event listener for "Generate Full Report" button
-            generateFullReportBtn.addEventListener('click', () => generateReport(false));
+            generateFullReportBtn.addEventListener('click', () => generateReport(false)); // False means no date range filter
 
             // Event listener for "Generate Filtered Report" button
-            generateFilteredReportBtn.addEventListener('click', () => generateReport(true));
+            generateFilteredReportBtn.addEventListener('click', () => generateReport(true)); // True means apply date range filter only
 
             const displayReportModal = (data, startDate, endDate, overallGross, overallDeductions, overallNet, isFiltered) => {
                 // Corrected: Assign to a new variable, not the global 'document'
@@ -2319,7 +2317,7 @@
                 reportContentElement.innerHTML = `
                     <h2 class="text-3xl font-bold text-gray-800 mb-4">Payroll Report</h2>
                     <p class="text-gray-600 mb-2"><strong>Date Generated:</strong> ${new Date().toLocaleDateString()}</p>
-                    ${isFiltered ? `<p class="text-gray-600 mb-4"><strong>Period:</strong> ${startDate ? startDate.toLocaleDateString() : 'Start'} to ${endDate ? endDate.toLocaleDateString() : 'End'}</p>` : ''}
+                    ${isFiltered && (startDate || endDate) ? `<p class="text-gray-600 mb-4"><strong>Period:</strong> ${startDate ? startDate.toLocaleDateString() : 'Start'} to ${endDate ? endDate.toLocaleDateString() : 'End'}</p>` : ''}
                     <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200 mb-6">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
