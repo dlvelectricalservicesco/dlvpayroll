@@ -181,10 +181,10 @@
                             <span>Deductions</span>
                         </button>
                     </li>
-                    <li>
-                        <button id="nav-summary-payroll" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <li class="mb-4">
+                        <button id="nav-payroll-report" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            <span>Summary of Payroll</span>
+                            <span>Payroll Report</span>
                         </button>
                     </li>
                 </ul>
@@ -379,61 +379,56 @@
             </div>
         </section>
 
-        <section id="summary-payroll-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Summary of Payroll</h2>
-            <p class="text-gray-600 mb-4">View a summary of payroll and deductions for each employee, and generate reports.</p>
+        <section id="payroll-report-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Payroll Report</h2>
+            <p class="text-gray-600 mb-4">Generate comprehensive payroll reports for various periods and filters.</p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
-                    <label for="summary-department-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Department/Site</label>
-                    <select id="summary-department-filter" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="report-department-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Department/Site</label>
+                    <select id="report-department-filter" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">All Departments</option>
                         </select>
                 </div>
                 <div>
-                    <label for="summary-employee-search" class="block text-sm font-medium text-gray-700 mb-1">Search Employee</label>
-                    <input type="text" id="summary-employee-search" placeholder="Search by ID or Name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                    <label for="report-employee-search" class="block text-sm font-medium text-gray-700 mb-1">Search Employee</label>
+                    <input type="text" id="report-employee-search" placeholder="Search by ID, Name, Position, or Department" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="report-start-date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input type="date" id="report-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="report-end-date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                    <input type="date" id="report-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
             </div>
 
-            <div class="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generate Report</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="report-start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                        <input type="date" id="report-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="report-end-date" class="block text-sm font-medium text-gray-700">End Date</label>
-                        <input type="date" id="report-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div class="flex flex-col justify-end gap-2">
-                        <button id="generate-full-report-btn" class="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200 w-full">Generate Full Report</button>
-                        <button id="generate-filtered-report-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200 w-full">Generate Filtered Report</button>
-                    </div>
-                </div>
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button id="generate-full-report-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Generate Full Report</button>
+                <button id="generate-filtered-report-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Generate Filtered Report</button>
             </div>
 
             <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Payroll Summary</h3>
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generated Report Preview</h3>
                 <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department/Site</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Deductions</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
                             </tr>
                         </thead>
-                        <tbody id="summary-payroll-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Summary data will be dynamically added here -->
+                        <tbody id="report-table-body" class="bg-white divide-y divide-gray-200">
+                            <tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No report generated yet.</td></tr>
                         </tbody>
+                        <tfoot id="report-summary-footer" class="bg-gray-50">
+                            <!-- Summary will be appended here -->
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -892,10 +887,11 @@
             const editEmployeePositionInput = document.getElementById('edit-employee-position');
             const editEmployeeContactInput = document.getElementById('edit-employee-contact');
             const editEmployeeAddressInput = document.getElementById('edit-employee-address');
-            // FIX: Corrected the typo here. It should be editEmployeeSalaryRateInput = document.getElementById(...)
             const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate');
             const editEmployeeSssDeductionInput = document.getElementById('edit-employee-sss-deduction');
+            // FIX START: Corrected assignment for editEmployeePhilhealthDeductionInput
             const editEmployeePhilhealthDeductionInput = document.getElementById('edit-employee-philhealth-deduction');
+            // FIX END
             const editEmployeePagibigDeductionInput = document.getElementById('edit-employee-pagibig-deduction');
 
 
@@ -1003,14 +999,16 @@
             const deductionEntriesTableBody = document.getElementById('deduction-entries-table-body');
             let currentDeductionEntries = [];
 
-            // Elements for Summary of Payroll section
-            const summaryDepartmentFilter = document.getElementById('summary-department-filter');
-            const summaryEmployeeSearchInput = document.getElementById('summary-employee-search');
-            const summaryPayrollTableBody = document.getElementById('summary-payroll-table-body');
-            const generateFullReportBtn = document.getElementById('generate-full-report-btn'); // Renamed
-            const generateFilteredReportBtn = document.getElementById('generate-filtered-report-btn'); // New
+            // Report section elements
+            const reportDepartmentFilter = document.getElementById('report-department-filter');
+            const reportEmployeeSearchInput = document.getElementById('report-employee-search');
             const reportStartDateInput = document.getElementById('report-start-date');
             const reportEndDateInput = document.getElementById('report-end-date');
+            const generateFullReportBtn = document.getElementById('generate-full-report-btn');
+            const generateFilteredReportBtn = document.getElementById('generate-filtered-report-btn');
+            const reportTableBody = document.getElementById('report-table-body');
+            const reportSummaryFooter = document.getElementById('report-summary-footer');
+
 
             // Report Modal elements
             const reportModal = document.getElementById('report-modal');
@@ -1107,10 +1105,6 @@
                 button.addEventListener('click', () => {
                     const contentId = button.id.replace('nav-', '') + '-content';
                     showContent(contentId);
-                    // Special handling for summary payroll to refresh data
-                    if (contentId === 'summary-payroll-content') {
-                        filterSummaryPayrollEmployees();
-                    }
                 });
             });
 
@@ -1136,7 +1130,7 @@
                 populateDepartmentDropdowns(); // Call this after departments are loaded/rendered
                 populatePayrollDepartmentFilter(); // Also populate payroll filter
                 populateDeductionsDepartmentFilter(); // Populate deductions filter
-                populateSummaryDepartmentFilter(); // Populate summary filter
+                populateReportDepartmentFilter(); // Populate report filter
             };
 
             // Function to populate department dropdowns (for Add/Edit Employee modals)
@@ -1175,14 +1169,14 @@
                 });
             };
 
-            // Function to populate the department dropdown in the summary payroll section
-            const populateSummaryDepartmentFilter = () => {
-                summaryDepartmentFilter.innerHTML = '<option value="">All Departments</option>'; // Add "All" option
+            // Function to populate the department dropdown in the report section
+            const populateReportDepartmentFilter = () => {
+                reportDepartmentFilter.innerHTML = '<option value="">All Departments</option>'; // Add "All" option
                 departments.forEach(dept => {
                     const option = document.createElement('option');
                     option.value = dept.name;
                     option.textContent = dept.name;
-                    summaryDepartmentFilter.appendChild(option);
+                    reportDepartmentFilter.appendChild(option);
                 });
             };
 
@@ -1230,7 +1224,8 @@
                         closeModal(addDeptModal); // Close the modal
                         addDepartmentForm.reset(); // Clear the form fields
                         showToast("Department added successfully!", "success");
-                    } catch (error) {
+                    }
+                    catch (error) {
                         console.error("Error adding department:", error);
                         showToast("Failed to add department. Please try again.", "error");
                     }
@@ -1256,7 +1251,8 @@
                         });
                         closeModal(editDeptModal);
                         showToast("Department updated successfully!", "success");
-                    } catch (error) {
+                    }
+                    catch (error) {
                         console.error("Error updating department:", error);
                         showToast("Failed to update department. Please try again.", "error");
                     }
@@ -1280,7 +1276,8 @@
                                 const deptDocRef = doc(db, `artifacts/${appId}/public/data/departments`, deptId);
                                 await deleteDoc(deptDocRef);
                                 showToast("Department deleted successfully!", "success");
-                            } catch (error) {
+                            }
+                            catch (error) {
                                 console.error("Error deleting department:", error);
                                 showToast("Failed to delete department. Please try again.", "error");
                             }
@@ -1353,7 +1350,7 @@
                     renderEmployees(); // Render the main employee list
                     filterPayrollEmployees(); // Also update the payroll employee list
                     filterDeductionsEmployees(); // Also update the deductions employee list
-                    filterSummaryPayrollEmployees(); // Update summary payroll list
+                    filterReportEmployees(); // Also update the report employee list
                 }, (error) => {
                     console.error("Error listening to employees:", error);
                     showToast("Failed to load employees.", "error");
@@ -1412,7 +1409,8 @@
                         newEmployeePhilhealthDeductionInput.value = '0'; // Reset to 0
                         newEmployeePagibigDeductionInput.value = '0'; // Reset to 0
                         showToast("Employee added successfully!", "success");
-                    } catch (error) {
+                    }
+                    catch (error) {
                         console.error("Error adding employee:", error);
                         showToast("Failed to add employee. Please try again.", "error");
                     }
@@ -1453,7 +1451,8 @@
                         });
                         closeModal(editEmployeeModal);
                         showToast("Employee updated successfully!", "success");
-                    } catch (error) {
+                    }
+                    catch (error) {
                         console.error("Error updating employee:", error);
                         showToast("Failed to update employee. Please try again.", "error");
                     }
@@ -1477,7 +1476,8 @@
                                 const employeeDocRef = doc(db, `artifacts/${appId}/public/data/employees`, employeeId);
                                 await deleteDoc(employeeDocRef);
                                 showToast("Employee deleted successfully!", "success");
-                            } catch (error) {
+                            }
+                            catch (error) {
                                 console.error("Error deleting employee:", error);
                                 showToast("Failed to delete employee. Please try again.", "error");
                             }
@@ -1775,7 +1775,8 @@
                     editPayrollEntryDocIdInput.value = ''; // Clear for next entry
                     savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
                     calculateGrossPay(); // Recalculate after submission
-                } catch (error) {
+                }
+                catch (error) {
                     console.error("Error saving payroll entry:", error);
                     showToast("Failed to save payroll entry. Please try again.", "error");
                 }
@@ -1816,7 +1817,8 @@
                                 const entryRef = doc(payrollEntriesCollectionRef, entryId);
                                 await deleteDoc(entryRef);
                                 showToast("Payroll entry deleted successfully!", "success");
-                            } catch (error) {
+                            }
+                            catch (error) {
                                 console.error("Error deleting payroll entry:", error);
                                 showToast("Failed to delete payroll entry. Please try again.", "error");
                             }
@@ -2102,7 +2104,8 @@
                     editDeductionEntryDocIdInput.value = ''; // Clear for next entry
                     saveDeductionEntryBtn.textContent = 'Add Deduction Entry'; // Reset button text
                     calculateNetPay(); // Recalculate after submission
-                } catch (error) {
+                }
+                catch (error) {
                     console.error("Error saving deduction entry:", error);
                     showToast("Failed to save deduction entry. Please try again.", "error");
                 }
@@ -2144,7 +2147,8 @@
                                 const entryRef = doc(deductionEntriesCollectionRef, entryId);
                                 await deleteDoc(entryRef);
                                 showToast("Deduction entry deleted successfully!", "success");
-                            } catch (error) {
+                            }
+                            catch (error) {
                                 console.error("Error deleting deduction entry:", error);
                                 showToast("Failed to delete deduction entry. Please try again.", "error");
                             }
@@ -2153,10 +2157,10 @@
                 }
             });
 
-            // --- Summary of Payroll Logic ---
+            // --- Payroll Report Logic ---
 
             // Helper function to calculate gross pay for a given employee and payroll entry
-            const calculateGrossPayForSummary = (employee, payrollEntry) => {
+            const calculateGrossPayForReport = (employee, payrollEntry) => {
                 const dailySalary = employee.salaryRate || 0;
                 const daysOfWork = payrollEntry.daysOfWork || 0;
                 const overtimeHrs = payrollEntry.overtimeHrs || 0;
@@ -2164,7 +2168,7 @@
                 const nightDiffHrs = payrollEntry.nightDiffHrs || 0;
                 const nightDiffOvertimeHrs = payrollEntry.nightDiffOvertimeHrs || 0;
                 const tardiness = payrollEntry.tardiness || 0;
-                const allowance = payrollEntry.allowance || 0; // Include allowance
+                const allowance = payrollEntry.allowance || 0;
 
                 const sssDeduction = employee.sssDeduction || 0;
                 const philhealthDeduction = employee.philhealthDeduction || 0;
@@ -2182,12 +2186,7 @@
                 const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction + allowance;
                 const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
 
-                return {
-                    grossPay: finalGrossPay,
-                    sssDeduction: sssDeduction,
-                    philhealthDeduction: philhealthDeduction,
-                    pagibigDeduction: pagibigDeduction
-                };
+                return finalGrossPay;
             };
 
             // Helper function to calculate total custom deductions for a given deduction entry
@@ -2202,255 +2201,164 @@
                        (deductionEntry.others || 0);
             };
 
-            // Function to render employees in the summary payroll table
-            const renderSummaryPayrollEmployeesTable = async (employeesToDisplay) => {
-                summaryPayrollTableBody.innerHTML = '';
-                if (!employeesToDisplay || employeesToDisplay.length === 0) {
-                    summaryPayrollTableBody.innerHTML = `<tr><td colspan="9" class="px-6 py-4 text-center text-gray-500">No employees found.</td></tr>`;
-                    return;
-                }
-
-                for (const employee of employeesToDisplay) {
-                    let grossPay = 0;
-                    let totalDeductions = 0;
-                    let netPay = 0;
-
-                    // Fetch latest payroll entry
-                    const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
-                    const latestPayrollQuery = query(payrollEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
-                    const payrollSnapshot = await getDocs(latestPayrollQuery);
-
-                    if (!payrollSnapshot.empty) {
-                        const latestPayrollEntry = payrollSnapshot.docs[0].data();
-                        const calculatedGross = calculateGrossPayForSummary(employee, latestPayrollEntry);
-                        grossPay = calculatedGross.grossPay;
-                    }
-
-                    // Fetch latest deduction entry
-                    const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
-                    const latestDeductionQuery = query(deductionEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
-                    const deductionSnapshot = await getDocs(latestDeductionQuery);
-
-                    if (!deductionSnapshot.empty) {
-                        const latestDeductionEntry = deductionSnapshot.docs[0].data();
-                        totalDeductions = calculateTotalCustomDeductions(latestDeductionEntry);
-                    }
-
-                    netPay = grossPay - totalDeductions;
-
-                    const row = summaryPayrollTableBody.insertRow();
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${employee.id}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.sssDeduction || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.philhealthDeduction || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.pagibigDeduction || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-semibold">₱${grossPay.toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-700 font-semibold">₱${totalDeductions.toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-700 font-bold">₱${netPay.toFixed(2)}</td>
-                    `;
-                }
+            // Function to filter and display employees in the report section
+            const filterReportEmployees = () => {
+                // This function is primarily for updating the employee list shown in the Payroll Report section,
+                // but the actual report generation will use the `generateReport` function with explicit filters.
+                // For now, it just ensures the dropdowns are populated.
+                populateReportDepartmentFilter();
             };
-
-            // Function to filter and display employees in the summary section
-            const filterSummaryPayrollEmployees = () => {
-                const selectedDepartment = summaryDepartmentFilter.value;
-                const searchTerm = summaryEmployeeSearchInput.value.toLowerCase();
-
-                let filteredEmployees = employees;
-
-                if (selectedDepartment) {
-                    filteredEmployees = filteredEmployees.filter(emp => emp.department === selectedDepartment);
-                }
-
-                if (searchTerm) {
-                    filteredEmployees = filteredEmployees.filter(emp =>
-                        emp.name.toLowerCase().includes(searchTerm) ||
-                        emp.id.toLowerCase().includes(searchTerm)
-                    );
-                }
-                renderSummaryPayrollEmployeesTable(filteredEmployees);
-            };
-
-            // Event listeners for summary filters
-            summaryDepartmentFilter.addEventListener('change', filterSummaryPayrollEmployees);
-            summaryEmployeeSearchInput.addEventListener('input', filterSummaryPayrollEmployees);
-
-            // --- Report Generation Logic ---
 
             // Reusable function to generate the report
             const generateReport = async (applyTableFilters = false) => {
-                const startDateStr = reportStartDateInput.value;
-                const endDateStr = reportEndDateInput.value;
+                reportTableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Generating report...</td></tr>';
+                reportSummaryFooter.innerHTML = ''; // Clear summary
 
-                if (!startDateStr || !endDateStr) {
-                    showToast("Please select both start and end dates for the report.", "error");
-                    return;
-                }
+                let filteredEmployees = employees;
+                let startDate = null;
+                let endDate = null;
 
-                const startDate = new Date(startDateStr);
-                const endDate = new Date(endDateStr);
-                // Set end date to end of day
-                endDate.setHours(23, 59, 59, 999);
-
-                if (startDate > endDate) {
-                    showToast("Start date cannot be after end date.", "error");
-                    return;
-                }
-
-                showToast("Generating report...", "info", 5000);
-
-                const reportData = [];
-                let overallGrossTotal = 0;
-                let overallDeductionsTotal = 0;
-                let overallNetTotal = 0;
-
-                let employeesToProcess = employees;
-
-                // Apply table filters if requested by the button
                 if (applyTableFilters) {
-                    const selectedDepartment = summaryDepartmentFilter.value;
-                    const searchTerm = summaryEmployeeSearchInput.value.toLowerCase();
+                    const selectedDepartment = reportDepartmentFilter.value;
+                    const searchTerm = reportEmployeeSearchInput.value.toLowerCase();
+                    const start = reportStartDateInput.value;
+                    const end = reportEndDateInput.value;
+
+                    if (start) startDate = new Date(start);
+                    if (end) endDate = new Date(end);
 
                     if (selectedDepartment) {
-                        employeesToProcess = employeesToProcess.filter(emp => emp.department === selectedDepartment);
+                        filteredEmployees = filteredEmployees.filter(emp => emp.department === selectedDepartment);
                     }
-
                     if (searchTerm) {
-                        employeesToProcess = employeesToProcess.filter(emp =>
+                        filteredEmployees = filteredEmployees.filter(emp =>
                             emp.name.toLowerCase().includes(searchTerm) ||
-                            emp.id.toLowerCase().includes(searchTerm)
+                            emp.id.toLowerCase().includes(searchTerm) ||
+                            emp.position.toLowerCase().includes(searchTerm) ||
+                            (emp.department && emp.department.toLowerCase().includes(searchTerm))
                         );
                     }
                 }
 
+                let reportData = [];
+                let overallGross = 0;
+                let overallDeductions = 0;
+                let overallNet = 0;
 
-                for (const employee of employeesToProcess) {
+                for (const employee of filteredEmployees) {
                     const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
                     const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
 
-                    // Fetch payroll entries within the date range
-                    const payrollQuery = query(
-                        payrollEntriesCollectionRef,
-                        where("timestamp", ">=", Timestamp.fromDate(startDate)),
-                        where("timestamp", "<=", Timestamp.fromDate(endDate))
-                    );
-                    const payrollSnapshot = await getDocs(payrollQuery);
                     let employeeGrossPay = 0;
+                    let employeeTotalDeductions = 0;
+                    let employeeNetPay = 0;
 
-                    payrollSnapshot.docs.forEach(payrollDoc => {
-                        const payrollEntry = payrollDoc.data();
-                        const calculatedGross = calculateGrossPayForSummary(employee, payrollEntry);
-                        employeeGrossPay += calculatedGross.grossPay;
+                    // Fetch payroll entries for the employee within the date range
+                    let payrollQuery = query(payrollEntriesCollectionRef);
+                    if (startDate) {
+                        payrollQuery = query(payrollQuery, where("timestamp", ">=", Timestamp.fromDate(startDate)));
+                    }
+                    if (endDate) {
+                        // Add one day to endDate to make it inclusive for the whole day
+                        const inclusiveEndDate = new Date(endDate);
+                        inclusiveEndDate.setDate(inclusiveEndDate.getDate() + 1);
+                        payrollQuery = query(payrollQuery, where("timestamp", "<", Timestamp.fromDate(inclusiveEndDate)));
+                    }
+                    const payrollSnapshot = await getDocs(payrollQuery);
+
+                    payrollSnapshot.forEach(doc => {
+                        const payrollEntry = doc.data();
+                        employeeGrossPay += calculateGrossPayForReport(employee, payrollEntry);
                     });
 
-                    // Fetch deduction entries within the date range
-                    const deductionQuery = query(
-                        deductionEntriesCollectionRef,
-                        where("timestamp", ">=", Timestamp.fromDate(startDate)),
-                        where("timestamp", "<=", Timestamp.fromDate(endDate))
-                    );
+                    // Fetch deduction entries for the employee within the date range
+                    let deductionQuery = query(deductionEntriesCollectionRef);
+                    if (startDate) {
+                        deductionQuery = query(deductionQuery, where("timestamp", ">=", Timestamp.fromDate(startDate)));
+                    }
+                    if (endDate) {
+                        const inclusiveEndDate = new Date(endDate);
+                        inclusiveEndDate.setDate(inclusiveEndDate.getDate() + 1);
+                        deductionQuery = query(deductionQuery, where("timestamp", "<", Timestamp.fromDate(inclusiveEndDate)));
+                    }
                     const deductionSnapshot = await getDocs(deductionQuery);
-                    let employeeCustomDeductions = 0;
 
-                    deductionSnapshot.docs.forEach(deductionDoc => {
-                        const deductionEntry = deductionDoc.data();
-                        employeeCustomDeductions += calculateTotalCustomDeductions(deductionEntry);
+                    deductionSnapshot.forEach(doc => {
+                        const deductionEntry = doc.data();
+                        employeeTotalDeductions += calculateTotalCustomDeductions(deductionEntry);
                     });
 
-                    const employeeNetPay = employeeGrossPay - employeeCustomDeductions;
+                    employeeNetPay = employeeGrossPay - employeeTotalDeductions;
 
                     reportData.push({
-                        id: employee.id,
+                        employeeId: employee.id,
                         name: employee.name,
                         department: employee.department,
-                        sssDeduction: employee.sssDeduction || 0,
-                        philhealthDeduction: employee.philhealthDeduction || 0,
-                        pagibigDeduction: employee.pagibigDeduction || 0,
                         grossPay: employeeGrossPay,
-                        totalDeductions: employeeCustomDeductions,
+                        totalDeductions: employeeTotalDeductions,
                         netPay: employeeNetPay
                     });
 
-                    overallGrossTotal += employeeGrossPay;
-                    overallDeductionsTotal += employeeCustomDeductions;
-                    overallNetTotal += employeeNetPay;
+                    overallGross += employeeGrossPay;
+                    overallDeductions += employeeTotalDeductions;
+                    overallNet += employeeNetPay;
                 }
 
-                displayReportModal(reportData, startDateStr, endDateStr, overallGrossTotal, overallDeductionsTotal, overallNetTotal, applyTableFilters);
-                showToast("Report generated successfully!", "success");
+                displayReportModal(reportData, startDate, endDate, overallGross, overallDeductions, overallNet, applyTableFilters);
             };
 
             // Event listener for "Generate Full Report" button
             generateFullReportBtn.addEventListener('click', () => generateReport(false));
 
-            // Event listener for "Generate Filtered Report" button (new)
+            // Event listener for "Generate Filtered Report" button
             generateFilteredReportBtn.addEventListener('click', () => generateReport(true));
 
-
             const displayReportModal = (data, startDate, endDate, overallGross, overallDeductions, overallNet, isFiltered) => {
-                let reportType = isFiltered ? "Filtered Payroll Summary Report" : "Payroll Summary Report";
-                let filterInfo = isFiltered ? `<p class="text-gray-600">Filters Applied: Department: "${summaryDepartmentFilter.value || 'All'}", Employee Search: "${summaryEmployeeSearchInput.value || 'None'}"</p>` : '';
-
-                let reportHtml = `
-                    <div class="text-center mb-8">
-                        <h1 class="text-3xl font-bold text-gray-800 mb-2">DLV Electrical Services Co.</h1>
-                        <h2 class="text-2xl font-semibold text-gray-700 mb-2">${reportType}</h2>
-                        <p class="text-gray-600">For the period: <span class="font-medium">${startDate}</span> to <span class="font-medium">${endDate}</span></p>
-                        ${filterInfo}
-                    </div>
-                    <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200 mb-8">
+                // Corrected: Assign to a new variable, not the global 'document'
+                const reportContentElement = document.getElementById('report-content');
+                reportContentElement.innerHTML = `
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Payroll Report</h2>
+                    <p class="text-gray-600 mb-2"><strong>Date Generated:</strong> ${new Date().toLocaleDateString()}</p>
+                    ${isFiltered ? `<p class="text-gray-600 mb-4"><strong>Period:</strong> ${startDate ? startDate.toLocaleDateString() : 'Start'} to ${endDate ? endDate.toLocaleDateString() : 'End'}</p>` : ''}
+                    <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200 mb-6">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Deductions</th>
-                                    <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Deductions</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                `;
-
-                data.forEach(row => {
-                    reportHtml += `
-                        <tr>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">${row.id}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">${row.name}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">${row.department}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">₱${row.sssDeduction.toFixed(2)}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">₱${row.philhealthDeduction.toFixed(2)}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-600">₱${row.pagibigDeduction.toFixed(2)}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-green-700 font-semibold">₱${row.grossPay.toFixed(2)}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-red-700 font-semibold">₱${row.totalDeductions.toFixed(2)}</td>
-                            <td class="px-4 py-2 whitespace-nowrap text-sm text-blue-700 font-bold">₱${row.netPay.toFixed(2)}</td>
-                        </tr>
-                    `;
-                });
-
-                reportHtml += `
+                                ${data.map(item => `
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.employeeId}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${item.name}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${item.department}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${item.grossPay.toFixed(2)}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${item.totalDeductions.toFixed(2)}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${item.netPay.toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                                ${data.length === 0 ? '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No data available for the selected filters.</td></tr>' : ''}
                             </tbody>
-                            <tfoot class="bg-gray-100">
+                            <tfoot class="bg-gray-50">
                                 <tr>
-                                    <td colspan="6" class="px-4 py-2 text-right text-base font-bold text-gray-800">Overall Totals:</td>
-                                    <td class="px-4 py-2 text-left text-base font-bold text-green-800">₱${overallGross.toFixed(2)}</td>
-                                    <td class="px-4 py-2 text-left text-base font-bold text-red-800">₱${overallDeductions.toFixed(2)}</td>
-                                    <td class="px-4 py-2 text-left text-base font-bold text-blue-800">₱${overallNet.toFixed(2)}</td>
+                                    <td colspan="3" class="px-6 py-3 text-right text-base font-bold text-gray-700">Overall Totals:</td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-base font-bold text-gray-700">₱${overallGross.toFixed(2)}</td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-base font-bold text-gray-700">₱${overallDeductions.toFixed(2)}</td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-base font-bold text-gray-700">₱${overallNet.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 `;
-
-                reportContentDiv.innerHTML = reportHtml;
                 openModal(reportModal);
             };
+
 
             closeReportModalBtn.addEventListener('click', () => {
                 closeModal(reportModal);
