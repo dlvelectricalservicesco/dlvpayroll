@@ -3,2407 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DLV Electrical Services Co. Payroll System</title>
-    <!-- Tailwind CSS CDN -->
+    <title>DLV Electrical Services - Payroll & ND System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom styles for the Inter font */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Hide content sections by default */
-        .content-section {
-            display: none;
-        }
-        /* Show the active content section */
-        .content-section.active {
-            display: block;
-        }
-        /* Modal styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 1.5rem; /* Made padding slightly more compact */
-            border-radius: 0.75rem; /* rounded-lg */
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
-            width: 95%; /* Increased width slightly for better fit */
-            max-width: 650px; /* Reduced max-width for more compactness */
-            max-height: 90vh; /* Added max-height for scrollbar */
-            overflow-y: auto; /* Added scrollbar for vertical overflow */
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-        .modal-overlay.show .modal-content {
-            transform: translateY(0);
-        }
-        .modal-close-button {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #6B7280; /* gray-500 */
-            transition: color 0.2s ease;
-        }
-        .modal-close-button:hover {
-            color: #1F2937; /* gray-900 */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f8fafc;
         }
 
-        /* Toast Notification Styles */
-        #toast-notification {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            background-color: #333;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            z-index: 1001; /* Above modals */
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        #toast-notification.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        #toast-notification.success {
-            background-color: #22C55E; /* green-500 */
-        }
-        #toast-notification.error {
-            background-color: #EF4444; /* red-500 */
-        }
-        #toast-notification.info {
-            background-color: #3B82F6; /* blue-500 */
-        }
-        #toast-notification .toast-icon {
-            font-size: 1.25rem;
+        .table-sticky-col {
+            @apply sticky left-0 z-20 bg-white border-r border-slate-100;
         }
 
-        /* Report Modal Specific Styles */
-        #report-modal .modal-content {
-            max-width: 900px; /* Wider for report */
-            padding: 2rem;
-        }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #report-modal, #report-modal * {
-                visibility: visible;
-            }
-            #report-modal {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: auto;
-                overflow: visible;
-                background-color: white;
-            }
-            #report-modal .modal-content {
-                width: 100%;
-                max-width: 100%;
-                box-shadow: none;
-                border-radius: 0;
-                transform: none;
-            }
-            .modal-close-button, #report-print-btn {
-                display: none !important;
-            }
+            .no-print { display: none !important; }
+            .md\:ml-64 { margin-left: 0 !important; }
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex">
+<body class="text-slate-900">
 
-    <!-- Side Navigation Bar -->
-    <aside class="w-64 bg-gradient-to-br from-blue-700 to-blue-900 text-white shadow-lg rounded-r-lg p-6 flex flex-col justify-between">
-        <div>
-            <div class="text-3xl font-extrabold mb-8 text-center tracking-wide">
-                DLV Payroll
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-50 no-print">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center text-slate-900 font-black">D</div>
+                <h1 class="text-lg font-extrabold tracking-tight">DLV ELECT.</h1>
             </div>
-            <nav>
-                <ul>
-                    <li class="mb-4">
-                        <button id="nav-dashboard" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-9v10a1 1 0 001 1h3M3 12l2 2m0 0l7 7 7-7M3 12v6a1 1 0 001 1h3m10-1v-6m-4-6v6a1 1 0 001 1h3"></path></svg>
-                            <span>Dashboard</span>
-                        </button>
-                    </li>
-                    <li class="mb-4">
-                        <button id="nav-department" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                            <span>Department/Site</span>
-                        </button>
-                    </li>
-                    <li class="mb-4">
-                        <button id="nav-employee" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2m20 0h-2.356A6 6 0 0110 6.136v0a6 6 0 009.356 1.857M17 20v-2A3 3 0 005.356 18.143M10 12V6a6 6 0 0112 0v6m-6 0h-2.356A6 6 0 006 18.143M10 12h2.356A6 6 0 0118 6.136v0a6 6 0 01-9.356 1.857"></path></svg>
-                            <span>Manage Employee</span>
-                        </button>
-                    </li>
-                     <li class="mb-4">
-                        <button id="nav-process-payroll" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0h-2m5 0h2M9 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h4l-1 1v2h5v-2l-1-1h4a2 2 0 002-2V5a2 2 0 00-2-2h-2m-7 12l-2 2m0 0l-2-2m2 2v2"></path></svg>
-                            <span>Process Payroll</span>
-                        </button>
-                    </li>
-                    <li class="mb-4">
-                        <button id="nav-deductions" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <span>Deductions</span>
-                        </button>
-                    </li>
-                    <li class="mb-4">
-                        <button id="nav-payroll-report" class="nav-button w-full text-left py-3 px-4 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            <span>Payroll Report</span>
-                        </button>
-                    </li>
-                </ul>
-            </nav>
+            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em]">Payroll & ND Console</p>
         </div>
-        <div class="text-sm text-gray-300 text-center">
-            &copy; 2025 DLV Electrical Services Co.
-        </div>
+        
+        <nav class="mt-4 px-4 space-y-1">
+            <button onclick="nav('dashboard')" class="w-full flex items-center px-4 py-3 rounded-xl hover:bg-slate-800"><i class="fas fa-chart-line w-5"></i><span class="ml-3 text-sm">Dashboard</span></button>
+            <button onclick="nav('attendance')" class="w-full flex items-center px-4 py-3 rounded-xl hover:bg-slate-800"><i class="fas fa-calendar-check w-5"></i><span class="ml-3 text-sm">Attendance</span></button>
+            <button onclick="nav('payroll')" class="w-full flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 text-emerald-400"><i class="fas fa-money-check-dollar w-5"></i><span class="ml-3 text-sm font-bold text-white">Payroll Report</span></button>
+            <button onclick="nav('deduction')" class="w-full flex items-center px-4 py-3 rounded-xl hover:bg-slate-800"><i class="fas fa-percent w-5 text-rose-400"></i><span class="ml-3 text-sm">Deductions</span></button>
+            <button onclick="nav('employee')" class="w-full flex items-center px-4 py-3 rounded-xl hover:bg-slate-800"><i class="fas fa-users w-5"></i><span class="ml-3 text-sm">Workers</span></button>
+        </nav>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 p-8 overflow-y-auto">
-        <!-- Header -->
-        <header class="bg-white shadow-md rounded-lg p-6 mb-8 flex items-center justify-between">
-            <h1 class="text-4xl font-bold text-gray-800">Welcome, Admin!</h1>
-            <div class="text-lg text-gray-600">
-                DLV Electrical Services Co.
+    <div class="md:ml-64 min-h-screen flex flex-col">
+        <header class="bg-white border-b px-6 py-4 flex justify-between items-center no-print sticky top-0 z-40">
+            <h2 class="text-xs font-extrabold uppercase text-slate-500" id="currentSectionTitle">Payroll Management</h2>
+            <div class="flex items-center gap-4">
+                <div class="bg-slate-50 border rounded-full px-4 py-1.5 flex items-center gap-2">
+                    <span class="text-[9px] font-black text-slate-400 uppercase">Cycle:</span>
+                    <input type="date" id="cycleDateInput" onchange="updateCycle(this.value)" class="bg-transparent text-xs font-bold outline-none cursor-pointer">
+                </div>
             </div>
         </header>
 
-        <!-- Content Sections -->
-        <section id="dashboard-content" class="content-section active bg-white shadow-md rounded-lg p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Dashboard Overview</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card 1: Total Employees -->
-                <div class="bg-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
-                    <div>
-                        <p class="text-xl font-medium">Total Employees</p>
-                        <p class="text-4xl font-bold mt-2">120</p>
+        <main class="p-6">
+            <!-- DASHBOARD -->
+            <section id="section-dashboard" class="content-section space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Workers</p>
+                        <h3 class="text-3xl font-black mt-1" id="stat-workers">0</h3>
                     </div>
-                    <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2m20 0h-2.356A6 6 0 0110 6.136v0a6 6 0 009.356 1.857M17 20v-2A3 3 0 005.356 18.143M10 12V6a6 6 0 0112 0v6m-6 0h-2.356A6 6 0 006 18.143M10 12h2.356A6 6 0 0118 6.136v0a6 6 0 01-9.356 1.857"></path></svg>
-                </div>
-                <!-- Card 2: Monthly Payroll -->
-                <div class="bg-green-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
-                    <div>
-                        <p class="text-xl font-medium">Monthly Payroll</p>
-                        <p class="text-4xl font-bold mt-2">₱75,000</p>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Weekly Payroll Total</p>
+                        <h3 class="text-3xl font-black mt-1 text-emerald-600" id="stat-payroll-dash">₱ 0.00</h3>
                     </div>
-                    <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.592 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.592-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <!-- Card 3: Pending Approvals -->
-                <div class="bg-yellow-500 text-white p-6 rounded-lg shadow-lg flex items-center justify-between">
-                    <div>
-                        <p class="text-xl font-medium">Pending Approvals</p>
-                        <p class="text-4xl font-bold mt-2">5</p>
-                    </div>
-                    <svg class="w-12 h-12 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-            </div>
-
-            <div class="mt-8 bg-gray-50 p-6 rounded-lg shadow-inner">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Quick Actions</h3>
-                <div class="flex flex-wrap gap-4">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg shadow-md transition duration-200">Generate Payroll</button>
-                    <button class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg shadow-md transition duration-200">Add New Employee</button>
-                    <button class="bg-teal-600 hover:bg-teal-700 text-white py-3 px-6 rounded-lg shadow-md transition duration-200">View Reports</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="department-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Department/Site Management</h2>
-            <p class="text-gray-600 mb-4">Manage departments and project sites for DLV Electrical Services Co.</p>
-
-            <div class="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Actions</h3>
-                <button id="open-add-dept-modal" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Department/Site</button>
-            </div>
-
-            <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Current Departments/Sites</h3>
-                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="departments-table-body" class="bg-white divide-y divide-gray-200">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="employee-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Manage Employees</h2>
-            <p class="text-gray-600 mb-4">This section is for adding, editing, and viewing employee details and their payroll information.</p>
-
-            <div class="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Actions</h3>
-                <button id="open-add-employee-modal" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add New Employee</button>
-            </div>
-
-            <div class="mb-6">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Employee List</h3>
-                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact No.</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary Rate</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SSS Deduction</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Philhealth Deduction</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pagibig Deduction</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="employees-table-body" class="bg-white divide-y divide-gray-200">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="process-payroll-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Process Payroll</h2>
-            <p class="text-gray-600 mb-4">This section allows you to manage and process payroll for employees.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <label for="payroll-department-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Department/Site</label>
-                    <select id="payroll-department-filter" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">All Departments</option>
-                        </select>
-                </div>
-                <div>
-                    <label for="payroll-employee-search" class="block text-sm font-medium text-gray-700 mb-1">Search Employee</label>
-                    <input type="text" id="payroll-employee-search" placeholder="Search by ID, Name, Position, or Department" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-            </div>
-
-            <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Eligible Employees for Payroll</h3>
-                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department/Site</th>
-                            </tr>
-                        </thead>
-                        <tbody id="payroll-employees-table-body" class="bg-white divide-y divide-gray-200">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
             </section>
 
-        <section id="deductions-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Manage Deductions</h2>
-            <p class="text-gray-600 mb-4">This section allows you to manage deductions for employees.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <label for="deductions-department-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Department/Site</label>
-                    <select id="deductions-department-filter" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">All Departments</option>
-                        </select>
-                </div>
-                <div>
-                    <label for="deductions-employee-search" class="block text-sm font-medium text-gray-700 mb-1">Search Employee</label>
-                    <input type="text" id="deductions-employee-search" placeholder="Search by ID, Name, Position, or Department" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-            </div>
-
-            <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Eligible Employees for Deductions Entry</h3>
-                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department/Site</th>
-                            </tr>
-                        </thead>
-                        <tbody id="deductions-employees-table-body" class="bg-white divide-y divide-gray-200">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="payroll-report-content" class="content-section bg-white shadow-md rounded-lg p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-700 mb-6">Payroll Report</h2>
-            <p class="text-gray-600 mb-4">Generate comprehensive payroll reports for various periods and filters.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <label for="report-department-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by Department/Site</label>
-                    <select id="report-department-filter" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">All Departments</option>
-                        </select>
-                </div>
-                <div>
-                    <label for="report-employee-search" class="block text-sm font-medium text-gray-700 mb-1">Search Employee</label>
-                    <input type="text" id="report-employee-search" placeholder="Search by ID, Name, Position, or Department" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="report-start-date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                    <input type="date" id="report-start-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="report-end-date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                    <input type="date" id="report-end-date" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-            </div>
-
-            <div class="flex flex-wrap gap-4 mb-8">
-                <button id="generate-full-report-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Generate Full Report</button>
-                <button id="generate-filtered-report-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Generate Filtered Report</button>
-            </div>
-
-            <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Generated Report Preview</h3>
-                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Deductions</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
-                            </tr>
-                        </thead>
-                        <tbody id="report-table-body" class="bg-white divide-y divide-gray-200">
-                            <tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No report generated yet.</td></tr>
-                        </tbody>
-                        <tfoot id="report-summary-footer" class="bg-gray-50">
-                            <!-- Summary will be appended here -->
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Add Department/Site Modal -->
-    <div id="add-dept-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-add-dept-modal">&times;</button>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Add New Department/Site</h3>
-            <form id="add-department-form" class="space-y-4">
-                <div>
-                    <label for="new-dept-name" class="block text-sm font-medium text-gray-700">Department/Site Name</label>
-                    <input type="text" id="new-dept-name" name="new-dept-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-dept-description" class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea id="new-dept-description" name="new-dept-description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Department/Site</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Department/Site Modal -->
-    <div id="edit-dept-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-edit-dept-modal">&times;</button>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Edit Department/Site</h3>
-            <form id="edit-department-form" class="space-y-4">
-                <input type="hidden" id="edit-dept-id"> <!-- Changed from index to id -->
-                <div>
-                    <label for="edit-dept-name" class="block text-sm font-medium text-gray-700">Department/Site Name</label>
-                    <input type="text" id="edit-dept-name" name="edit-dept-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="edit-dept-description" class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea id="edit-dept-description" name="edit-dept-description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add Employee Modal -->
-    <div id="add-employee-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-add-employee-modal">&times;</button>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Add New Employee</h3>
-            <form id="add-employee-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Employee ID will be auto-generated -->
-                <div>
-                    <label for="new-employee-name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" id="new-employee-name" name="new-employee-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
-                    <select id="new-employee-department" name="new-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select Department</option>
-                        <!-- Options will be dynamically populated -->
-                    </select>
-                </div>
-                <div>
-                    <label for="new-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
-                    <input type="text" id="new-employee-position" name="new-employee-position" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-employee-contact" class="block text-sm font-medium text-gray-700">Contact No.</label>
-                    <input type="text" id="new-employee-contact" name="new-employee-contact" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="md:col-span-2">
-                    <label for="new-employee-address" class="block text-sm font-medium text-gray-700">Address</label>
-                    <textarea id="new-employee-address" name="new-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-                <div>
-                    <label for="new-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Daily)</label>
-                    <input type="number" id="new-employee-salary-rate" name="new-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-employee-sss-deduction" class="block text-sm font-medium text-gray-700">SSS Deduction</label>
-                    <input type="number" id="new-employee-sss-deduction" name="new-employee-sss-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-employee-philhealth-deduction" class="block text-sm font-medium text-gray-700">Philhealth Deduction</label>
-                    <input type="number" id="new-employee-philhealth-deduction" name="new-employee-philhealth-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="new-employee-pagibig-deduction" class="block text-sm font-medium text-gray-700">Pagibig Deduction</label>
-                    <input type="number" id="new-employee-pagibig-deduction" name="new-employee-pagibig-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="md:col-span-2">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Employee</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Employee Modal -->
-    <div id="edit-employee-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-edit-employee-modal">&times;</button>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Edit Employee Details</h3>
-            <form id="edit-employee-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <input type="hidden" id="edit-employee-doc-id"> <!-- Hidden field for Firestore doc ID -->
-                <div>
-                    <label for="edit-employee-id" class="block text-sm font-medium text-gray-700">Employee ID</label>
-                    <input type="text" id="edit-employee-id" name="edit-employee-id" readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-gray-100 cursor-not-allowed">
-                </div>
-                <div>
-                    <label for="edit-employee-name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" id="edit-employee-name" name="edit-employee-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="edit-employee-department" class="block text-sm font-medium text-gray-700">Department</label>
-                    <select id="edit-employee-department" name="edit-employee-department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select Department</option>
-                        <!-- Options will be dynamically populated -->
-                    </select>
-                </div>
-                <div>
-                    <label for="edit-employee-position" class="block text-sm font-medium text-gray-700">Position</label>
-                    <input type="text" id="edit-employee-position" name="edit-employee-position" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="edit-employee-contact" class="block text-sm font-medium text-gray-700">Contact No.</label>
-                    <input type="text" id="edit-employee-contact" name="edit-employee-contact" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="md:col-span-2">
-                    <label for="edit-employee-address" class="block text-sm font-medium text-gray-700">Address</label>
-                    <textarea id="edit-employee-address" name="edit-employee-address" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-                <div>
-                    <label for="edit-employee-salary-rate" class="block text-sm font-medium text-gray-700">Salary Rate (Daily)</label>
-                    <input type="number" id="edit-employee-salary-rate" name="edit-employee-salary-rate" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="edit-employee-sss-deduction" class="block text-sm font-medium text-gray-700">SSS Deduction</label>
-                    <input type="number" id="edit-employee-sss-deduction" name="edit-employee-sss-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="edit-employee-philhealth-deduction" class="block text-sm font-medium text-gray-700">Philhealth Deduction</label>
-                    <input type="number" id="edit-employee-philhealth-deduction" name="edit-employee-philhealth-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="edit-employee-pagibig-deduction" class="block text-sm font-medium text-gray-700">Pagibig Deduction</label>
-                    <input type="number" id="edit-employee-pagibig-deduction" name="edit-employee-pagibig-deduction" step="0.01" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="md:col-span-2">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Payroll Entry Modal -->
-    <div id="payroll-entry-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-payroll-entry-modal">&times;</button>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Payroll Entry for: <span id="payroll-employee-display-name"></span> (<span id="payroll-employee-display-id"></span>)</h3>
-
-            <form id="add-payroll-entry-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <input type="hidden" id="current-payroll-employee-id">
-                <input type="hidden" id="edit-payroll-entry-doc-id"> <!-- For editing existing entries -->
-                <input type="hidden" id="current-employee-daily-salary"> <!-- To store the employee's daily salary -->
-                <input type="hidden" id="current-employee-sss-deduction"> <!-- To store SSS deduction -->
-                <input type="hidden" id="current-employee-philhealth-deduction"> <!-- To store Philhealth deduction -->
-                <input type="hidden" id="current-employee-pagibig-deduction"> <!-- To store Pagibig deduction -->
-
-                <div>
-                    <label for="payroll-entry-date" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" id="payroll-entry-date" name="payroll-entry-date" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="payroll-days-of-work" class="block text-sm font-medium text-gray-700">Days of Work</label>
-                    <input type="number" id="payroll-days-of-work" name="days-of-work" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="payroll-overtime-hrs" class="block text-sm font-medium text-gray-700">Overtime Hrs</label>
-                    <input type="number" id="payroll-overtime-hrs" name="overtime-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="payroll-sunday-holiday-hrs" class="block text-sm font-medium text-gray-700">Sunday/Holiday Hrs</label>
-                    <input type="number" id="payroll-sunday-holiday-hrs" name="sunday-holiday-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="payroll-night-diff-hrs" class="block text-sm font-medium text-gray-700">Night Differential Hrs</label>
-                    <input type="number" id="payroll-night-diff-hrs" name="night-diff-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="payroll-night-diff-overtime-hrs" class="block text-sm font-medium text-gray-700">Night Differential Overtime Hrs</label>
-                    <input type="number" id="payroll-night-diff-overtime-hrs" name="night-diff-overtime-hrs" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="payroll-tardiness" class="block text-sm font-medium text-gray-700">Tardiness (Hrs)</label>
-                    <input type="number" id="payroll-tardiness" name="tardiness" step="0.5" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="payroll-allowance" class="block text-sm font-medium text-gray-700">Allowance</label>
-                    <input type="number" id="payroll-allowance" name="payroll-allowance" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <div class="md:col-span-2 mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Gross Pay Calculation Details</h4>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                        <p>Base Pay:</p><p id="calc-base-pay" class="font-medium text-right">₱0.00</p>
-                        <p>Overtime Pay:</p><p id="calc-overtime-pay" class="font-medium text-right">₱0.00</p>
-                        <p>Sunday/Holiday Pay:</p><p id="calc-sunday-holiday-pay" class="font-medium text-right">₱0.00</p>
-                        <p>Night Differential Pay:</p><p id="calc-night-diff-pay" class="font-medium text-right">₱0.00</p>
-                        <p>Night Differential Overtime Pay:</p><p id="calc-night-diff-overtime-pay" class="font-medium text-right">₱0.00</p>
-                        <p class="text-red-700">Tardiness Deduction:</p><p id="calc-tardiness-deduction" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p>Allowance:</p><p id="calc-allowance" class="font-medium text-right">₱0.00</p>
-                        <p class="font-bold text-gray-900">Gross Pay (Before Statutory):</p><p id="calc-gross-before-statutory" class="font-bold text-right text-gray-900">₱0.00</p>
-                        <p class="text-purple-700">SSS Deduction:</p><p id="calc-sss-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
-                        <p class="text-purple-700">Philhealth Deduction:</p><p id="calc-philhealth-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
-                        <p class="text-purple-700">Pagibig Deduction:</p><p id="calc-pagibig-deduction" class="font-medium text-right text-purple-700">-₱0.00</p>
-                        <p class="font-bold text-xl text-blue-800">Final Gross Pay:</p><p id="payroll-gross-pay" class="font-bold text-xl text-right text-blue-800">₱0.00</p>
+            <!-- ATTENDANCE -->
+            <section id="section-attendance" class="content-section hidden">
+                <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
+                    <div class="p-4 border-b bg-slate-50 text-xs font-bold uppercase text-slate-500">Attendance & Site Input</div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left min-w-[1200px]">
+                            <thead class="bg-slate-50/50 border-b">
+                                <tr id="attendanceHeader"></tr>
+                            </thead>
+                            <tbody id="attendanceBody" class="divide-y"></tbody>
+                        </table>
                     </div>
                 </div>
+            </section>
 
-                <div class="md:col-span-2">
-                    <button type="submit" id="save-payroll-entry-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Payroll Entry</button>
-                </div>
-            </form>
+            <!-- PAYROLL REPORT (DETAILED ND) -->
+            <section id="section-payroll" class="content-section hidden">
+                <div class="bg-white rounded-3xl shadow-xl border overflow-hidden">
+                    <div class="p-8 bg-slate-900 text-white flex justify-between items-center no-print">
+                        <div>
+                            <h3 class="font-black text-2xl uppercase tracking-tighter">Detailed Payroll Summary</h3>
+                            <p class="text-xs text-slate-400 font-bold italic">Kasama ang ND Pay at ND OT Pay computation.</p>
+                        </div>
+                        <button onclick="window.print()" class="bg-yellow-400 text-slate-900 px-8 py-3 rounded-xl text-xs font-black shadow-lg shadow-yellow-400/20">Print Report</button>
+                    </div>
 
-            <div class="mt-8">
-                <h4 class="text-xl font-semibold text-gray-700 mb-4">Recorded Payroll Entries</h4>
-                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Days Work</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">OT Hrs</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sun/Hol Hrs</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ND Hrs</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ND OT Hrs</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tardiness</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Allowance</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="payroll-entries-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Payroll entries will be dynamically added here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left min-w-[3000px]">
+                            <thead>
+                                <tr class="bg-slate-100 text-[10px] font-black uppercase text-slate-500 border-b">
+                                    <th rowspan="2" class="px-6 py-4 table-sticky-col bg-slate-50">Worker Details</th>
+                                    <th rowspan="2" class="px-3 py-4 text-center border-r">Daily Rate</th>
+                                    <th colspan="2" class="px-4 py-2 text-center border-r bg-emerald-50 text-emerald-700">Regular (100%)</th>
+                                    <th colspan="2" class="px-4 py-2 text-center border-r bg-purple-50 text-purple-700">Special (130%)</th>
+                                    <th colspan="2" class="px-4 py-2 text-center border-r bg-orange-50 text-orange-700">Holiday (200%)</th>
+                                    
+                                    <!-- OVERTIME -->
+                                    <th colspan="2" class="px-4 py-2 text-center border-r bg-blue-50 text-blue-700">Normal OT</th>
 
-    <!-- Deductions Entry Modal -->
-    <div id="deductions-entry-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-deductions-entry-modal">&times;</button>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Deductions Entry for: <span id="deductions-employee-display-name"></span> (<span id="deductions-employee-display-id"></span>)</h3>
+                                    <!-- NIGHT DIFFERENTIAL (NEW BREAKDOWN) -->
+                                    <th colspan="3" class="px-4 py-2 text-center border-r bg-indigo-900 text-white">Night Differential (ND)</th>
+                                    
+                                    <th rowspan="2" class="px-3 py-4 text-center border-r">Allow.</th>
+                                    <th rowspan="2" class="px-4 py-4 text-right bg-blue-100 text-blue-900 font-black border-x">Gross Pay</th>
+                                    <th colspan="8" class="px-4 py-2 text-center bg-rose-50/50 text-rose-700">Deductions</th>
+                                    <th rowspan="2" class="px-6 py-4 text-right bg-emerald-600 text-white min-w-[150px]">Net Pay</th>
+                                </tr>
+                                <tr class="bg-slate-50 text-[9px] font-bold text-slate-400 border-b">
+                                    <th>Days</th><th class="border-r">Amount</th>
+                                    <th>Days</th><th class="border-r">Amount</th>
+                                    <th>Days</th><th class="border-r">Amount</th>
+                                    <th>Hrs</th><th class="border-r">Amount</th>
+                                    
+                                    <!-- ND DETAILS -->
+                                    <th class="px-3 py-2 text-center bg-indigo-50 text-indigo-800">ND Hours</th>
+                                    <th class="px-3 py-2 text-right bg-indigo-50 text-indigo-800">ND Premium (10%)</th>
+                                    <th class="px-3 py-2 text-right bg-indigo-100 text-indigo-900 font-black border-r">Total ND Pay</th>
 
-            <form id="add-deduction-entry-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <input type="hidden" id="current-deductions-employee-id">
-                <input type="hidden" id="edit-deduction-entry-doc-id"> <!-- For editing existing entries -->
-                <input type="hidden" id="current-deductions-gross-pay"> <!-- To store the employee's gross pay for calculation -->
-
-                <div>
-                    <label for="deductions-entry-date" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" id="deductions-entry-date" name="deductions-entry-date" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-govt-loan" class="block text-sm font-medium text-gray-700">Govt Loan</label>
-                    <input type="number" id="deductions-govt-loan" name="govt-loan" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-coop-share" class="block text-sm font-medium text-gray-700">Coop Share</label>
-                    <input type="number" id="deductions-coop-share" name="coop-share" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-coop-2025" class="block text-sm font-medium text-gray-700">Coop 2025</label>
-                    <input type="number" id="deductions-coop-2025" name="coop-2025" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-withholding-tax" class="block text-sm font-medium text-gray-700">Withholding Tax</label>
-                    <input type="number" id="deductions-withholding-tax" name="withholding-tax" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-unpaid-loan" class="block text-sm font-medium text-gray-700">Unpaid Loan</label>
-                    <input type="number" id="deductions-unpaid-loan" name="unpaid-loan" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-ca-voucher" class="block text-sm font-medium text-gray-700">C/A Voucher</label>
-                    <input type="number" id="deductions-ca-voucher" name="ca-voucher" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-daily-balance" class="block text-sm font-medium text-gray-700">Daily Balance</label>
-                    <input type="number" id="deductions-daily-balance" name="daily-balance" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="deductions-others" class="block text-sm font-medium text-gray-700">Others</label>
-                    <input type="number" id="deductions-others" name="others" step="0.01" min="0" value="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <div class="md:col-span-2 mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Net Pay Calculation Details</h4>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                        <p>Gross Pay (from last payroll):</p><p id="calc-deductions-gross-pay" class="font-medium text-right">₱0.00</p>
-                        <p class="text-red-700">Govt Loan:</p><p id="calc-govt-loan" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="text-red-700">Coop Share:</p><p id="calc-coop-share" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="text-red-700">Coop 2025:</p><p id="calc-coop-2025" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="text-red-700">Withholding Tax:</p><p id="calc-withholding-tax" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="text-red-700">Unpaid Loan:</p><p id="calc-unpaid-loan" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="text-red-700">C/A Voucher:</p><p id="calc-ca-voucher" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="text-red-700">Daily Balance:</p><p id="calc-daily-balance" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="text-red-700">Others:</p><p id="calc-others" class="font-medium text-right text-red-700">-₱0.00</p>
-                        <p class="font-bold text-xl text-purple-800">Net Pay:</p><p id="deductions-net-pay" class="font-bold text-xl text-right text-purple-800">₱0.00</p>
+                                    <th>SSS</th><th>PH</th><th>PI</th><th>Loan</th><th>Vale</th><th>Vouch</th><th>Coop</th><th class="bg-rose-100 text-rose-700">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payrollTableBody" class="divide-y"></tbody>
+                        </table>
                     </div>
                 </div>
+            </section>
 
-                <div class="md:col-span-2">
-                    <button type="submit" id="save-deduction-entry-btn" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Add Deduction Entry</button>
+            <!-- WORKERS -->
+            <section id="section-employee" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-black">Worker Masterlist</h3>
+                    <button onclick="openModal('worker')" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-black">Add Worker</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="workerGrid"></div>
+            </section>
+
+            <!-- DEDUCTIONS -->
+            <section id="section-deduction" class="content-section hidden">
+                <div class="bg-white rounded-3xl border overflow-hidden">
+                    <div class="p-6 bg-slate-50 border-b font-black">Weekly Deductions</div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
+                                <tr>
+                                    <th class="px-8 py-5">Worker</th>
+                                    <th>SSS</th><th>PhilH</th><th>PagIBIG</th><th>Loan</th><th>Vale</th><th>Voucher</th><th>Coop</th><th class="text-right px-8">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deductionBody" class="divide-y"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL -->
+    <div id="modal-worker" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[100] flex items-center justify-center hidden">
+        <div class="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl">
+            <h3 class="text-xl font-black mb-6">New Worker</h3>
+            <form id="form-worker" class="space-y-4">
+                <input type="text" id="w-name" placeholder="Full Name" class="w-full border p-3 rounded-xl" required>
+                <input type="text" id="w-pos" placeholder="Position" class="w-full border p-3 rounded-xl" required>
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="number" id="w-rate" placeholder="Daily Rate" class="w-full border p-3 rounded-xl" required>
+                    <input type="number" id="w-allow" placeholder="Allowance" class="w-full border p-3 rounded-xl">
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeModal('worker')" class="flex-1 py-3 bg-slate-100 rounded-xl font-bold">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-yellow-400 text-slate-900 rounded-xl font-black">Save Worker</button>
                 </div>
             </form>
-
-            <div class="mt-8">
-                <h4 class="text-xl font-semibold text-gray-700 mb-4">Recorded Deduction Entries</h4>
-                <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Govt Loan</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coop Share</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coop 2025</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">W/H Tax</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unpaid Loan</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">C/A Voucher</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Daily Bal</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Others</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
-                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="deduction-entries-table-body" class="bg-white divide-y divide-gray-200">
-                            <!-- Deduction entries will be dynamically added here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
-    </div>
-
-
-    <!-- Confirmation Modal -->
-    <div id="confirm-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-confirm-modal">&times;</button>
-            <h3 class="text-2xl font-semibold text-gray-700 mb-4" id="confirm-modal-title">Confirm Action</h3>
-            <p class="text-gray-600 mb-6" id="confirm-modal-message">Are you sure you want to proceed?</p>
-            <div class="flex justify-end space-x-4">
-                <button id="confirm-cancel-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg shadow-md transition duration-200">Cancel</button>
-                <button id="confirm-ok-btn" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">OK</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Report Modal -->
-    <div id="report-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close-button" id="close-report-modal">&times;</button>
-            <div id="report-content" class="p-4">
-                <!-- Report content will be dynamically generated here -->
-            </div>
-            <div class="flex justify-end mt-6">
-                <button id="report-print-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md transition duration-200">Print Report</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast-notification" class="flex items-center">
-        <span id="toast-icon" class="toast-icon"></span>
-        <span id="toast-message"></span>
     </div>
 
     <script type="module">
-        // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, getDocs, where, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Firebase setup
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-            const firebaseConfig = {
-                apiKey: "AIzaSyBJTXVvZ2IS7i3DIY2Dl9X4PYsS5aw2ST8",
-                authDomain: "dlvpayroll-b5c3b.firebaseapp.com",
-                projectId: "dlvpayroll-b5c3b",
-                storageBucket: "dlvpayroll-b5c3b.firebaseapp.com",
-                messagingSenderId: "885811032842",
-                appId: "1:885811032842:web:879edb8a1f9a0f8f3ac0f3",
-                measurementId: "G-DKWWX56V55"
-            };
-
-            let app, db, auth, departmentsCollectionRef, employeesCollectionRef;
-            let userId = null;
-            let isAuthReady = false;
-            let currentEmployeePayrollId = null; // To keep track of the employee whose payroll is being managed
-            let currentEmployeeDailySalary = 0; // To store the employee's daily salary
-            let currentEmployeeSssDeduction = 0; // To store SSS deduction
-            let currentEmployeePhilhealthDeduction = 0; // To store Philhealth deduction
-            let currentEmployeePagibigDeduction = 0; // To store Pagibig deduction
-
-            let currentEmployeeDeductionsId = null; // To track employee for deductions
-            let currentDeductionsGrossPay = 0; // To store the gross pay for deductions calculation
-
-
-            // Get all navigation buttons
-            const navButtons = document.querySelectorAll('.nav-button');
-            // Get all content sections
-            const contentSections = document.querySelectorAll('.content-section');
-
-            // Modal elements
-            const addDeptModal = document.getElementById('add-dept-modal');
-            const openAddDeptModalBtn = document.getElementById('open-add-dept-modal');
-            const closeAddDeptModalBtn = document.getElementById('close-add-dept-modal');
-            const addDepartmentForm = document.getElementById('add-department-form');
-            const newDeptNameInput = document.getElementById('new-dept-name');
-            const newDeptDescriptionInput = document.getElementById('new-dept-description');
-
-            const editDeptModal = document.getElementById('edit-dept-modal');
-            const closeEditDeptModalBtn = document.getElementById('close-edit-dept-modal');
-            const editDepartmentForm = document.getElementById('edit-department-form');
-            const editDeptIdInput = document.getElementById('edit-dept-id');
-            const editDeptNameInput = document.getElementById('edit-dept-name');
-            const editDeptDescriptionInput = document.getElementById('edit-dept-description');
-
-            const addEmployeeModal = document.getElementById('add-employee-modal');
-            const openAddEmployeeModalBtn = document.getElementById('open-add-employee-modal');
-            const closeAddEmployeeModalBtn = document.getElementById('close-add-employee-modal');
-            const addEmployeeForm = document.getElementById('add-employee-form');
-            const newEmployeeNameInput = document.getElementById('new-employee-name');
-            const newEmployeeDepartmentInput = document.getElementById('new-employee-department');
-            const newEmployeePositionInput = document.getElementById('new-employee-position');
-            const newEmployeeContactInput = document.getElementById('new-employee-contact');
-            const newEmployeeAddressInput = document.getElementById('new-employee-address');
-            const newEmployeeSalaryRateInput = document.getElementById('new-employee-salary-rate');
-            const newEmployeeSssDeductionInput = document.getElementById('new-employee-sss-deduction');
-            const newEmployeePhilhealthDeductionInput = document.getElementById('new-employee-philhealth-deduction');
-            const newEmployeePagibigDeductionInput = document.getElementById('new-employee-pagibig-deduction');
-
-
-            const editEmployeeModal = document.getElementById('edit-employee-modal');
-            const closeEditEmployeeModalBtn = document.getElementById('close-edit-employee-modal');
-            const editEmployeeForm = document.getElementById('edit-employee-form');
-            const editEmployeeDocIdInput = document.getElementById('edit-employee-doc-id');
-            const editEmployeeIdInput = document.getElementById('edit-employee-id');
-            const editEmployeeNameInput = document.getElementById('edit-employee-name');
-            const editEmployeeDepartmentInput = document.getElementById('edit-employee-department');
-            const editEmployeePositionInput = document.getElementById('edit-employee-position');
-            const editEmployeeContactInput = document.getElementById('edit-employee-contact');
-            const editEmployeeAddressInput = document.getElementById('edit-employee-address');
-            const editEmployeeSalaryRateInput = document.getElementById('edit-employee-salary-rate');
-            const editEmployeeSssDeductionInput = document.getElementById('edit-employee-sss-deduction');
-            const editEmployeePhilhealthDeductionInput = document.getElementById('edit-employee-philhealth-deduction');
-            const editEmployeePagibigDeductionInput = document.getElementById('edit-employee-pagibig-deduction');
-
-
-            const confirmModal = document.getElementById('confirm-modal');
-            const closeConfirmModalBtn = document.getElementById('close-confirm-modal');
-            const confirmModalTitle = document.getElementById('confirm-modal-title');
-            const confirmModalMessage = document.getElementById('confirm-modal-message');
-            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-            const confirmOkBtn = document.getElementById('confirm-ok-btn');
-
-            // Toast elements
-            const toastNotification = document.getElementById('toast-notification');
-            const toastMessage = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-
-            const departmentsTableBody = document.getElementById('departments-table-body');
-            let departments = [];
-
-            const employeesTableBody = document.getElementById('employees-table-body');
-            let employees = [];
-
-            // Elements for Process Payroll section
-            const payrollDepartmentFilter = document.getElementById('payroll-department-filter');
-            const payrollEmployeeSearchInput = document.getElementById('payroll-employee-search');
-            const payrollEmployeesTableBody = document.getElementById('payroll-employees-table-body');
-
-            // Elements for Payroll Entry Modal
-            const payrollEntryModal = document.getElementById('payroll-entry-modal');
-            const closePayrollEntryModalBtn = document.getElementById('close-payroll-entry-modal');
-            const payrollEmployeeDisplayName = document.getElementById('payroll-employee-display-name');
-            const payrollEmployeeDisplayId = document.getElementById('payroll-employee-display-id');
-            const addPayrollEntryForm = document.getElementById('add-payroll-entry-form');
-            const currentPayrollEmployeeIdInput = document.getElementById('current-payroll-employee-id');
-            const currentEmployeeDailySalaryInput = document.getElementById('current-employee-daily-salary');
-            const currentEmployeeSssDeductionInput = document.getElementById('current-employee-sss-deduction');
-            const currentEmployeePhilhealthDeductionInput = document.getElementById('current-employee-philhealth-deduction');
-            const currentEmployeePagibigDeductionInput = document.getElementById('current-employee-pagibig-deduction');
-            const editPayrollEntryDocIdInput = document.getElementById('edit-payroll-entry-doc-id');
-            const savePayrollEntryBtn = document.getElementById('save-payroll-entry-btn');
-
-            const payrollEntryDateInput = document.getElementById('payroll-entry-date'); // New: Date input
-            const payrollDaysOfWorkInput = document.getElementById('payroll-days-of-work');
-            const payrollOvertimeHrsInput = document.getElementById('payroll-overtime-hrs');
-            const payrollSundayHolidayHrsInput = document.getElementById('payroll-sunday-holiday-hrs');
-            const payrollNightDiffHrsInput = document.getElementById('payroll-night-diff-hrs');
-            const payrollNightDiffOvertimeHrsInput = document.getElementById('payroll-night-diff-overtime-hrs');
-            const payrollTardinessInput = document.getElementById('payroll-tardiness');
-            const payrollAllowanceInput = document.getElementById('payroll-allowance'); // New: Allowance input
-
-            // Elements for detailed gross pay display
-            const calcBasePay = document.getElementById('calc-base-pay');
-            const calcOvertimePay = document.getElementById('calc-overtime-pay');
-            const calcSundayHolidayPay = document.getElementById('calc-sunday-holiday-pay');
-            const calcNightDiffPay = document.getElementById('calc-night-diff-pay');
-            const calcNightDiffOvertimePay = document.getElementById('calc-night-diff-overtime-pay');
-            const calcTardinessDeduction = document.getElementById('calc-tardiness-deduction');
-            const calcAllowance = document.getElementById('calc-allowance'); // New: Allowance display
-            const calcGrossBeforeStatutory = document.getElementById('calc-gross-before-statutory');
-            const calcSssDeduction = document.getElementById('calc-sss-deduction');
-            const calcPhilhealthDeduction = document.getElementById('calc-philhealth-deduction');
-            const calcPagibigDeduction = document.getElementById('calc-pagibig-deduction');
-            const payrollGrossPayDisplay = document.getElementById('payroll-gross-pay');
-
-            const payrollEntriesTableBody = document.getElementById('payroll-entries-table-body');
-
-            let currentPayrollEntries = [];
-
-            // Elements for Deductions section
-            const deductionsDepartmentFilter = document.getElementById('deductions-department-filter');
-            const deductionsEmployeeSearchInput = document.getElementById('deductions-employee-search');
-            const deductionsEmployeesTableBody = document.getElementById('deductions-employees-table-body');
-
-            // Elements for Deductions Entry Modal
-            const deductionsEntryModal = document.getElementById('deductions-entry-modal');
-            const closeDeductionsEntryModalBtn = document.getElementById('close-deductions-entry-modal');
-            const deductionsEmployeeDisplayName = document.getElementById('deductions-employee-display-name');
-            const deductionsEmployeeDisplayId = document.getElementById('deductions-employee-display-id');
-            const addDeductionEntryForm = document.getElementById('add-deduction-entry-form');
-            const currentDeductionsEmployeeIdInput = document.getElementById('current-deductions-employee-id');
-            const editDeductionEntryDocIdInput = document.getElementById('edit-deduction-entry-doc-id');
-            const saveDeductionEntryBtn = document.getElementById('save-deduction-entry-btn');
-
-            const deductionsEntryDateInput = document.getElementById('deductions-entry-date'); // New: Date input
-            const deductionsGovtLoanInput = document.getElementById('deductions-govt-loan');
-            const deductionsCoopShareInput = document.getElementById('deductions-coop-share');
-            const deductionsCoop2025Input = document.getElementById('deductions-coop-2025');
-            const deductionsWithholdingTaxInput = document.getElementById('deductions-withholding-tax');
-            const deductionsUnpaidLoanInput = document.getElementById('deductions-unpaid-loan');
-            const deductionsCaVoucherInput = document.getElementById('deductions-ca-voucher');
-            const deductionsDailyBalanceInput = document.getElementById('deductions-daily-balance');
-            const deductionsOthersInput = document.getElementById('deductions-others');
-
-            // Elements for detailed net pay display
-            const calcDeductionsGrossPay = document.getElementById('calc-deductions-gross-pay');
-            const calcGovtLoan = document.getElementById('calc-govt-loan');
-            const calcCoopShare = document.getElementById('calc-coop-share');
-            const calcCoop2025 = document.getElementById('calc-coop-2025');
-            const calcWithholdingTax = document.getElementById('calc-withholding-tax');
-            const calcUnpaidLoan = document.getElementById('calc-unpaid-loan');
-            const calcCaVoucher = document.getElementById('calc-ca-voucher');
-            const calcDailyBalance = document.getElementById('calc-daily-balance');
-            const calcOthers = document.getElementById('calc-others');
-            const deductionsNetPayDisplay = document.getElementById('deductions-net-pay');
-
-            const deductionEntriesTableBody = document.getElementById('deduction-entries-table-body');
-            let currentDeductionEntries = [];
-
-            // Report section elements
-            const reportDepartmentFilter = document.getElementById('report-department-filter');
-            const reportEmployeeSearchInput = document.getElementById('report-employee-search');
-            const reportStartDateInput = document.getElementById('report-start-date');
-            const reportEndDateInput = document.getElementById('report-end-date');
-            const generateFullReportBtn = document.getElementById('generate-full-report-btn');
-            const generateFilteredReportBtn = document.getElementById('generate-filtered-report-btn');
-            const reportTableBody = document.getElementById('report-table-body');
-            const reportSummaryFooter = document.getElementById('report-summary-footer');
-
-
-            // Report Modal elements
-            const reportModal = document.getElementById('report-modal');
-            const closeReportModalBtn = document.getElementById('close-report-modal');
-            const reportContentDiv = document.getElementById('report-content');
-            const reportPrintBtn = document.getElementById('report-print-btn');
-
-
-            // Function to show a specific content section
-            const showContent = (id) => {
-                navButtons.forEach(button => {
-                    if (button.id === `nav-${id.replace('-content', '')}`) {
-                        button.classList.add('bg-blue-600'); // Highlight active nav button
-                    } else {
-                        button.classList.remove('bg-blue-600');
-                    }
-                });
-                contentSections.forEach(section => {
-                    section.classList.remove('active');
-                });
-                const targetSection = document.getElementById(id);
-                if (targetSection) {
-                    targetSection.classList.add('active');
-                }
-            };
-
-            // Function to open a modal
-            const openModal = (modalElement) => {
-                modalElement.classList.add('show');
-            };
-
-            // Function to close a modal
-            const closeModal = (modalElement) => {
-                modalElement.classList.remove('show');
-            };
-
-            // Generic confirmation modal handler
-            let confirmCallback = null; // Stores the callback function for the OK button
-
-            const showConfirmModal = (title, message, onConfirm) => {
-                confirmModalTitle.textContent = title;
-                confirmModalMessage.textContent = message;
-                confirmCallback = onConfirm;
-                openModal(confirmModal);
-            };
-
-            confirmOkBtn.addEventListener('click', () => {
-                if (confirmCallback) {
-                    confirmCallback(true);
-                }
-                closeModal(confirmModal);
-            });
-
-            confirmCancelBtn.addEventListener('click', () => {
-                if (confirmCallback) {
-                    confirmCallback(false);
-                }
-                closeModal(confirmModal);
-            });
-
-            // New: Close button for confirm modal
-            if (closeConfirmModalBtn) {
-                closeConfirmModalBtn.addEventListener('click', () => {
-                    closeModal(confirmModal);
-                });
-            }
-
-
-            // Function to show a toast notification
-            const showToast = (message, type = 'info', duration = 3000) => {
-                toastMessage.textContent = message;
-                toastNotification.className = ''; // Clear existing classes
-                toastNotification.classList.add('flex', 'items-center', type); // Add base and type classes
-
-                // Set icon based on type (simple text icons for now)
-                if (type === 'success') {
-                    toastIcon.textContent = '✓'; // Checkmark
-                } else if (type === 'error') {
-                    toastIcon.textContent = '✗'; // Cross
-                } else {
-                    toastIcon.textContent = 'i'; // Info
-                }
-
-                toastNotification.classList.add('show');
-
-                setTimeout(() => {
-                    toastNotification.classList.remove('show');
-                }, duration);
-            };
-
-
-            // Add click event listeners to navigation buttons
-            navButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const contentId = button.id.replace('nav-', '') + '-content';
-                    showContent(contentId);
-                });
-            });
-
-            // Initially show the dashboard content when the page loads
-            showContent('dashboard-content');
-
-            // --- Department/Site Management Logic ---
-
-            // Function to render departments in the table
-            const renderDepartments = () => {
-                departmentsTableBody.innerHTML = ''; // Clear existing rows
-                departments.forEach((dept) => {
-                    const row = departmentsTableBody.insertRow();
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${dept.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${dept.description}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900 mr-4 edit-dept-btn" data-id="${dept.id}">Edit</button>
-                            <button class="text-red-600 hover:text-red-900 delete-dept-btn" data-id="${dept.id}">Delete</button>
-                        </td>
-                    `;
-                });
-                populateDepartmentDropdowns(); // Call this after departments are loaded/rendered
-                populatePayrollDepartmentFilter(); // Also populate payroll filter
-                populateDeductionsDepartmentFilter(); // Populate deductions filter
-                populateReportDepartmentFilter(); // Populate report filter
-            };
-
-            // Function to populate department dropdowns (for Add/Edit Employee modals)
-            const populateDepartmentDropdowns = () => {
-                const departmentDropdowns = [newEmployeeDepartmentInput, editEmployeeDepartmentInput];
-                departmentDropdowns.forEach(dropdown => {
-                    dropdown.innerHTML = '<option value="">Select Department</option>'; // Clear existing options
-                    departments.forEach(dept => {
-                        const option = document.createElement('option');
-                        option.value = dept.name; // Use department name as value
-                        option.textContent = dept.name;
-                        dropdown.appendChild(option);
-                    });
-                });
-            };
-
-            // Function to populate the department dropdown in the payroll section
-            const populatePayrollDepartmentFilter = () => {
-                payrollDepartmentFilter.innerHTML = '<option value="">All Departments</option>'; // Add "All" option
-                departments.forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept.name;
-                    option.textContent = dept.name;
-                    payrollDepartmentFilter.appendChild(option);
-                });
-            };
-
-            // Function to populate the department dropdown in the deductions section
-            const populateDeductionsDepartmentFilter = () => {
-                deductionsDepartmentFilter.innerHTML = '<option value="">All Departments</option>'; // Add "All" option
-                departments.forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept.name;
-                    option.textContent = dept.name;
-                    deductionsDepartmentFilter.appendChild(option);
-                });
-            };
-
-            // Function to populate the department dropdown in the report section
-            const populateReportDepartmentFilter = () => {
-                reportDepartmentFilter.innerHTML = '<option value="">All Departments</option>'; // Add "All" option
-                departments.forEach(dept => {
-                    const option = document.createElement('option');
-                    option.value = dept.name;
-                    option.textContent = dept.name;
-                    reportDepartmentFilter.appendChild(option);
-                });
-            };
-
-
-            // Listen to departments collection in Firestore
-            const listenToDepartments = () => {
-                if (!isAuthReady || !departmentsCollectionRef) {
-                    console.warn("Firestore not ready for departments.");
-                    return;
-                }
-                onSnapshot(query(departmentsCollectionRef), (snapshot) => {
-                    departments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderDepartments();
-                }, (error) => {
-                    console.error("Error listening to departments:", error);
-                    showToast("Failed to load departments.", "error");
-                });
-            };
-
-
-            // Open Add Department Modal
-            openAddDeptModalBtn.addEventListener('click', () => {
-                openModal(addDeptModal);
-            });
-
-            // Close Add Department Modal
-            closeAddDeptModalBtn.addEventListener('click', () => {
-                closeModal(addDeptModal);
-                addDepartmentForm.reset(); // Clear form on close
-            });
-
-            // Handle form submission for adding a new department
-            addDepartmentForm.addEventListener('submit', async (event) => {
-                event.preventDefault(); // Prevent default form submission
-
-                const deptName = newDeptNameInput.value.trim();
-                const deptDescription = newDeptDescriptionInput.value.trim();
-
-                if (deptName) {
-                    try {
-                        await addDoc(departmentsCollectionRef, {
-                            name: deptName,
-                            description: deptDescription
-                        });
-                        closeModal(addDeptModal); // Close the modal
-                        addDepartmentForm.reset(); // Clear the form fields
-                        showToast("Department added successfully!", "success");
-                    }
-                    catch (error) {
-                        console.error("Error adding department:", error);
-                        showToast("Failed to add department. Please try again.", "error");
-                    }
-                } else {
-                    showToast("Department Name is required.", "error");
-                }
-            });
-
-            // Handle form submission for editing a department
-            editDepartmentForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const deptId = editDeptIdInput.value; // Get the Firestore document ID
-                const newName = editDeptNameInput.value.trim();
-                const newDescription = editDeptDescriptionInput.value.trim();
-
-                if (newName && deptId) {
-                    try {
-                        const deptDocRef = doc(db, `artifacts/${appId}/public/data/departments`, deptId);
-                        await updateDoc(deptDocRef, {
-                            name: newName,
-                            description: newDescription
-                        });
-                        closeModal(editDeptModal);
-                        showToast("Department updated successfully!", "success");
-                    }
-                    catch (error) {
-                        console.error("Error updating department:", error);
-                        showToast("Failed to update department. Please try again.", "error");
-                    }
-                } else {
-                    showToast("Department Name is required.", "error");
-                }
-            });
-
-            // Close Edit Department Modal
-            closeEditDeptModalBtn.addEventListener('click', () => {
-                closeModal(editDeptModal);
-            });
-
-            // Event delegation for edit and delete buttons
-            departmentsTableBody.addEventListener('click', async (event) => {
-                if (event.target.classList.contains('delete-dept-btn')) {
-                    const deptId = event.target.dataset.id;
-                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this department?", async (confirmed) => {
-                        if (confirmed) {
-                            try {
-                                const deptDocRef = doc(db, `artifacts/${appId}/public/data/departments`, deptId);
-                                await deleteDoc(deptDocRef);
-                                showToast("Department deleted successfully!", "success");
-                            }
-                            catch (error) {
-                                console.error("Error deleting department:", error);
-                                showToast("Failed to delete department. Please try again.", "error");
-                            }
-                        }
-                    });
-                } else if (event.target.classList.contains('edit-dept-btn')) {
-                    const deptId = event.target.dataset.id;
-                    const currentDept = departments.find(d => d.id === deptId);
-                    if (currentDept) {
-                        editDeptIdInput.value = currentDept.id; // Store Firestore ID
-                        editDeptNameInput.value = currentDept.name;
-                        editDeptDescriptionInput.value = currentDept.description;
-                        openModal(editDeptModal);
-                    }
-                }
-            });
-
-            // --- Manage Employee Logic ---
-
-            // Function to generate a unique employee ID (DLV-XXXXX)
-            const generateUniqueEmployeeId = async () => {
-                let newId;
-                let isUnique = false;
-                while (!isUnique) {
-                    const randomNumber = Math.floor(10000 + Math.random() * 90000); // 5 random digits
-                    newId = `DLV-${randomNumber}`;
-                    // Check if ID already exists in current employees array
-                    isUnique = !employees.some(employee => employee.id === newId);
-                    // For a robust check, you might query Firestore here, but for simplicity,
-                    // we'll rely on the `setDoc` operation to create/overwrite.
-                    // If a collision happens, Firestore will overwrite, which is not ideal for "unique ID".
-                    // A proper solution would involve a transaction or a server-side check.
-                    // For client-side, we'll assume the random generation is sufficient for most cases.
-                }
-                return newId;
-            };
-
-            // Function to render employees in the main employee table
-            const renderEmployees = () => {
-                employeesTableBody.innerHTML = ''; // Clear existing rows
-                employees.forEach((employee) => {
-                    const row = employeesTableBody.insertRow();
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${employee.id}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.contactNo || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.address || ''}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.salaryRate || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.sssDeduction || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.philhealthDeduction || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${(employee.pagibigDeduction || 0).toFixed(2)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900 mr-4 edit-employee-btn" data-id="${employee.id}">Edit</button>
-                            <button class="text-red-600 hover:text-red-900 delete-employee-btn" data-id="${employee.id}">Delete</button>
-                        </td>
-                    `;
-                });
-            };
-
-            // Listen to employees collection in Firestore
-            const listenToEmployees = () => {
-                if (!isAuthReady || !employeesCollectionRef) {
-                    console.warn("Firestore not ready for employees.");
-                    return;
-                }
-                onSnapshot(query(employeesCollectionRef), (snapshot) => {
-                    employees = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderEmployees(); // Render the main employee list
-                    filterPayrollEmployees(); // Also update the payroll employee list
-                    filterDeductionsEmployees(); // Also update the deductions employee list
-                    filterReportEmployees(); // Also update the report employee list
-                }, (error) => {
-                    console.error("Error listening to employees:", error);
-                    showToast("Failed to load employees.", "error");
-                });
-            };
-
-
-            // Open Add Employee Modal
-            openAddEmployeeModalBtn.addEventListener('click', () => {
-                populateDepartmentDropdowns(); // Ensure dropdown is fresh
-                openModal(addEmployeeModal);
-            });
-
-            // Close Add Employee Modal
-            closeAddEmployeeModalBtn.addEventListener('click', () => {
-                closeModal(addEmployeeModal);
-                addEmployeeForm.reset(); // Clear form on close
-                newEmployeeSssDeductionInput.value = '0'; // Reset to 0
-                newEmployeePhilhealthDeductionInput.value = '0'; // Reset to 0
-                newEmployeePagibigDeductionInput.value = '0'; // Reset to 0
-            });
-
-            // Handle form submission for adding a new employee
-            addEmployeeForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const employeeName = newEmployeeNameInput.value.trim();
-                const employeeDepartment = newEmployeeDepartmentInput.value.trim();
-                const employeePosition = newEmployeePositionInput.value.trim();
-                const employeeContact = newEmployeeContactInput.value.trim();
-                const employeeAddress = newEmployeeAddressInput.value.trim();
-                const employeeSalaryRate = parseFloat(newEmployeeSalaryRateInput.value);
-                const employeeSssDeduction = parseFloat(newEmployeeSssDeductionInput.value) || 0;
-                const employeePhilhealthDeduction = parseFloat(newEmployeePhilhealthDeductionInput.value) || 0;
-                const employeePagibigDeduction = parseFloat(newEmployeePagibigDeductionInput.value) || 0;
-
-
-                if (employeeName && employeeDepartment && employeePosition) {
-                    const newEmployeeId = await generateUniqueEmployeeId(); // Generate unique ID
-                    try {
-                        // Use setDoc with the generated ID as the document ID
-                        await setDoc(doc(employeesCollectionRef, newEmployeeId), {
-                            name: employeeName,
-                            department: employeeDepartment,
-                            position: employeePosition,
-                            contactNo: employeeContact,
-                            address: employeeAddress,
-                            salaryRate: isNaN(employeeSalaryRate) ? 0 : employeeSalaryRate, // Store as number
-                            sssDeduction: employeeSssDeduction,
-                            philhealthDeduction: employeePhilhealthDeduction,
-                            pagibigDeduction: employeePagibigDeduction
-                        });
-                        closeModal(addEmployeeModal);
-                        addEmployeeForm.reset();
-                        newEmployeeSssDeductionInput.value = '0'; // Reset to 0
-                        newEmployeePhilhealthDeductionInput.value = '0'; // Reset to 0
-                        newEmployeePagibigDeductionInput.value = '0'; // Reset to 0
-                        showToast("Employee added successfully!", "success");
-                    }
-                    catch (error) {
-                        console.error("Error adding employee:", error);
-                        showToast("Failed to add employee. Please try again.", "error");
-                    }
-                } else {
-                    showToast("Required fields (Name, Department, Position) are missing.", "error");
-                }
-            });
-
-            // Handle form submission for editing an employee
-            editEmployeeForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const docId = editEmployeeDocIdInput.value; // Get the Firestore document ID
-                const newName = editEmployeeNameInput.value.trim();
-                const newDepartment = editEmployeeDepartmentInput.value.trim();
-                const newPosition = editEmployeePositionInput.value.trim();
-                const newContact = editEmployeeContactInput.value.trim();
-                const newAddress = editEmployeeAddressInput.value.trim();
-                const newSalaryRate = parseFloat(editEmployeeSalaryRateInput.value);
-                const newSssDeduction = parseFloat(editEmployeeSssDeductionInput.value) || 0;
-                const newPhilhealthDeduction = parseFloat(editEmployeePhilhealthDeductionInput.value) || 0;
-                const newPagibigDeduction = parseFloat(editEmployeePagibigDeductionInput.value) || 0;
-
-
-                if (docId && newName && newDepartment && newPosition) {
-                    try {
-                        const employeeDocRef = doc(db, `artifacts/${appId}/public/data/employees`, docId);
-                        await updateDoc(employeeDocRef, {
-                            name: newName,
-                            department: newDepartment,
-                            position: newPosition,
-                            contactNo: newContact,
-                            address: newAddress,
-                            salaryRate: isNaN(newSalaryRate) ? 0 : newSalaryRate,
-                            sssDeduction: newSssDeduction,
-                            philhealthDeduction: newPhilhealthDeduction,
-                            pagibigDeduction: newPagibigDeduction
-                        });
-                        closeModal(editEmployeeModal);
-                        showToast("Employee updated successfully!", "success");
-                    }
-                    catch (error) {
-                        console.error("Error updating employee:", error);
-                        showToast("Failed to update employee. Please try again.", "error");
-                    }
-                } else {
-                    showToast("Required fields (Name, Department, Position) are missing.", "error");
-                }
-            });
-
-            // Close Edit Employee Modal
-            closeEditEmployeeModalBtn.addEventListener('click', () => {
-                closeModal(editEmployeeModal);
-            });
-
-            // Event delegation for employee edit and delete buttons
-            employeesTableBody.addEventListener('click', async (event) => {
-                if (event.target.classList.contains('delete-employee-btn')) {
-                    const employeeId = event.target.dataset.id; // This is the Firestore doc ID
-                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this employee?", async (confirmed) => {
-                        if (confirmed) {
-                            try {
-                                const employeeDocRef = doc(db, `artifacts/${appId}/public/data/employees`, employeeId);
-                                await deleteDoc(employeeDocRef);
-                                showToast("Employee deleted successfully!", "success");
-                            }
-                            catch (error) {
-                                console.error("Error deleting employee:", error);
-                                showToast("Failed to delete employee. Please try again.", "error");
-                            }
-                        }
-                    });
-                } else if (event.target.classList.contains('edit-employee-btn')) {
-                    const employeeId = event.target.dataset.id; // This is the Firestore doc ID
-                    const currentEmployee = employees.find(e => e.id === employeeId);
-                    if (currentEmployee) {
-                        editEmployeeDocIdInput.value = currentEmployee.id; // Store Firestore doc ID
-                        editEmployeeIdInput.value = currentEmployee.id; // Display the DLV-XXXXX ID (read-only)
-                        editEmployeeNameInput.value = currentEmployee.name;
-                        editEmployeeDepartmentInput.value = currentEmployee.department;
-                        editEmployeePositionInput.value = currentEmployee.position;
-                        editEmployeeContactInput.value = currentEmployee.contactNo || '';
-                        editEmployeeAddressInput.value = currentEmployee.address || '';
-                        editEmployeeSalaryRateInput.value = currentEmployee.salaryRate || '';
-                        editEmployeeSssDeductionInput.value = currentEmployee.sssDeduction || '0';
-                        editEmployeePhilhealthDeductionInput.value = currentEmployee.philhealthDeduction || '0';
-                        editEmployeePagibigDeductionInput.value = currentEmployee.pagibigDeduction || '0';
-
-                        populateDepartmentDropdowns(); // Ensure dropdown is fresh before setting value
-                        editEmployeeDepartmentInput.value = currentEmployee.department; // Set the selected department
-
-                        openModal(editEmployeeModal);
-                    }
-                }
-            });
-
-
-            // --- Process Payroll Logic ---
-
-            // Function to render employees in the payroll table (filtered view)
-            const renderPayrollEmployeesTable = (employeesToDisplay) => {
-                payrollEmployeesTableBody.innerHTML = '';
-                if (!employeesToDisplay || employeesToDisplay.length === 0) {
-                    payrollEmployeesTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No employees found.</td></tr>`;
-                    return;
-                }
-                employeesToDisplay.forEach(employee => {
-                    const row = payrollEmployeesTableBody.insertRow();
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            <button class="text-blue-600 hover:text-blue-800 font-bold open-payroll-entry-btn" data-employee-id="${employee.id}">${employee.id}</button>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
-                    `;
-                });
-            };
-
-            // Function to filter and display employees in the payroll section
-            const filterPayrollEmployees = () => {
-                const selectedDepartment = payrollDepartmentFilter.value;
-                const searchTerm = payrollEmployeeSearchInput.value.toLowerCase();
-
-                let filteredEmployees = employees; // Start with the full list
-
-                if (selectedDepartment) {
-                    filteredEmployees = filteredEmployees.filter(emp => emp.department === selectedDepartment);
-                }
-
-                if (searchTerm) {
-                    filteredEmployees = filteredEmployees.filter(emp =>
-                        emp.name.toLowerCase().includes(searchTerm) ||
-                        emp.id.toLowerCase().includes(searchTerm) ||
-                        emp.position.toLowerCase().includes(searchTerm) ||
-                        (emp.department && emp.department.toLowerCase().includes(searchTerm)) // Check if department exists
-                    );
-                }
-                renderPayrollEmployeesTable(filteredEmployees);
-            };
-
-            // Event listeners for payroll filters
-            payrollDepartmentFilter.addEventListener('change', filterPayrollEmployees);
-            payrollEmployeeSearchInput.addEventListener('input', filterPayrollEmployees);
-
-            // Function to calculate and display gross pay
-            const calculateGrossPay = () => {
-                const dailySalary = parseFloat(currentEmployeeDailySalaryInput.value) || 0;
-                const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
-                const overtimeHrs = parseFloat(payrollOvertimeHrsInput.value) || 0;
-                const sundayHolidayHrs = parseFloat(payrollSundayHolidayHrsInput.value) || 0;
-                const nightDiffHrs = parseFloat(payrollNightDiffHrsInput.value) || 0;
-                const nightDiffOvertimeHrs = parseFloat(payrollNightDiffOvertimeHrsInput.value) || 0;
-                const tardiness = parseFloat(payrollTardinessInput.value) || 0;
-                const allowance = parseFloat(payrollAllowanceInput.value) || 0; // New: Get allowance
-
-                const sssDeduction = parseFloat(currentEmployeeSssDeductionInput.value) || 0;
-                const philhealthDeduction = parseFloat(currentEmployeePhilhealthDeductionInput.value) || 0;
-                const pagibigDeduction = parseFloat(currentEmployeePagibigDeductionInput.value) || 0;
-
-                // Assuming 8 hours per day for hourly rate calculation
-                const hourlyRate = dailySalary / 8;
-
-                // Calculate components based on user's new formulas
-                const basePay = dailySalary * daysOfWork;
-                const overtimePay = hourlyRate * overtimeHrs * 1.25;
-                const sundayHolidayPay = hourlyRate * sundayHolidayHrs * 1.30;
-                const nightDiffPay = hourlyRate * nightDiffHrs * 1.10; // 110% of hourly rate
-                const nightDiffOvertimePay = hourlyRate * nightDiffOvertimeHrs * 1.25;
-                const tardinessDeduction = hourlyRate * tardiness;
-
-                // Gross Pay before statutory deductions - now includes allowance
-                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction + allowance;
-
-                // Final Gross Pay after statutory deductions
-                const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
-
-                // Update display elements with PHP currency
-                calcBasePay.textContent = `₱${basePay.toFixed(2)}`;
-                calcOvertimePay.textContent = `₱${overtimePay.toFixed(2)}`;
-                calcSundayHolidayPay.textContent = `₱${sundayHolidayPay.toFixed(2)}`;
-                calcNightDiffPay.textContent = `₱${nightDiffPay.toFixed(2)}`;
-                calcNightDiffOvertimePay.textContent = `₱${nightDiffOvertimePay.toFixed(2)}`;
-                calcTardinessDeduction.textContent = `-₱${tardinessDeduction.toFixed(2)}`;
-                calcAllowance.textContent = `₱${allowance.toFixed(2)}`; // New: Update allowance display
-                calcGrossBeforeStatutory.textContent = `₱${grossPayBeforeStatutory.toFixed(2)}`;
-                calcSssDeduction.textContent = `-₱${sssDeduction.toFixed(2)}`;
-                calcPhilhealthDeduction.textContent = `-₱${philhealthDeduction.toFixed(2)}`;
-                calcPagibigDeduction.textContent = `-₱${pagibigDeduction.toFixed(2)}`;
-                payrollGrossPayDisplay.textContent = `₱${finalGrossPay.toFixed(2)}`;
-            };
-
-            // Event delegation for opening payroll entry modal
-            payrollEmployeesTableBody.addEventListener('click', (event) => {
-                if (event.target.classList.contains('open-payroll-entry-btn')) {
-                    const employeeId = event.target.dataset.employeeId;
-                    const selectedEmployee = employees.find(emp => emp.id === employeeId);
-                    if (selectedEmployee) {
-                        currentEmployeePayrollId = employeeId; // Set the global variable
-                        currentEmployeeDailySalary = selectedEmployee.salaryRate || 0; // Store daily salary
-                        currentEmployeeSssDeduction = selectedEmployee.sssDeduction || 0; // Store SSS deduction
-                        currentEmployeePhilhealthDeduction = selectedEmployee.philhealthDeduction || 0; // Store Philhealth deduction
-                        currentEmployeePagibigDeduction = selectedEmployee.pagibigDeduction || 0; // Store Pagibig deduction
-
-                        currentEmployeeDailySalaryInput.value = currentEmployeeDailySalary; // Store in hidden input
-                        currentEmployeeSssDeductionInput.value = currentEmployeeSssDeduction;
-                        currentEmployeePhilhealthDeductionInput.value = currentEmployeePhilhealthDeduction;
-                        currentEmployeePagibigDeductionInput.value = currentEmployeePagibigDeduction;
-
-
-                        payrollEmployeeDisplayName.textContent = selectedEmployee.name;
-                        payrollEmployeeDisplayId.textContent = selectedEmployee.id;
-                        currentPayrollEmployeeIdInput.value = employeeId; // Set hidden input
-                        addPayrollEntryForm.reset(); // Clear form for new entry
-                        // Set default date to today for new entries
-                        payrollEntryDateInput.value = new Date().toISOString().split('T')[0];
-                        editPayrollEntryDocIdInput.value = ''; // Clear doc ID for new entry
-                        savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
-                        calculateGrossPay(); // Initial calculation when modal opens
-
-                        listenToPayrollEntries(employeeId); // Start listening to this employee's payroll entries
-                        openModal(payrollEntryModal);
-                    }
-                }
-            });
-
-            // Event listeners for payroll input fields to trigger gross pay calculation
-            payrollEntryDateInput.addEventListener('input', calculateGrossPay); // New: Date input listener
-            payrollDaysOfWorkInput.addEventListener('input', calculateGrossPay);
-            payrollOvertimeHrsInput.addEventListener('input', calculateGrossPay);
-            payrollSundayHolidayHrsInput.addEventListener('input', calculateGrossPay);
-            payrollNightDiffHrsInput.addEventListener('input', calculateGrossPay);
-            payrollNightDiffOvertimeHrsInput.addEventListener('input', calculateGrossPay);
-            payrollTardinessInput.addEventListener('input', calculateGrossPay);
-            payrollAllowanceInput.addEventListener('input', calculateGrossPay); // New: Allowance input listener
-
-
-            // Close Payroll Entry Modal
-            closePayrollEntryModalBtn.addEventListener('click', () => {
-                closeModal(payrollEntryModal);
-                addPayrollEntryForm.reset();
-                payrollEntryDateInput.value = ''; // Reset date
-                payrollAllowanceInput.value = '0'; // Reset allowance
-                editPayrollEntryDocIdInput.value = '';
-                savePayrollEntryBtn.textContent = 'Add Payroll Entry';
-                currentEmployeePayrollId = null; // Clear the current employee context
-                currentEmployeeDailySalary = 0; // Reset daily salary
-                currentEmployeeSssDeduction = 0;
-                currentEmployeePhilhealthDeduction = 0;
-                currentEmployeePagibigDeduction = 0;
-                // Reset all display values
-                calcBasePay.textContent = '₱0.00';
-                calcOvertimePay.textContent = '₱0.00';
-                calcSundayHolidayPay.textContent = '₱0.00';
-                calcNightDiffPay.textContent = '₱0.00';
-                calcNightDiffOvertimePay.textContent = '₱0.00';
-                calcTardinessDeduction.textContent = '-₱0.00';
-                calcAllowance.textContent = '₱0.00'; // Reset allowance display
-                calcGrossBeforeStatutory.textContent = '₱0.00';
-                calcSssDeduction.textContent = '-₱0.00';
-                calcPhilhealthDeduction.textContent = '-₱0.00';
-                calcPagibigDeduction.textContent = '-₱0.00';
-                payrollGrossPayDisplay.textContent = '₱0.00';
-            });
-
-            // Function to listen to payroll entries for a specific employee
-            const listenToPayrollEntries = (employeeId) => {
-                if (!isAuthReady || !db) {
-                    console.warn("Firestore not ready for payroll entries.");
-                    return;
-                }
-                const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
-                onSnapshot(query(payrollEntriesCollectionRef), (snapshot) => {
-                    currentPayrollEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderPayrollEntriesTableInModal(currentPayrollEntries);
-                }, (error) => {
-                    console.error(`Error listening to payroll entries for ${employeeId}:`, error);
-                    showToast("Failed to load payroll entries.", "error");
-                });
-            };
-
-            // Function to render payroll entries in the modal's table
-            const renderPayrollEntriesTableInModal = (entries) => {
-                payrollEntriesTableBody.innerHTML = '';
-                if (!entries || entries.length === 0) {
-                    payrollEntriesTableBody.innerHTML = `<tr><td colspan="9" class="px-6 py-4 text-center text-gray-500">No payroll entries recorded for this employee.</td></tr>`;
-                    return;
-                }
-                entries.forEach(entry => {
-                    const row = payrollEntriesTableBody.insertRow();
-                    // Display date from timestamp, format to YYYY-MM-DD for consistency
-                    const entryDate = entry.date || 'N/A'; // Use the stored date string
-                    row.innerHTML = `
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.daysOfWork || '0'}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.overtimeHrs || '0'}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.sundayHolidayHrs || '0'}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.nightDiffHrs || '0'}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.nightDiffOvertimeHrs || '0'}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entry.tardiness || '0'}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.allowance || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900 mr-2 edit-payroll-entry-btn" data-id="${entry.id}">Edit</button>
-                            <button class="text-red-600 hover:text-red-900 delete-payroll-entry-btn" data-id="${entry.id}">Delete</button>
-                        </td>
-                    `;
-                });
-            };
-
-            // Handle form submission for adding/editing payroll entry
-            addPayrollEntryForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const employeeId = currentPayrollEmployeeIdInput.value;
-                const entryDocId = editPayrollEntryDocIdInput.value; // Will be empty for new entries
-
-                const entryDateStr = payrollEntryDateInput.value; // Get date from input
-                const daysOfWork = parseFloat(payrollDaysOfWorkInput.value) || 0;
-                const overtimeHrs = parseFloat(payrollOvertimeHrsInput.value) || 0;
-                const sundayHolidayHrs = parseFloat(payrollSundayHolidayHrsInput.value) || 0;
-                const nightDiffHrs = parseFloat(payrollNightDiffHrsInput.value) || 0;
-                const nightDiffOvertimeHrs = parseFloat(payrollNightDiffOvertimeHrsInput.value) || 0;
-                const tardiness = parseFloat(payrollTardinessInput.value) || 0;
-                const allowance = parseFloat(payrollAllowanceInput.value) || 0; // Get allowance
-
-                if (!employeeId) {
-                    showToast("No employee selected for payroll entry.", "error");
-                    return;
-                }
-                if (!entryDateStr) {
-                    showToast("Please select a date for the payroll entry.", "error");
-                    return;
-                }
-
-                try {
-                    const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
-                    const payrollData = {
-                        date: entryDateStr, // Store date as string YYYY-MM-DD
-                        daysOfWork,
-                        overtimeHrs,
-                        sundayHolidayHrs,
-                        nightDiffHrs,
-                        nightDiffOvertimeHrs,
-                        tardiness,
-                        allowance, // Save allowance
-                        timestamp: Timestamp.fromDate(new Date(entryDateStr)) // Store timestamp for ordering/filtering
-                    };
-
-                    if (entryDocId) {
-                        // Editing existing entry
-                        const entryRef = doc(payrollEntriesCollectionRef, entryDocId);
-                        await updateDoc(entryRef, payrollData);
-                        showToast("Payroll entry updated successfully!", "success");
-                    } else {
-                        // Adding new entry
-                        await addDoc(payrollEntriesCollectionRef, payrollData);
-                        showToast("Payroll entry added successfully!", "success");
-                    }
-                    addPayrollEntryForm.reset();
-                    payrollEntryDateInput.value = new Date().toISOString().split('T')[0]; // Reset date to today
-                    payrollAllowanceInput.value = '0'; // Reset allowance
-                    editPayrollEntryDocIdInput.value = ''; // Clear for next entry
-                    savePayrollEntryBtn.textContent = 'Add Payroll Entry'; // Reset button text
-                    calculateGrossPay(); // Recalculate after submission
-                }
-                catch (error) {
-                    console.error("Error saving payroll entry:", error);
-                    showToast("Failed to save payroll entry. Please try again.", "error");
-                }
-            });
-
-            // Event delegation for edit and delete payroll entry buttons in the modal
-            payrollEntriesTableBody.addEventListener('click', async (event) => {
-                const target = event.target;
-                const entryId = target.dataset.id;
-                const employeeId = currentPayrollEmployeeIdInput.value;
-
-                if (!employeeId) {
-                    showToast("Error: No employee context for payroll action.", "error");
-                    return;
-                }
-
-                const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
-
-                if (target.classList.contains('edit-payroll-entry-btn')) {
-                    const entryToEdit = currentPayrollEntries.find(entry => entry.id === entryId);
-                    if (entryToEdit) {
-                        payrollEntryDateInput.value = entryToEdit.date || ''; // Set date from stored string
-                        payrollDaysOfWorkInput.value = entryToEdit.daysOfWork;
-                        payrollOvertimeHrsInput.value = entryToEdit.overtimeHrs;
-                        payrollSundayHolidayHrsInput.value = entryToEdit.sundayHolidayHrs;
-                        payrollNightDiffHrsInput.value = entryToEdit.nightDiffHrs;
-                        payrollNightDiffOvertimeHrsInput.value = entryToEdit.nightDiffOvertimeHrs;
-                        payrollTardinessInput.value = entryToEdit.tardiness;
-                        payrollAllowanceInput.value = entryToEdit.allowance || 0; // Set allowance
-                        editPayrollEntryDocIdInput.value = entryId; // Store the ID of the entry being edited
-                        savePayrollEntryBtn.textContent = 'Update Payroll Entry'; // Change button text
-                        calculateGrossPay(); // Recalculate for editing
-                    }
-                } else if (target.classList.contains('delete-payroll-entry-btn')) {
-                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this payroll entry?", async (confirmed) => {
-                        if (confirmed) {
-                            try {
-                                const entryRef = doc(payrollEntriesCollectionRef, entryId);
-                                await deleteDoc(entryRef);
-                                showToast("Payroll entry deleted successfully!", "success");
-                            }
-                            catch (error) {
-                                console.error("Error deleting payroll entry:", error);
-                                showToast("Failed to delete payroll entry. Please try again.", "error");
-                            }
-                        }
-                    });
-                }
-            });
-
-            // --- Deductions Logic ---
-
-            // Function to render employees in the deductions table (filtered view)
-            const renderDeductionsEmployeesTable = (employeesToDisplay) => {
-                deductionsEmployeesTableBody.innerHTML = '';
-                if (!employeesToDisplay || employeesToDisplay.length === 0) {
-                    deductionsEmployeesTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No employees found.</td></tr>`;
-                    return;
-                }
-                employeesToDisplay.forEach(employee => {
-                    const row = deductionsEmployeesTableBody.insertRow();
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            <button class="text-blue-600 hover:text-blue-800 font-bold open-deductions-entry-btn" data-employee-id="${employee.id}">${employee.id}</button>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.position}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${employee.department}</td>
-                    `;
-                });
-            };
-
-            // Function to filter and display employees in the deductions section
-            const filterDeductionsEmployees = () => {
-                const selectedDepartment = deductionsDepartmentFilter.value;
-                const searchTerm = deductionsEmployeeSearchInput.value.toLowerCase();
-
-                let filteredEmployees = employees; // Start with the full list
-
-                if (selectedDepartment) {
-                    filteredEmployees = filteredEmployees.filter(emp => emp.department === selectedDepartment);
-                }
-
-                if (searchTerm) {
-                    filteredEmployees = filteredEmployees.filter(emp =>
-                        emp.name.toLowerCase().includes(searchTerm) ||
-                        emp.id.toLowerCase().includes(searchTerm) ||
-                        emp.position.toLowerCase().includes(searchTerm) ||
-                        (emp.department && emp.department.toLowerCase().includes(searchTerm))
-                    );
-                }
-                renderDeductionsEmployeesTable(filteredEmployees);
-            };
-
-            // Event listeners for deductions filters
-            deductionsDepartmentFilter.addEventListener('change', filterDeductionsEmployees);
-            deductionsEmployeeSearchInput.addEventListener('input', filterDeductionsEmployees);
-
-            // Function to calculate and display Net Pay
-            const calculateNetPay = () => {
-                const grossPay = parseFloat(currentDeductionsGrossPay) || 0; // Use the fetched gross pay
-                const govtLoan = parseFloat(deductionsGovtLoanInput.value) || 0;
-                const coopShare = parseFloat(deductionsCoopShareInput.value) || 0;
-                const coop2025 = parseFloat(deductionsCoop2025Input.value) || 0;
-                const withholdingTax = parseFloat(deductionsWithholdingTaxInput.value) || 0;
-                const unpaidLoan = parseFloat(deductionsUnpaidLoanInput.value) || 0;
-                const caVoucher = parseFloat(deductionsCaVoucherInput.value) || 0;
-                const dailyBalance = parseFloat(deductionsDailyBalanceInput.value) || 0;
-                const others = parseFloat(deductionsOthersInput.value) || 0;
-
-                const totalDeductions = govtLoan + coopShare + coop2025 + withholdingTax + unpaidLoan + caVoucher + dailyBalance + others;
-                const netPay = grossPay - totalDeductions;
-
-                // Update display elements
-                calcDeductionsGrossPay.textContent = `₱${grossPay.toFixed(2)}`;
-                calcGovtLoan.textContent = `-₱${govtLoan.toFixed(2)}`;
-                calcCoopShare.textContent = `-₱${coopShare.toFixed(2)}`;
-                calcCoop2025.textContent = `-₱${coop2025.toFixed(2)}`;
-                calcWithholdingTax.textContent = `-₱${withholdingTax.toFixed(2)}`;
-                calcUnpaidLoan.textContent = `-₱${unpaidLoan.toFixed(2)}`;
-                calcCaVoucher.textContent = `-₱${caVoucher.toFixed(2)}`;
-                calcDailyBalance.textContent = `-₱${dailyBalance.toFixed(2)}`;
-                calcOthers.textContent = `-₱${others.toFixed(2)}`;
-                deductionsNetPayDisplay.textContent = `₱${netPay.toFixed(2)}`;
-            };
-
-            // Fetch the latest final gross pay for an employee
-            const fetchLatestGrossPay = async (employeeId) => {
-                const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/payrollEntries`);
-                // Query for the latest entry by timestamp
-                const q = query(payrollEntriesCollectionRef, orderBy("timestamp", "desc"), limit(1));
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    const latestEntry = querySnapshot.docs[0].data();
-                    const employeeData = employees.find(emp => emp.id === employeeId);
-                    const dailySalary = employeeData?.salaryRate || 0;
-                    const sssDeduction = employeeData?.sssDeduction || 0;
-                    const philhealthDeduction = employeeData?.philhealthDeduction || 0;
-                    const pagibigDeduction = employeeData?.pagibigDeduction || 0;
-                    const allowance = latestEntry.allowance || 0; // Get allowance from payroll entry
-
-                    const hourlyRate = dailySalary / 8;
-
-                    const basePay = dailySalary * (latestEntry.daysOfWork || 0);
-                    const overtimePay = hourlyRate * (latestEntry.overtimeHrs || 0) * 1.25;
-                    const sundayHolidayPay = hourlyRate * (latestEntry.sundayHolidayHrs || 0) * 1.30;
-                    const nightDiffPay = hourlyRate * (latestEntry.nightDiffHrs || 0) * 1.10;
-                    const nightDiffOvertimePay = hourlyRate * (latestEntry.nightDiffOvertimeHrs || 0) * 1.25;
-                    const tardinessDeduction = hourlyRate * (latestEntry.tardiness || 0);
-
-                    const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction + allowance;
-                    const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
-
-                    return finalGrossPay;
-                }
-                return 0; // Return 0 if no payroll entries found
-            };
-
-
-            // Event delegation for opening deductions entry modal
-            deductionsEmployeesTableBody.addEventListener('click', async (event) => {
-                if (event.target.classList.contains('open-deductions-entry-btn')) {
-                    const employeeId = event.target.dataset.employeeId;
-                    const selectedEmployee = employees.find(emp => emp.id === employeeId);
-                    if (selectedEmployee) {
-                        currentEmployeeDeductionsId = employeeId; // Set the global variable
-
-                        deductionsEmployeeDisplayName.textContent = selectedEmployee.name;
-                        deductionsEmployeeDisplayId.textContent = selectedEmployee.id;
-                        currentDeductionsEmployeeIdInput.value = employeeId; // Set hidden input
-                        addDeductionEntryForm.reset(); // Clear form for new entry
-                        // Set default date to today for new entries
-                        deductionsEntryDateInput.value = new Date().toISOString().split('T')[0];
-                        editDeductionEntryDocIdInput.value = ''; // Clear doc ID for new entry
-                        saveDeductionEntryBtn.textContent = 'Add Deduction Entry'; // Reset button text
-
-                        // Fetch and set the latest gross pay
-                        currentDeductionsGrossPay = await fetchLatestGrossPay(employeeId);
-                        calcDeductionsGrossPay.textContent = `₱${currentDeductionsGrossPay.toFixed(2)}`;
-
-                        calculateNetPay(); // Initial calculation when modal opens
-
-                        listenToDeductionEntries(employeeId); // Start listening to this employee's deduction entries
-                        openModal(deductionsEntryModal);
-                    }
-                }
-            });
-
-            // Event listeners for deduction input fields to trigger net pay calculation
-            deductionsEntryDateInput.addEventListener('input', calculateNetPay); // New: Date input listener
-            deductionsGovtLoanInput.addEventListener('input', calculateNetPay);
-            deductionsCoopShareInput.addEventListener('input', calculateNetPay);
-            deductionsCoop2025Input.addEventListener('input', calculateNetPay);
-            deductionsWithholdingTaxInput.addEventListener('input', calculateNetPay);
-            deductionsUnpaidLoanInput.addEventListener('input', calculateNetPay);
-            deductionsCaVoucherInput.addEventListener('input', calculateNetPay);
-            deductionsDailyBalanceInput.addEventListener('input', calculateNetPay);
-            deductionsOthersInput.addEventListener('input', calculateNetPay);
-
-
-            // Close Deductions Entry Modal
-            closeDeductionsEntryModalBtn.addEventListener('click', () => {
-                closeModal(deductionsEntryModal);
-                addDeductionEntryForm.reset();
-                deductionsEntryDateInput.value = ''; // Reset date
-                editDeductionEntryDocIdInput.value = '';
-                saveDeductionEntryBtn.textContent = 'Add Deduction Entry';
-                currentEmployeeDeductionsId = null; // Clear the current employee context
-                currentDeductionsGrossPay = 0; // Reset gross pay
-                // Reset all display values
-                calcDeductionsGrossPay.textContent = '₱0.00';
-                calcGovtLoan.textContent = '-₱0.00';
-                calcCoopShare.textContent = '-₱0.00';
-                calcCoop2025.textContent = '-₱0.00';
-                calcWithholdingTax.textContent = '-₱0.00';
-                calcUnpaidLoan.textContent = '-₱0.00';
-                calcCaVoucher.textContent = '-₱0.00';
-                calcDailyBalance.textContent = '-₱0.00';
-                calcOthers.textContent = '-₱0.00';
-                deductionsNetPayDisplay.textContent = '₱0.00';
-            });
-
-            // Function to listen to deduction entries for a specific employee
-            const listenToDeductionEntries = (employeeId) => {
-                if (!isAuthReady || !db) {
-                    console.warn("Firestore not ready for deduction entries.");
-                    return;
-                }
-                const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/deductionEntries`);
-                onSnapshot(query(deductionEntriesCollectionRef), (snapshot) => {
-                    currentDeductionEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderDeductionEntriesTableInModal(currentDeductionEntries);
-                }, (error) => {
-                    console.error(`Error listening to deduction entries for ${employeeId}:`, error);
-                    showToast("Failed to load deduction entries.", "error");
-                });
-            };
-
-            // Function to render deduction entries in the modal's table
-            const renderDeductionEntriesTableInModal = (entries) => {
-                deductionEntriesTableBody.innerHTML = '';
-                if (!entries || entries.length === 0) {
-                    deductionEntriesTableBody.innerHTML = `<tr><td colspan="11" class="px-6 py-4 text-center text-gray-500">No deduction entries recorded for this employee.</td></tr>`;
-                    return;
-                }
-                entries.forEach(entry => {
-                    const row = deductionEntriesTableBody.insertRow();
-                    // Display date from timestamp, format to YYYY-MM-DD for consistency
-                    const entryDate = entry.date || 'N/A'; // Use the stored date string
-                    row.innerHTML = `
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">${entryDate}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.govtLoan || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.coopShare || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.coop2025 || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.withholdingTax || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.unpaidLoan || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.caVoucher || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.dailyBalance || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-600">₱${(entry.others || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-sm font-bold text-gray-800">₱${(entry.netPay || 0).toFixed(2)}</td>
-                        <td class="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
-                            <button class="text-indigo-600 hover:text-indigo-900 mr-2 edit-deduction-entry-btn" data-id="${entry.id}">Edit</button>
-                            <button class="text-red-600 hover:text-red-900 delete-deduction-entry-btn" data-id="${entry.id}">Delete</button>
-                        </td>
-                    `;
-                });
-            };
-
-            // Handle form submission for adding/editing deduction entry
-            addDeductionEntryForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const employeeId = currentDeductionsEmployeeIdInput.value;
-                const entryDocId = editDeductionEntryDocIdInput.value; // Will be empty for new entries
-
-                const entryDateStr = deductionsEntryDateInput.value; // Get date from input
-                const govtLoan = parseFloat(deductionsGovtLoanInput.value) || 0;
-                const coopShare = parseFloat(deductionsCoopShareInput.value) || 0;
-                const coop2025 = parseFloat(deductionsCoop2025Input.value) || 0;
-                const withholdingTax = parseFloat(deductionsWithholdingTaxInput.value) || 0;
-                const unpaidLoan = parseFloat(deductionsUnpaidLoanInput.value) || 0;
-                const caVoucher = parseFloat(deductionsCaVoucherInput.value) || 0;
-                const dailyBalance = parseFloat(deductionsDailyBalanceInput.value) || 0;
-                const others = parseFloat(deductionsOthersInput.value) || 0;
-                const netPay = parseFloat(deductionsNetPayDisplay.textContent.replace('₱', '')) || 0; // Get calculated Net Pay
-
-                if (!employeeId) {
-                    showToast("No employee selected for deduction entry.", "error");
-                    return;
-                }
-                if (!entryDateStr) {
-                    showToast("Please select a date for the deduction entry.", "error");
-                    return;
-                }
-
-                try {
-                    const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/deductionEntries`);
-                    const deductionData = {
-                        date: entryDateStr, // Store date as string YYYY-MM-DD
-                        govtLoan,
-                        coopShare,
-                        coop2025,
-                        withholdingTax,
-                        unpaidLoan,
-                        caVoucher,
-                        dailyBalance,
-                        others,
-                        netPay, // Save the calculated net pay
-                        timestamp: Timestamp.fromDate(new Date(entryDateStr)) // Store timestamp for ordering/filtering
-                    };
-
-                    if (entryDocId) {
-                        // Editing existing entry
-                        const entryRef = doc(deductionEntriesCollectionRef, entryDocId);
-                        await updateDoc(entryRef, deductionData);
-                        showToast("Deduction entry updated successfully!", "success");
-                    } else {
-                        // Adding new entry
-                        await addDoc(deductionEntriesCollectionRef, deductionData);
-                        showToast("Deduction entry added successfully!", "success");
-                    }
-                    addDeductionEntryForm.reset();
-                    deductionsEntryDateInput.value = new Date().toISOString().split('T')[0]; // Reset date to today
-                    editDeductionEntryDocIdInput.value = ''; // Clear for next entry
-                    saveDeductionEntryBtn.textContent = 'Add Deduction Entry'; // Reset button text
-                    calculateNetPay(); // Recalculate after submission
-                }
-                catch (error) {
-                    console.error("Error saving deduction entry:", error);
-                    showToast("Failed to save deduction entry. Please try again.", "error");
-                }
-            });
-
-            // Event delegation for edit and delete deduction entry buttons in the modal
-            deductionEntriesTableBody.addEventListener('click', async (event) => {
-                const target = event.target;
-                const entryId = target.dataset.id;
-                const employeeId = currentDeductionsEmployeeIdInput.value;
-
-                if (!employeeId) {
-                    showToast("Error: No employee context for deduction action.", "error");
-                    return;
-                }
-
-                const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employeeId}/deductionEntries`);
-
-                if (target.classList.contains('edit-deduction-entry-btn')) {
-                    const entryToEdit = currentDeductionEntries.find(entry => entry.id === entryId);
-                    if (entryToEdit) {
-                        deductionsEntryDateInput.value = entryToEdit.date || ''; // Set date from stored string
-                        deductionsGovtLoanInput.value = entryToEdit.govtLoan || 0;
-                        deductionsCoopShareInput.value = entryToEdit.coopShare || 0;
-                        deductionsCoop2025Input.value = entryToEdit.coop2025 || 0;
-                        deductionsWithholdingTaxInput.value = entryToEdit.withholdingTax || 0;
-                        deductionsUnpaidLoanInput.value = entryToEdit.unpaidLoan || 0;
-                        deductionsCaVoucherInput.value = entryToEdit.caVoucher || 0;
-                        deductionsDailyBalanceInput.value = entryToEdit.dailyBalance || 0;
-                        deductionsOthersInput.value = entryToEdit.others || 0;
-                        editDeductionEntryDocIdInput.value = entryId; // Store the ID of the entry being edited
-                        saveDeductionEntryBtn.textContent = 'Update Deduction Entry'; // Change button text
-                        calculateNetPay(); // Recalculate for editing
-                    }
-                } else if (target.classList.contains('delete-deduction-entry-btn')) {
-                    showConfirmModal("Confirm Deletion", "Are you sure you want to delete this deduction entry?", async (confirmed) => {
-                        if (confirmed) {
-                            try {
-                                const entryRef = doc(deductionEntriesCollectionRef, entryId);
-                                await deleteDoc(entryRef);
-                                showToast("Deduction entry deleted successfully!", "success");
-                            }
-                            catch (error) {
-                                console.error("Error deleting deduction entry:", error);
-                                showToast("Failed to delete deduction entry. Please try again.", "error");
-                            }
-                        }
-                    });
-                }
-            });
-
-            // --- Payroll Report Logic ---
-
-            // Helper function to calculate gross pay for a given employee and payroll entry
-            const calculateGrossPayForReport = (employee, payrollEntry) => {
-                const dailySalary = employee.salaryRate || 0;
-                const daysOfWork = payrollEntry.daysOfWork || 0;
-                const overtimeHrs = payrollEntry.overtimeHrs || 0;
-                const sundayHolidayHrs = payrollEntry.sundayHolidayHrs || 0;
-                const nightDiffHrs = payrollEntry.nightDiffHrs || 0;
-                const nightDiffOvertimeHrs = payrollEntry.nightDiffOvertimeHrs || 0;
-                const tardiness = payrollEntry.tardiness || 0;
-                const allowance = payrollEntry.allowance || 0;
-
-                const sssDeduction = employee.sssDeduction || 0;
-                const philhealthDeduction = employee.philhealthDeduction || 0;
-                const pagibigDeduction = employee.pagibigDeduction || 0;
-
-                const hourlyRate = dailySalary / 8;
-
-                const basePay = dailySalary * daysOfWork;
-                const overtimePay = hourlyRate * overtimeHrs * 1.25;
-                const sundayHolidayPay = hourlyRate * sundayHolidayHrs * 1.30;
-                const nightDiffPay = hourlyRate * nightDiffHrs * 1.10;
-                const nightDiffOvertimePay = hourlyRate * nightDiffOvertimeHrs * 1.25;
-                const tardinessDeduction = hourlyRate * tardiness;
-
-                const grossPayBeforeStatutory = basePay + overtimePay + sundayHolidayPay + nightDiffPay + nightDiffOvertimePay - tardinessDeduction + allowance;
-                const finalGrossPay = grossPayBeforeStatutory - sssDeduction - philhealthDeduction - pagibigDeduction;
-
-                return finalGrossPay;
-            };
-
-            // Helper function to calculate total custom deductions for a given deduction entry
-            const calculateTotalCustomDeductions = (deductionEntry) => {
-                return (deductionEntry.govtLoan || 0) +
-                       (deductionEntry.coopShare || 0) +
-                       (deductionEntry.coop2025 || 0) +
-                       (deductionEntry.withholdingTax || 0) +
-                       (deductionEntry.unpaidLoan || 0) +
-                       (deductionEntry.caVoucher || 0) +
-                       (deductionEntry.dailyBalance || 0) +
-                       (deductionEntry.others || 0);
-            };
-
-            // Function to filter and display employees in the report section
-            const filterReportEmployees = () => {
-                // This function is primarily for updating the employee list shown in the Payroll Report section,
-                // but the actual report generation will use the `generateReport` function with explicit filters.
-                // For now, it just ensures the dropdowns are populated.
-                populateReportDepartmentFilter();
-            };
-
-            // Reusable function to generate the report
-            // `applyDateRangeFiltersOnly` is true for "Generate Filtered Report" (applies only date filters)
-            // and false for "Generate Full Report" (applies no filters at all).
-            const generateReport = async (applyDateRangeFiltersOnly = false) => {
-                reportTableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Generating report...</td></tr>';
-                reportSummaryFooter.innerHTML = ''; // Clear summary
-
-                let employeesToProcess = employees; // Always start with all employees
-
-                let startDate = null;
-                let endDate = null;
-
-                if (applyDateRangeFiltersOnly) {
-                    // For "Generate Filtered Report", only apply date range filters from the UI.
-                    // Department and employee search filters on the UI are ignored for the data selection.
-                    const start = reportStartDateInput.value;
-                    const end = reportEndDateInput.value;
-
-                    if (start) startDate = new Date(start);
-                    if (end) endDate = new Date(end);
-                }
-                // If applyDateRangeFiltersOnly is false (Full Report), startDate and endDate remain null,
-                // meaning no date filtering will be applied to the sub-collections.
-
-                let reportData = [];
-                let overallGross = 0;
-                let overallDeductions = 0;
-                let overallNet = 0;
-
-                for (const employee of employeesToProcess) { // Iterate over all employees
-                    const payrollEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/payrollEntries`);
-                    const deductionEntriesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees/${employee.id}/deductionEntries`);
-
-                    let employeeGrossPay = 0;
-                    let employeeTotalDeductions = 0;
-                    let employeeNetPay = 0;
-
-                    // Fetch payroll entries for the employee within the date range (if specified)
-                    let payrollQuery = query(payrollEntriesCollectionRef);
-                    if (startDate) {
-                        payrollQuery = query(payrollQuery, where("timestamp", ">=", Timestamp.fromDate(startDate)));
-                    }
-                    if (endDate) {
-                        // Add one day to endDate to make it inclusive for the whole day
-                        const inclusiveEndDate = new Date(endDate);
-                        inclusiveEndDate.setDate(inclusiveEndDate.getDate() + 1);
-                        payrollQuery = query(payrollQuery, where("timestamp", "<", Timestamp.fromDate(inclusiveEndDate)));
-                    }
-                    const payrollSnapshot = await getDocs(payrollQuery);
-
-                    payrollSnapshot.forEach(doc => {
-                        const payrollEntry = doc.data();
-                        employeeGrossPay += calculateGrossPayForReport(employee, payrollEntry);
-                    });
-
-                    // Fetch deduction entries for the employee within the date range (if specified)
-                    let deductionQuery = query(deductionEntriesCollectionRef);
-                    if (startDate) {
-                        deductionQuery = query(deductionQuery, where("timestamp", ">=", Timestamp.fromDate(startDate)));
-                    }
-                    if (endDate) {
-                        const inclusiveEndDate = new Date(endDate);
-                        inclusiveEndDate.setDate(inclusiveEndDate.getDate() + 1);
-                        deductionQuery = query(deductionQuery, where("timestamp", "<", Timestamp.fromDate(inclusiveEndDate)));
-                    }
-                    const deductionSnapshot = await getDocs(deductionQuery);
-
-                    deductionSnapshot.forEach(doc => {
-                        const deductionEntry = doc.data();
-                        employeeTotalDeductions += calculateTotalCustomDeductions(deductionEntry);
-                    });
-
-                    employeeNetPay = employeeGrossPay - employeeTotalDeductions;
-
-                    // Only add employee to report data if they have any gross pay or deductions within the period
-                    if (employeeGrossPay > 0 || employeeTotalDeductions > 0) {
-                        reportData.push({
-                            employeeId: employee.id,
-                            name: employee.name,
-                            department: employee.department,
-                            grossPay: employeeGrossPay,
-                            totalDeductions: employeeTotalDeductions,
-                            netPay: employeeNetPay
-                        });
-                    }
-
-                    overallGross += employeeGrossPay;
-                    overallDeductions += employeeTotalDeductions;
-                    overallNet += employeeNetPay;
-                }
-
-                // Sort report data by employee ID for consistent display
-                reportData.sort((a, b) => a.employeeId.localeCompare(b.employeeId));
-
-
-                displayReportModal(reportData, startDate, endDate, overallGross, overallDeductions, overallNet, applyDateRangeFiltersOnly);
-            };
-
-            // Event listener for "Generate Full Report" button
-            generateFullReportBtn.addEventListener('click', () => generateReport(false)); // False means no date range filter
-
-            // Event listener for "Generate Filtered Report" button
-            generateFilteredReportBtn.addEventListener('click', () => generateReport(true)); // True means apply date range filter only
-
-            const displayReportModal = (data, startDate, endDate, overallGross, overallDeductions, overallNet, isFiltered) => {
-                // Corrected: Assign to a new variable, not the global 'document'
-                const reportContentElement = document.getElementById('report-content');
-                reportContentElement.innerHTML = `
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Payroll Report</h2>
-                    <p class="text-gray-600 mb-2"><strong>Date Generated:</strong> ${new Date().toLocaleDateString()}</p>
-                    ${isFiltered && (startDate || endDate) ? `<p class="text-gray-600 mb-4"><strong>Period:</strong> ${startDate ? startDate.toLocaleDateString() : 'Start'} to ${endDate ? endDate.toLocaleDateString() : 'End'}</p>` : ''}
-                    <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200 mb-6">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee ID</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gross Pay</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Deductions</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Pay</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                ${data.map(item => `
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.employeeId}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${item.name}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${item.department}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${item.grossPay.toFixed(2)}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${item.totalDeductions.toFixed(2)}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₱${item.netPay.toFixed(2)}</td>
-                                    </tr>
-                                `).join('')}
-                                ${data.length === 0 ? '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No data available for the selected filters.</td></tr>' : ''}
-                            </tbody>
-                            <tfoot class="bg-gray-50">
-                                <tr>
-                                    <td colspan="3" class="px-6 py-3 text-right text-base font-bold text-gray-700">Overall Totals:</td>
-                                    <td class="px-6 py-3 whitespace-nowrap text-base font-bold text-gray-700">₱${overallGross.toFixed(2)}</td>
-                                    <td class="px-6 py-3 whitespace-nowrap text-base font-bold text-gray-700">₱${overallDeductions.toFixed(2)}</td>
-                                    <td class="px-6 py-3 whitespace-nowrap text-base font-bold text-gray-700">₱${overallNet.toFixed(2)}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                `;
-                openModal(reportModal);
-            };
-
-
-            closeReportModalBtn.addEventListener('click', () => {
-                closeModal(reportModal);
-            });
-
-            reportPrintBtn.addEventListener('click', () => {
-                window.print();
-            });
-
-
-            // Initialize Firebase and start listeners
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Authenticate
-                if (typeof __initial_auth_token !== 'undefined') {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                // Set up auth state listener
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        console.log("Firebase authenticated. User ID:", userId);
-                        // Initialize collection references after authentication
-                        departmentsCollectionRef = collection(db, `artifacts/${appId}/public/data/departments`);
-                        employeesCollectionRef = collection(db, `artifacts/${appId}/public/data/employees`);
-                        isAuthReady = true;
-                        // Start listening to data once authenticated
-                        listenToDepartments();
-                        listenToEmployees();
-                    } else {
-                        console.log("Firebase not authenticated.");
-                        userId = null;
-                        isAuthReady = true; // Still ready, but unauthenticated
-                    }
-                });
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                showToast("Failed to initialize Firebase.", "error");
-            }
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCHkN4FS6sGXIs8cleBwr5yIcjBn3Olt10",
+            authDomain: "dlvsys.firebaseapp.com",
+            projectId: "dlvsys",
+            storageBucket: "dlvsys.firebasestorage.app",
+            messagingSenderId: "332557308953",
+            appId: "1:332557308953:web:ffa160a0e41734c7690688"
+        };
+
+        const APP_ID = 'dlv-v4-clean-nd';
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let state = {
+            employees: [],
+            attendance: {},
+            deductions: {},
+            currentCycle: null,
+            activeSection: 'dashboard',
+            user: null
+        };
+
+        signInAnonymously(auth);
+        onAuthStateChanged(auth, u => {
+            state.user = u;
+            if(u) { initDate(); startDataSync(); }
         });
+
+        function initDate() {
+            const now = new Date();
+            const start = new Date(now);
+            const diff = (now.getDay() - 4 + 7) % 7;
+            start.setDate(now.getDate() - diff);
+            state.currentCycle = start;
+            document.getElementById('cycleDateInput').value = start.toISOString().split('T')[0];
+        }
+
+        function startDataSync() {
+            onSnapshot(collection(db, 'artifacts', APP_ID, 'public', 'data', 'employees'), s => {
+                state.employees = s.docs.map(d => ({ id: d.id, ...d.data() }));
+                refreshUI();
+            });
+            onSnapshot(collection(db, 'artifacts', APP_ID, 'public', 'data', 'attendance'), s => {
+                state.attendance = {};
+                s.docs.forEach(d => state.attendance[d.id] = d.data());
+                refreshUI();
+            });
+            onSnapshot(collection(db, 'artifacts', APP_ID, 'public', 'data', 'deductions'), s => {
+                state.deductions = {};
+                s.docs.forEach(d => state.deductions[d.id] = d.data());
+                refreshUI();
+            });
+        }
+
+        window.nav = (section) => {
+            state.activeSection = section;
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`section-${section}`).classList.remove('hidden');
+            refreshUI();
+        };
+
+        function refreshUI() {
+            if(state.activeSection === 'attendance') renderAttendance();
+            if(state.activeSection === 'payroll') renderPayroll();
+            if(state.activeSection === 'employee') renderWorkers();
+            if(state.activeSection === 'deduction') renderDeductions();
+            document.getElementById('stat-workers').innerText = state.employees.length;
+        }
+
+        function getCycleDays(start) {
+            const days = [];
+            const current = new Date(start);
+            for(let i=0; i<7; i++) { days.push(new Date(current)); current.setDate(current.getDate() + 1); }
+            return days;
+        }
+
+        window.renderAttendance = () => {
+            const days = getCycleDays(state.currentCycle);
+            const head = document.getElementById('attendanceHeader');
+            head.innerHTML = `<th class="px-8 py-5 table-sticky-col min-w-[200px] text-xs">Worker</th>`;
+            days.forEach(d => { head.innerHTML += `<th class="px-4 py-5 text-center border-l">${d.getDate()} (${d.toLocaleDateString('en', {weekday:'short'})})</th>`; });
+
+            const body = document.getElementById('attendanceBody');
+            body.innerHTML = state.employees.map(emp => {
+                const dayCells = days.map(d => {
+                    const k = `${emp.id}_${d.toISOString().split('T')[0]}`;
+                    const r = state.attendance[k] || { status:null, ot:0, nd:0, holiday:'none' };
+                    return `
+                        <td class="px-4 py-6 text-center border-l">
+                            <div class="flex gap-1 justify-center mb-2">
+                                <button onclick="mark('${emp.id}','${k.split('_')[1]}','p')" class="w-8 h-8 rounded border ${r.status==='p'?'bg-emerald-500 text-white font-black':''}">P</button>
+                                <button onclick="mark('${emp.id}','${k.split('_')[1]}','a')" class="w-8 h-8 rounded border ${r.status==='a'?'bg-rose-500 text-white font-black':''}">A</button>
+                            </div>
+                            <input type="number" step="0.5" value="${r.ot}" onchange="upd('${emp.id}','${k.split('_')[1]}','ot',this.value)" placeholder="OT" class="w-full text-center text-[10px] border rounded mb-1">
+                            <input type="number" step="0.5" value="${r.nd}" onchange="upd('${emp.id}','${k.split('_')[1]}','nd',this.value)" placeholder="ND" class="w-full text-center text-[10px] border rounded mb-1">
+                            <select onchange="upd('${emp.id}','${k.split('_')[1]}','holiday',this.value)" class="w-full text-[9px] border rounded">
+                                <option value="none" ${r.holiday==='none'?'selected':''}>Reg</option>
+                                <option value="spe" ${r.holiday==='spe'?'selected':''}>Spe (1.3)</option>
+                                <option value="reg" ${r.holiday==='reg'?'selected':''}>Hol (2.0)</option>
+                            </select>
+                        </td>
+                    `;
+                }).join('');
+                return `<tr><td class="px-8 py-4 table-sticky-col font-black">${emp.name}</td>${dayCells}</tr>`;
+            }).join('');
+        };
+
+        window.mark = async (eid, dt, s) => {
+            const k = `${eid}_${dt}`;
+            const ex = state.attendance[k] || { status:null, ot:0, nd:0, holiday:'none' };
+            await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'attendance', k), { ...ex, status: ex.status === s ? null : s });
+        };
+
+        window.upd = async (eid, dt, f, v) => {
+            const k = `${eid}_${dt}`;
+            const ex = state.attendance[k] || { status:null, ot:0, nd:0, holiday:'none' };
+            const val = (f === 'ot' || f === 'nd') ? parseFloat(v) || 0 : v;
+            await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'attendance', k), { ...ex, [f]: val });
+        };
+
+        window.renderPayroll = () => {
+            const days = getCycleDays(state.currentCycle);
+            const body = document.getElementById('payrollTableBody');
+            body.innerHTML = '';
+            let grandTotal = 0;
+
+            state.employees.forEach(emp => {
+                let rD=0, rP=0, sD=0, sP=0, hD=0, hP=0, tOT=0, tOTP=0, tNDH=0, tNDP=0, tAl=0;
+                const dR = emp.rate || 0;
+                const hR = dR / 8;
+
+                days.forEach(d => {
+                    const att = state.attendance[`${emp.id}_${d.toISOString().split('T')[0]}`] || { status:null, ot:0, nd:0, holiday:'none' };
+                    const isP = att.status === 'p';
+                    if(isP) tAl += (emp.allowance || 0);
+
+                    let dayM = 1, otM = 1.25;
+                    if(att.holiday === 'spe') { dayM = 1.3; otM = 1.3 * 1.3; if(isP){ sD++; sP += (dR * 1.3); } }
+                    else if(att.holiday === 'reg') { dayM = 2; otM = 2 * 1.3; hD++; hP += isP ? (dR * 2) : dR; }
+                    else if(isP) { rD++; rP += dR; }
+
+                    if(isP) {
+                        tOT += att.ot;
+                        tOTP += (att.ot * hR * otM);
+                        tNDH += att.nd;
+                        tNDP += (att.nd * (hR * dayM) * 0.10); // Standard ND logic
+                    }
+                });
+
+                const gross = rP + sP + hP + tOTP + tNDP + tAl;
+                const deds = state.deductions[emp.id] || {};
+                const tDed = Object.values(deds).reduce((a,b) => a + (parseFloat(b) || 0), 0);
+                const net = gross - tDed;
+                grandTotal += net;
+
+                body.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 table-sticky-col font-black text-sm">${emp.name}</td>
+                        <td class="px-3 py-4 text-center border-r">₱${dR}</td>
+                        <td class="px-2 py-4 text-center bg-emerald-50">${rD}</td><td class="px-3 py-4 text-right bg-emerald-50 border-r">₱${rP}</td>
+                        <td class="px-2 py-4 text-center bg-purple-50">${sD}</td><td class="px-3 py-4 text-right bg-purple-50 border-r">₱${sP}</td>
+                        <td class="px-2 py-4 text-center bg-orange-50">${hD}</td><td class="px-3 py-4 text-right bg-orange-50 border-r">₱${hP}</td>
+                        <td class="px-2 py-4 text-center bg-blue-50">${tOT}h</td><td class="px-3 py-4 text-right bg-blue-50 border-r font-bold">₱${tOTP.toFixed(2)}</td>
+                        
+                        <!-- ND DETAILED -->
+                        <td class="px-3 py-4 text-center bg-indigo-50 font-black text-indigo-700">${tNDH}h</td>
+                        <td class="px-3 py-4 text-right bg-indigo-50 text-indigo-600">₱${tNDP.toFixed(2)}</td>
+                        <td class="px-3 py-4 text-right bg-indigo-100 font-black text-indigo-900 border-r">₱${tNDP.toFixed(2)}</td>
+
+                        <td class="px-3 py-4 text-center border-r">₱${tAl}</td>
+                        <td class="px-4 py-4 text-right bg-blue-100 font-black">₱${gross.toFixed(2)}</td>
+                        ${['sss','philhealth','pagibig','loan','vale','voucher','coop'].map(f => `<td class="text-[8px] text-center">${deds[f]||0}</td>`).join('')}
+                        <td class="px-4 py-4 text-right bg-rose-50 font-bold text-rose-700">₱${tDed}</td>
+                        <td class="px-6 py-4 text-right bg-emerald-600 text-white font-black">₱${net.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('stat-payroll-dash').innerText = `₱ ${grandTotal.toLocaleString()}`;
+        };
+
+        window.renderWorkers = () => {
+            document.getElementById('workerGrid').innerHTML = state.employees.map(e => `
+                <div class="bg-white p-6 rounded-2xl border flex justify-between items-center">
+                    <div>
+                        <h4 class="font-black">${e.name}</h4>
+                        <p class="text-xs text-slate-400 font-bold uppercase">${e.position} | Rate: ₱${e.rate}</p>
+                    </div>
+                    <button onclick="delEmp('${e.id}')" class="text-rose-300 hover:text-rose-500"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        };
+
+        window.delEmp = async id => { if(confirm("Burahin?")) await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'employees', id)); };
+
+        window.renderDeductions = () => {
+            document.getElementById('deductionBody').innerHTML = state.employees.map(e => {
+                const d = state.deductions[e.id] || { sss:0, philhealth:0, pagibig:0, loan:0, vale:0, voucher:0, coop:0 };
+                const total = Object.values(d).reduce((a,b) => a + (parseFloat(b) || 0), 0);
+                return `
+                    <tr>
+                        <td class="px-8 py-4 font-bold">${e.name}</td>
+                        ${['sss','philhealth','pagibig','loan','vale','voucher','coop'].map(f => `
+                            <td><input type="number" value="${d[f]}" onchange="saveDed('${e.id}','${f}',this.value)" class="w-16 border rounded text-xs p-1"></td>
+                        `).join('')}
+                        <td class="text-right px-8 font-black text-rose-600">₱${total}</td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        window.saveDed = async (id, f, v) => {
+            const ex = state.deductions[id] || { sss:0, philhealth:0, pagibig:0, loan:0, vale:0, voucher:0, coop:0 };
+            await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'deductions', id), { ...ex, [f]: parseFloat(v) || 0 });
+        };
+
+        window.updateCycle = v => { state.currentCycle = new Date(v); refreshUI(); };
+        window.openModal = id => document.getElementById(`modal-${id}`).classList.remove('hidden');
+        window.closeModal = id => document.getElementById(`modal-${id}`).classList.add('hidden');
+
+        document.getElementById('form-worker').onsubmit = async e => {
+            e.preventDefault();
+            const id = Date.now().toString();
+            await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'employees', id), {
+                name: document.getElementById('w-name').value,
+                position: document.getElementById('w-pos').value,
+                rate: parseFloat(document.getElementById('w-rate').value),
+                allowance: parseFloat(document.getElementById('w-allow').value || 0)
+            });
+            closeModal('worker'); e.target.reset();
+        };
+
     </script>
 </body>
 </html>
