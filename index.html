@@ -18,8 +18,8 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        .profile-card { transition: all 0.3s ease; border-left: 4px solid #cbd5e1; }
-        .profile-card:hover { transform: translateY(-4px); border-left-color: #facc15; }
+        .profile-card { transition: all 0.3s ease; }
+        .profile-card:hover { transform: translateY(-4px); }
 
         .status-badge-active { @apply bg-emerald-100 text-emerald-700; }
         .status-badge-resigned { @apply bg-rose-100 text-rose-700; }
@@ -67,10 +67,12 @@
         <header class="bg-white border-b px-6 py-4 flex justify-between items-center no-print sticky top-0 z-40">
             <h2 class="text-xs font-black uppercase text-slate-400" id="currentSectionTitle">Dashboard</h2>
             <div class="flex items-center gap-4">
+                <!-- Search Bar -->
                 <div id="searchContainer" class="hidden relative w-64">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="workerSearch" onkeyup="filterWorkers()" placeholder="Search by Name or ID..." class="w-full pl-9 pr-4 py-1.5 bg-slate-50 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-yellow-400">
+                    <input type="text" id="workerSearch" onkeyup="filterWorkers()" placeholder="Search workers..." class="w-full pl-9 pr-4 py-1.5 bg-slate-50 border rounded-lg text-xs outline-none focus:ring-2 focus:ring-yellow-400">
                 </div>
+                <!-- Cycle Date -->
                 <div class="bg-slate-50 border rounded-full px-4 py-1.5 flex items-center gap-2">
                     <span class="text-[9px] font-black text-slate-400 uppercase">Cycle Start:</span>
                     <input type="date" id="cycleDateInput" onchange="updateCycle(this.value)" class="bg-transparent text-xs font-bold outline-none cursor-pointer">
@@ -101,11 +103,12 @@
                 </div>
             </section>
 
-            <!-- ATTENDANCE -->
+            <!-- ATTENDANCE (Filtered for Active Only) -->
             <section id="section-attendance" class="content-section hidden">
                 <div class="bg-white rounded-3xl shadow-sm border overflow-hidden">
                     <div class="p-4 border-b bg-slate-50 text-xs font-bold uppercase text-slate-500 flex justify-between items-center">
                         <span>Attendance & Tardiness Input (Active Workers Only)</span>
+                        <span class="text-rose-500 text-[10px]">LT: 1.0 = 1 Hour Late</span>
                     </div>
                     <div class="overflow-x-auto custom-scrollbar">
                         <table class="w-full text-left min-w-[1600px]">
@@ -118,12 +121,13 @@
                 </div>
             </section>
 
-            <!-- PAYROLL REPORT -->
+            <!-- PAYROLL (Filtered for Active Only) -->
             <section id="section-payroll" class="content-section hidden">
                 <div class="bg-white rounded-3xl shadow-xl border overflow-hidden">
                     <div class="p-8 bg-slate-900 text-white flex justify-between items-center no-print">
                         <div>
                             <h3 class="font-black text-2xl uppercase tracking-tighter">Payroll Summary</h3>
+                            <p class="text-xs text-slate-400 font-bold italic">Calculation based on employment status and attendance.</p>
                         </div>
                         <button onclick="window.print()" class="bg-yellow-400 text-slate-900 px-8 py-3 rounded-xl text-xs font-black shadow-lg shadow-yellow-400/20 hover:bg-yellow-300 transition-colors">Print Report</button>
                     </div>
@@ -132,7 +136,7 @@
                         <table class="w-full text-left min-w-[6000px]">
                             <thead>
                                 <tr class="bg-slate-100 text-[10px] font-black uppercase text-slate-500 border-b">
-                                    <th rowspan="2" class="px-8 py-4 table-sticky-col bg-slate-50 min-w-[280px]">Worker Name & ID</th>
+                                    <th rowspan="2" class="px-8 py-4 table-sticky-col bg-slate-50 min-w-[250px]">Worker Name</th>
                                     <th rowspan="2" class="px-6 py-4 text-center border-r min-w-[120px]">Daily Rate</th>
                                     <th colspan="4" class="px-4 py-2 text-center border-r bg-emerald-50 text-emerald-700">Regular (100%)</th>
                                     <th colspan="4" class="px-4 py-2 text-center border-r bg-blue-50 text-blue-700">Sunday (130%)</th>
@@ -168,7 +172,7 @@
                         <table class="w-full text-left min-w-[1800px]">
                             <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 border-b">
                                 <tr>
-                                    <th class="px-8 py-5 table-sticky-col min-w-[250px]">Worker</th>
+                                    <th class="px-8 py-5 table-sticky-col min-w-[200px]">Worker</th>
                                     <th>SSS</th><th>PhilHealth</th><th>PagIBIG</th><th>Govt. Loan</th><th>Unpaid Loan</th><th>Vale</th><th>C/A Voucher</th><th>Coop Share</th><th>Coop 2026</th><th>W.Tax</th><th>Others</th><th class="text-right px-8">Total</th>
                                 </tr>
                             </thead>
@@ -183,7 +187,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                     <div>
                         <h3 class="text-2xl font-black text-slate-800">Worker Profiles</h3>
-                        <p class="text-sm text-slate-500 font-medium">Manage Unique IDs and Employee Records.</p>
+                        <p class="text-sm text-slate-500 font-medium">Manage IDs, Status, and Personal Information.</p>
                     </div>
                     <button onclick="openWorkerModal()" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-black flex items-center gap-2 hover:bg-slate-800 transition-colors">
                         <i class="fas fa-plus"></i> Add New Worker
@@ -194,7 +198,7 @@
         </main>
     </div>
 
-    <!-- WORKER MODAL -->
+    <!-- WORKER MODAL (ADD/EDIT) -->
     <div id="modal-worker" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl">
             <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
@@ -203,22 +207,14 @@
             </div>
             <form id="form-worker" class="p-8 max-h-[80vh] overflow-y-auto custom-scrollbar">
                 <input type="hidden" id="edit-id">
-                <input type="hidden" id="w-unique-id">
                 
-                <div class="mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Employee Unique ID</p>
-                        <p class="text-lg font-black text-slate-900" id="display-unique-id">AUTO-GENERATE</p>
-                    </div>
-                    <i class="fas fa-barcode text-3xl text-slate-300"></i>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Column 1: Personal -->
                     <div class="space-y-4">
                         <label class="block text-xs font-black uppercase text-slate-400">Personal Info</label>
                         <input type="text" id="w-name" placeholder="Full Name" class="w-full border p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-yellow-400" required>
                         <input type="text" id="w-pos" placeholder="Position" class="w-full border p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-yellow-400" required>
-                        <input type="text" id="w-address" placeholder="Complete Address" class="w-full border p-3 rounded-xl text-sm outline-none">
+                        <input type="text" id="w-address" placeholder="Complete Address" class="w-full border p-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-yellow-400">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] text-slate-400 mb-1 font-bold">Birthday</label>
@@ -231,6 +227,7 @@
                         </div>
                     </div>
 
+                    <!-- Column 2: Status & Payroll -->
                     <div class="space-y-4">
                         <label class="block text-xs font-black uppercase text-slate-400">Employment Status</label>
                         <select id="w-status" class="w-full border p-3 rounded-xl text-sm font-bold outline-none bg-white">
@@ -260,6 +257,7 @@
                     </div>
                 </div>
 
+                <!-- Column 3: Govt IDs -->
                 <div class="space-y-4 pt-4 border-t">
                     <label class="block text-xs font-black uppercase text-slate-400">Government ID Numbers</label>
                     <div class="grid grid-cols-3 gap-4">
@@ -295,7 +293,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dlv-v5-unique-ids';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dlv-v4-clean-nd-ot';
 
         let state = {
             employees: [],
@@ -326,7 +324,7 @@
         function initDate() {
             const now = new Date();
             const start = new Date(now);
-            const diff = (now.getDay() - 4 + 7) % 7; 
+            const diff = (now.getDay() - 4 + 7) % 7; // Cycle starts on Thursday
             start.setDate(now.getDate() - diff);
             state.currentCycle = start;
             document.getElementById('cycleDateInput').value = start.toISOString().split('T')[0];
@@ -392,10 +390,11 @@
             renderPayroll(activeEmps, true); 
         }
 
+        // --- ATTENDANCE ---
         window.renderAttendance = (activeEmps) => {
             const days = getCycleDays(state.currentCycle);
             const head = document.getElementById('attendanceHeader');
-            head.innerHTML = `<th class="px-8 py-5 table-sticky-col min-w-[250px] text-xs">Worker Name & ID</th>`;
+            head.innerHTML = `<th class="px-8 py-5 table-sticky-col min-w-[200px] text-xs">Worker</th>`;
             days.forEach(d => { head.innerHTML += `<th class="px-4 py-5 text-center border-l">${d.getDate()} (${d.toLocaleDateString('en', {weekday:'short'})})</th>`; });
 
             const body = document.getElementById('attendanceBody');
@@ -414,10 +413,15 @@
                                 <div class="flex items-center gap-1"><span class="text-[8px] font-bold w-6">ND:</span><input type="number" step="0.5" value="${r.nd||0}" onchange="updAtt('${emp.id}','${k.split('_')[1]}','nd',this.value)" class="w-full text-center text-[10px] border rounded"></div>
                                 <div class="flex items-center gap-1"><span class="text-[8px] font-bold w-6 text-rose-500">LT:</span><input type="number" step="0.1" value="${r.late||0}" onchange="updAtt('${emp.id}','${k.split('_')[1]}','late',this.value)" class="w-full text-center text-[10px] border border-rose-100 bg-rose-50 rounded"></div>
                             </div>
+                            <select onchange="updAtt('${emp.id}','${k.split('_')[1]}','holiday',this.value)" class="w-full text-[9px] border rounded mt-2">
+                                <option value="none" ${r.holiday==='none'?'selected':''}>Reg</option>
+                                <option value="spe" ${r.holiday==='spe'?'selected':''}>Spe (1.3)</option>
+                                <option value="reg" ${r.holiday==='reg'?'selected':''}>Hol (2.0)</option>
+                            </select>
                         </td>
                     `;
                 }).join('');
-                return `<tr><td class="px-8 py-4 table-sticky-col"><p class="font-black text-slate-700 leading-tight">${emp.name}</p><p class="text-[10px] font-bold text-slate-400">${emp.employeeId || 'NO ID'}</p></td>${dayCells}</tr>`;
+                return `<tr><td class="px-8 py-4 table-sticky-col font-black text-sm text-slate-700">${emp.name}</td>${dayCells}</tr>`;
             }).join('');
         };
 
@@ -430,10 +434,11 @@
         window.updAtt = async (eid, dt, f, v) => {
             const key = `${eid}_${dt}`;
             const ex = state.attendance[key] || { status:null, ot:0, nd:0, late:0, holiday:'none' };
-            const val = parseFloat(v) || 0;
+            const val = (f === 'ot' || f === 'nd' || f === 'late') ? parseFloat(v) || 0 : v;
             await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'attendance', key), { ...ex, [f]: val });
         };
 
+        // --- PAYROLL ---
         window.renderPayroll = (activeEmps, updateOnlyStats = false) => {
             const days = getCycleDays(state.currentCycle);
             const body = document.getElementById('payrollTableBody');
@@ -444,41 +449,82 @@
 
             activeEmps.forEach(emp => {
                 let rD=0, rP=0, rOT=0, rOTP=0, sunD=0, sunP=0, sunOT=0, sunOTP=0, sD=0, sP=0, sOT=0, sOTP=0, hD=0, hP=0;
-                let tNDPay=0, totalLateHrs=0, hasPInWeek=false, daysPresentCount=0;
-                const dR = emp.rate || 0, hR = dR / 8;
+                let tNDD=0, tND_Basic=0, tND_Premium=0, tND_OTHrs=0, tND_OTPay=0;
+                let totalLateHrs=0;
+                let hasPInWeek = false;
+                let daysPresentCount = 0;
+                
+                const dR = emp.rate || 0;
+                const hR = dR / 8;
 
                 days.forEach(d => {
                     const dateStr = d.toISOString().split('T')[0];
                     const att = state.attendance[`${emp.id}_${dateStr}`] || { status:null, ot:0, nd:0, late:0, holiday:'none' };
-                    if(att.status === 'p') {
-                        hasPInWeek = true; daysPresentCount++; totalLateHrs += (att.late || 0);
-                        if(d.getDay() === 0) { sunD++; sunP += (dR * 1.3); sunOTP += (att.ot * hR * 1.3 * 1.3); }
-                        else { rD++; rP += dR; rOTP += (att.ot * hR * 1.25); }
-                        tNDPay += (att.nd * hR * 0.10);
+                    const isP = att.status === 'p';
+                    const isSunday = d.getDay() === 0;
+
+                    if(isP) {
+                        hasPInWeek = true;
+                        daysPresentCount++;
+                        totalLateHrs += (att.late || 0);
+                        let dayM = 1, otM = 1.25;
+
+                        if(att.holiday === 'reg') {
+                            hD++; hP += (dR * 2); 
+                        } else if (att.holiday === 'spe') {
+                            dayM = 1.3; otM = 1.3 * 1.3;
+                            sD++; sP += (dR * 1.3);
+                            sOT += att.ot; sOTP += (att.ot * hR * otM);
+                        } else if (isSunday) {
+                            dayM = 1.3; otM = 1.3 * 1.3;
+                            sunD++; sunP += (dR * 1.3);
+                            sunOT += att.ot; sunOTP += (att.ot * hR * otM);
+                        } else {
+                            rD++; rP += dR;
+                            rOT += att.ot; rOTP += (att.ot * hR * 1.25);
+                        }
+
+                        if(att.nd > 0) {
+                            tNDD++;
+                            const ndRatePerHour = hR * dayM;
+                            tND_Basic += (Math.min(att.nd, 8) * ndRatePerHour);
+                            tND_Premium += (att.nd * ndRatePerHour * 0.10);
+                            if(att.nd > 8) {
+                                tND_OTHrs += (att.nd - 8);
+                                tND_OTPay += ((att.nd - 8) * hR * dayM * 1.25); 
+                            }
+                        }
+                    } else if(att.holiday === 'reg') {
+                        hD++; hP += dR;
                     }
                 });
 
-                let allowance = emp.allowType === 'fixed' ? (hasPInWeek ? (emp.allowance || 0) : 0) : (daysPresentCount * (emp.allowance || 0));
-                const tardiness = totalLateHrs * hR;
-                const gross = rP + rOTP + sunP + sunOTP + sP + sOTP + hP + tNDPay + allowance;
+                let finalAllowance = emp.allowType === 'fixed' ? (hasPInWeek ? (emp.allowance || 0) : 0) : (daysPresentCount * (emp.allowance || 0));
+                const tardinessDed = totalLateHrs * hR;
+                const tNDPay = tND_Basic + tND_Premium + tND_OTPay;
+                const gross = rP + rOTP + sunP + sunOTP + sP + sOTP + hP + tNDPay + finalAllowance;
+                
                 const deds = state.deductions[emp.id] || {};
                 const otherDeds = DED_FIELDS.reduce((a,f) => a + (parseFloat(deds[f]) || 0), 0);
-                const tDed = tardiness + otherDeds;
+                const tDed = tardinessDed + otherDeds;
                 const net = gross - tDed;
 
                 grandTotal += net;
-                totalLateDeduction += tardiness;
+                totalLateDeduction += tardinessDed;
 
                 if(!updateOnlyStats) {
                     body.innerHTML += `
                         <tr>
-                            <td class="px-8 py-4 table-sticky-col"><p class="font-black text-slate-700 leading-tight">${emp.name}</p><p class="text-[9px] font-bold text-slate-400">${emp.employeeId || 'NO ID'}</p></td>
+                            <td class="px-8 py-4 table-sticky-col font-black text-slate-700">${emp.name}</td>
                             <td class="px-6 py-4 text-center border-r font-bold">₱${dR}</td>
                             <td class="px-4 py-4 text-center bg-emerald-50/20">${rD}</td><td class="px-4 py-4 text-right bg-emerald-50/20">₱${rP.toFixed(2)}</td><td class="px-4 py-4 text-center bg-emerald-50/20">${rOT}h</td><td class="px-4 py-4 text-right bg-emerald-50/20 border-r">₱${rOTP.toFixed(2)}</td>
-                            <td colspan="10" class="bg-slate-50/50 text-center text-[10px] text-slate-400">... (Extended Data)</td>
-                            <td class="px-6 py-4 text-center border-r font-bold">₱${allowance.toFixed(2)}</td>
+                            <td class="px-4 py-4 text-center bg-blue-50/20">${sunD}</td><td class="px-4 py-4 text-right bg-blue-50/20">₱${sunP.toFixed(2)}</td><td class="px-4 py-4 text-center bg-blue-50/20">${sunOT}h</td><td class="px-4 py-4 text-right bg-blue-50/20 border-r">₱${sunOTP.toFixed(2)}</td>
+                            <td class="px-4 py-4 text-center bg-purple-50/20">${sD}</td><td class="px-4 py-4 text-right bg-purple-50/20">₱${sP.toFixed(2)}</td><td class="px-4 py-4 text-center bg-purple-50/20">${sOT}h</td><td class="px-4 py-4 text-right bg-purple-50/20 border-r">₱${sOTP.toFixed(2)}</td>
+                            <td class="px-4 py-4 text-center bg-orange-50/20">${hD}</td><td class="px-4 py-4 text-right bg-orange-50/20 border-r">₱${hP.toFixed(2)}</td>
+                            <td class="px-4 py-4 text-center bg-indigo-50/20">${tNDD}</td><td class="px-4 py-4 text-right bg-indigo-50/20">₱${tND_Basic.toFixed(2)}</td><td class="px-4 py-4 text-right bg-indigo-50/20">₱${tND_Premium.toFixed(2)}</td><td class="px-4 py-4 text-center bg-indigo-50/20">${tND_OTHrs}h</td><td class="px-4 py-4 text-right bg-indigo-50/20 text-xs">₱${tND_OTPay.toFixed(2)}</td><td class="px-4 py-4 text-right bg-indigo-100 font-black border-r">₱${tNDPay.toFixed(2)}</td>
+                            <td class="px-6 py-4 text-center border-r font-bold">₱${finalAllowance.toFixed(2)}</td>
                             <td class="px-8 py-4 text-right bg-blue-50 font-black border-x">₱${gross.toFixed(2)}</td>
-                            <td class="px-4 py-4 text-center font-black text-rose-600 bg-rose-50">₱${tardiness.toFixed(2)}</td>
+                            <td class="px-4 py-4 text-center font-black text-rose-600 bg-rose-50">₱${tardinessDed.toFixed(2)}</td>
                             ${DED_FIELDS.map(f => `<td class="px-4 py-4 text-center text-[10px] text-slate-500">${deds[f]||0}</td>`).join('')}
                             <td class="px-6 py-4 text-right bg-rose-50 font-bold border-r">₱${tDed.toFixed(2)}</td>
                             <td class="px-8 py-4 text-right bg-emerald-600 text-white font-black">₱${net.toFixed(2)}</td>
@@ -490,51 +536,51 @@
             document.getElementById('stat-late-dash').innerText = `₱ ${totalLateDeduction.toLocaleString()}`;
         };
 
-        // --- WORKER MANAGEMENT ---
-        function generateUniqueId() {
-            const year = new Date().getFullYear();
-            const count = state.employees.length + 1;
-            const seq = count.toString().padStart(3, '0');
-            return `DLV-${year}-${seq}`;
-        }
+        // --- WORKERS ---
+        window.calculateAge = (bday) => {
+            if(!bday) return;
+            const diff = Date.now() - new Date(bday).getTime();
+            document.getElementById('w-age').value = Math.floor(diff / (31557600000));
+        };
 
         window.renderWorkers = (query = '') => {
             const grid = document.getElementById('workerGrid');
             const filtered = state.employees.filter(e => 
                 e.name.toLowerCase().includes(query.toLowerCase()) || 
-                (e.employeeId && e.employeeId.toLowerCase().includes(query.toLowerCase())) ||
                 e.position.toLowerCase().includes(query.toLowerCase())
             );
 
             grid.innerHTML = filtered.map(e => {
                 const status = e.status || 'active';
+                const statusClass = `status-badge-${status}`;
                 return `
-                <div class="profile-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6">
+                <div class="profile-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 relative overflow-hidden">
                     <div class="flex-1">
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-slate-900 text-yellow-400 rounded-2xl flex items-center justify-center font-black text-xl">${e.name[0]}</div>
+                                <div class="w-12 h-12 bg-slate-900 text-yellow-400 rounded-2xl flex items-center justify-center font-black">${e.name[0]}</div>
                                 <div>
                                     <h4 class="font-black text-slate-800">${e.name}</h4>
-                                    <p class="text-xs font-bold text-yellow-600 tracking-wider">${e.employeeId || 'NO ID'}</p>
+                                    <p class="text-xs font-bold text-slate-400 uppercase">${e.position}</p>
                                 </div>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase status-badge-${status}">${status}</span>
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${statusClass}">${status}</span>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-3 border-y mb-3 text-[10px]">
-                            <div><p class="text-slate-400 font-bold uppercase">Position</p><p class="font-black">${e.position}</p></div>
                             <div><p class="text-slate-400 font-bold uppercase">Rate</p><p class="font-black">₱${e.rate}</p></div>
+                            <div><p class="text-slate-400 font-bold uppercase">Allow.</p><p class="font-black">₱${e.allowance} (${e.allowType})</p></div>
                             <div><p class="text-slate-400 font-bold uppercase">B-Day</p><p class="font-black">${e.birthday||'--'}</p></div>
                             <div><p class="text-slate-400 font-bold uppercase">Age</p><p class="font-black">${e.age||'0'}</p></div>
                         </div>
                         <div class="space-y-2 mb-4">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">Government IDs</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase"><i class="fas fa-id-card mr-1"></i> Government IDs</p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="bg-slate-50 border px-2 py-1 rounded text-[9px] font-bold"><span class="text-slate-400 mr-1">SSS:</span> ${e.sss || 'N/A'}</span>
                                 <span class="bg-slate-50 border px-2 py-1 rounded text-[9px] font-bold"><span class="text-slate-400 mr-1">PH:</span> ${e.phil || 'N/A'}</span>
                                 <span class="bg-slate-50 border px-2 py-1 rounded text-[9px] font-bold"><span class="text-slate-400 mr-1">PAG:</span> ${e.pag || 'N/A'}</span>
                             </div>
                         </div>
+                        <p class="text-[10px] text-slate-500 italic"><i class="fas fa-map-marker-alt mr-1"></i> ${e.address || 'Walang address na nakalagay'}</p>
                     </div>
                     <div class="flex flex-row md:flex-col gap-2 justify-end">
                         <button onclick="editWorker('${e.id}')" class="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl hover:bg-blue-500 hover:text-white transition-all"><i class="fas fa-edit"></i></button>
@@ -544,23 +590,20 @@
             `}).join('');
         };
 
+        window.filterWorkers = () => renderWorkers(document.getElementById('workerSearch').value);
+
         window.openWorkerModal = () => {
-            document.getElementById('modalTitle').innerText = "Register New Worker";
+            document.getElementById('modalTitle').innerText = "Mag-register ng Bagong Worker";
             document.getElementById('edit-id').value = "";
             document.getElementById('form-worker').reset();
-            const newId = generateUniqueId();
-            document.getElementById('w-unique-id').value = newId;
-            document.getElementById('display-unique-id').innerText = newId;
             document.getElementById('modal-worker').classList.remove('hidden');
         };
 
         window.editWorker = (id) => {
             const e = state.employees.find(x => x.id === id);
             if(!e) return;
-            document.getElementById('modalTitle').innerText = "Edit Worker Profile";
+            document.getElementById('modalTitle').innerText = "I-edit ang Profile ng Worker";
             document.getElementById('edit-id').value = id;
-            document.getElementById('w-unique-id').value = e.employeeId || generateUniqueId();
-            document.getElementById('display-unique-id').innerText = e.employeeId || "NO ID";
             document.getElementById('w-name').value = e.name;
             document.getElementById('w-pos').value = e.position;
             document.getElementById('w-rate').value = e.rate;
@@ -572,15 +615,17 @@
             document.getElementById('w-phil').value = e.phil || "";
             document.getElementById('w-pag').value = e.pag || "";
             document.getElementById('w-status').value = e.status || 'active';
+            document.getElementsByName('allowType').forEach(r => r.checked = r.value === (e.allowType || 'daily'));
             document.getElementById('modal-worker').classList.remove('hidden');
         };
+
+        window.delWorker = async (id) => { if(confirm("Sigurado ka bang nais mong alisin ang worker na ito?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'employees', id)); };
 
         document.getElementById('form-worker').onsubmit = async e => {
             e.preventDefault();
             const editId = document.getElementById('edit-id').value;
             const id = editId || Date.now().toString();
             const data = {
-                employeeId: document.getElementById('w-unique-id').value,
                 name: document.getElementById('w-name').value,
                 position: document.getElementById('w-pos').value,
                 rate: parseFloat(document.getElementById('w-rate').value),
@@ -598,14 +643,19 @@
             closeModal('worker');
         };
 
-        window.filterWorkers = () => renderWorkers(document.getElementById('workerSearch').value);
-        window.delWorker = async (id) => { if(confirm("Confirm delete?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'employees', id)); };
-        window.closeModal = (id) => document.getElementById(`modal-${id}`).classList.add('hidden');
-        window.updateCycle = v => { state.currentCycle = new Date(v); refreshUI(); };
-        window.calculateAge = (bday) => {
-            if(!bday) return;
-            const diff = Date.now() - new Date(bday).getTime();
-            document.getElementById('w-age').value = Math.floor(diff / (31557600000));
+        // --- DEDUCTIONS ---
+        window.renderDeductions = (activeEmps) => {
+            document.getElementById('deductionBody').innerHTML = activeEmps.map(e => {
+                const d = state.deductions[e.id] || {};
+                const total = DED_FIELDS.reduce((a,f) => a + (parseFloat(d[f]) || 0), 0);
+                return `
+                    <tr>
+                        <td class="px-8 py-5 table-sticky-col font-bold text-slate-700">${e.name}</td>
+                        ${DED_FIELDS.map(f => `<td><input type="number" step="0.01" value="${d[f]||0}" onchange="saveDed('${e.id}','${f}',this.value)" class="w-20 border rounded p-1 text-xs"></td>`).join('')}
+                        <td class="text-right px-8 font-black text-rose-600">₱${total.toFixed(2)}</td>
+                    </tr>
+                `;
+            }).join('');
         };
 
         window.saveDed = async (id, f, v) => {
@@ -613,19 +663,9 @@
             await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'deductions', id), { ...ex, [f]: parseFloat(v) || 0 });
         };
 
-        window.renderDeductions = (activeEmps) => {
-            document.getElementById('deductionBody').innerHTML = activeEmps.map(e => {
-                const d = state.deductions[e.id] || {};
-                const total = DED_FIELDS.reduce((a,f) => a + (parseFloat(d[f]) || 0), 0);
-                return `
-                    <tr>
-                        <td class="px-8 py-5 table-sticky-col"><p class="font-bold text-slate-700 leading-tight">${e.name}</p><p class="text-[9px] text-slate-400 font-bold">${e.employeeId || ''}</p></td>
-                        ${DED_FIELDS.map(f => `<td><input type="number" step="0.01" value="${d[f]||0}" onchange="saveDed('${e.id}','${f}',this.value)" class="w-20 border rounded p-1 text-xs"></td>`).join('')}
-                        <td class="text-right px-8 font-black text-rose-600">₱${total.toFixed(2)}</td>
-                    </tr>
-                `;
-            }).join('');
-        };
+        window.closeModal = (id) => document.getElementById(`modal-${id}`).classList.add('hidden');
+        window.updateCycle = v => { state.currentCycle = new Date(v); refreshUI(); };
+
     </script>
 </body>
 </html>
